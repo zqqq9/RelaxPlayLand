@@ -1,0 +1,18 @@
+{
+  "name": "relaxplayland",
+  "version": "1.0.0",
+  "description": "A relaxing online gaming platform with fun and casual games",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "serve": "npx http-server . -p 3000"
+  },
+  "keywords": ["gaming", "casual games", "online games", "relaxing games"],
+  "author": "RelaxPlayLand",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "http-server": "^14.1.1"
+  }
+} 

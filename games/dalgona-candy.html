@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Play Dalgona Candy Honeycomb Cookie Game Online | RelaxPlayLand</title>
+    <meta name="description" content="Play Dalgona Candy Honeycomb Cookie game online for free! Test your patience and precision by carving intricate patterns into honeycomb candy. Based on the viral Squid Game challenge.">
+    <meta name="keywords" content="Dalgona Candy, Honeycomb Cookie, Squid Game, online game, free game, puzzle game, patience game, precision game">
+    <meta name="author" content="RelaxPlayLand">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://relaxplayland.online/games/dalgona-candy.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Play Dalgona Candy Honeycomb Cookie Game Online">
+    <meta property="og:description" content="Test your patience and precision in this addictive Dalgona Candy game. Carve patterns without breaking the honeycomb!">
+    <meta property="og:url" content="https://relaxplayland.online/games/dalgona-candy.html">
+    <meta property="og:type" content="game">
+    <meta property="og:site_name" content="RelaxPlayLand">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Play Dalgona Candy Honeycomb Cookie Game Online">
+    <meta name="twitter:description" content="Test your patience and precision in this addictive Dalgona Candy game. Carve patterns without breaking the honeycomb!">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <link href="../dist/output.css?v=20240621" rel="stylesheet">
+    
+    <!-- 强制刷新脚本 -->
+    <script>
+        // 检查URL是否包含nocache参数
+        if (!window.location.href.includes('nocache')) {
+            // 如果没有nocache参数，添加一个并刷新页面
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'nocache=' + new Date().getTime();
+        }
+    </script>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "Dalgona Candy Honeycomb Cookie",
+        "description": "A challenging puzzle game where players must carve intricate patterns into honeycomb candy without breaking it. Based on the viral Squid Game challenge.",
+        "url": "https://relaxplayland.online/games/dalgona-candy.html",
+        "gamePlatform": "Web Browser",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "RelaxPlayLand"
+        }
+    }
+    </script>
+    <style>
+        /* Custom styles for game page */
+        .game-container {
+            min-height: 80vh;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+        }
+        .game-iframe {
+            min-height: 75vh;
+            box-shadow: 0 0 30px rgba(0, 122, 255, 0.2);
+        }
+        @media (max-width: 768px) {
+            .game-iframe {
+                min-height: 60vh;
+            }
+            body {
+                overflow-x: hidden;
+                width: 100%;
+            }
+            html, body {
+                max-width: 100%;
+            }
+        }
+        .game-info-bar {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-bottom: 1px solid #dee2e6;
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #FF9500, #FF3B30);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content-section {
+            background-color: #f8f9fa;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-apple-light-gray min-h-screen w-full overflow-x-hidden">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="../index.html" class="text-2xl font-bold text-apple-blue">RelaxPlayLand</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="../index.html" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="../index.html#games" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Games</a>
+                        <a href="../index.html#about" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full overflow-hidden">
+        <!-- Game Title Bar -->
+        <div class="bg-gradient-to-br from-apple-blue to-apple-purple text-white py-12 w-full">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center mb-2">
+                    <a href="../index.html" class="text-white hover:text-gray-200 transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Games
+                    </a>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold">Dalgona Candy Honeycomb Cookie</h1>
+                <p class="text-lg mt-2 opacity-90">Test your patience and precision in this addictive puzzle game!</p>
+            </div>
+        </div>
+
+        <!-- Game Container with Background Design -->
+        <div class="game-container w-full py-8">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="bg-black rounded-xl overflow-hidden border border-gray-800">
+                    <div class="bg-gradient-to-r from-gray-900 to-black p-4 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-semibold text-white">Dalgona Candy Game</h2>
+                            <p class="text-sm text-gray-400">Use mouse or touch to carve the pattern</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="location.reload()" class="bg-apple-green hover:bg-green-600 text-white py-1 px-3 rounded text-sm transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Restart
+                            </button>
+                            <button onclick="toggleFullscreen()" class="bg-apple-blue hover:bg-blue-600 text-white py-1 px-3 rounded text-sm transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"></path>
+                                </svg>
+                                Fullscreen
+                            </button>
+                        </div>
+                    </div>
+                    <iframe 
+                        src="https://www.crazygames.com/embed/dalgona-candy-honeycomb-cookie-kam"
+                        class="game-iframe w-full border-0"
+                        allowfullscreen
+                        title="Dalgona Candy Honeycomb Cookie Game"
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Info Bar -->
+        <div class="game-info-bar py-4 w-full">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap justify-center gap-4 text-center">
+                    <div class="px-4 py-2">
+                        <span class="block text-sm text-apple-gray">Category</span>
+                        <span class="font-semibold text-apple-dark-gray">Puzzle</span>
+                    </div>
+                    <div class="px-4 py-2">
+                        <span class="block text-sm text-apple-gray">Difficulty</span>
+                        <span class="font-semibold text-apple-orange">Medium</span>
+                    </div>
+                    <div class="px-4 py-2">
+                        <span class="block text-sm text-apple-gray">Players</span>
+                        <span class="font-semibold text-apple-dark-gray">Single Player</span>
+                    </div>
+                    <div class="px-4 py-2">
+                        <span class="block text-sm text-apple-gray">Controls</span>
+                        <span class="font-semibold text-apple-dark-gray">Mouse/Touch</span>
+                    </div>
+                    <div class="px-4 py-2">
+                        <span class="block text-sm text-apple-gray">Age Rating</span>
+                        <span class="font-semibold text-apple-green">All Ages</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Description and Tips -->
+        <div class="py-12 px-4 w-full">
+            <div class="max-w-5xl mx-auto">
+                <!-- Game Description -->
+                <div class="content-section mb-8">
+                    <div class="p-6 md:p-8 bg-white rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold mb-6 gradient-text inline-block">About This Game</h2>
+                        <div class="prose max-w-none text-apple-gray">
+                            <p class="mb-4">Dalgona Candy Honeycomb Cookie is a challenging puzzle game inspired by the viral sensation from the popular Netflix series "Squid Game." In this addictive game, your mission is to carve intricate patterns into honeycomb candy without breaking it.</p>
+                            
+                            <h3 class="text-xl font-semibold mb-3 text-apple-dark-gray">How to Play</h3>
+                            <ul class="list-disc pl-6 mb-6 space-y-2">
+                                <li>Use your mouse or finger to carefully trace the pattern</li>
+                                <li>Follow the outline precisely without breaking the candy</li>
+                                <li>Take your time - patience is key to success</li>
+                                <li>Complete the pattern to advance to the next level</li>
+                                <li>Each level increases in difficulty</li>
+                            </ul>
+
+                            <h3 class="text-xl font-semibold mb-3 text-apple-dark-gray">Game Features</h3>
+                            <ul class="list-disc pl-6 mb-6 space-y-2">
+                                <li>Multiple challenging patterns to master</li>
+                                <li>Progressive difficulty levels</li>
+                                <li>Intuitive touch and mouse controls</li>
+                                <li>Relaxing background music</li>
+                                <li>Perfect for stress relief and concentration</li>
+                            </ul>
+
+                            <p class="mb-4">This game is perfect for anyone looking to test their patience, improve their concentration, or simply enjoy a relaxing puzzle experience. Whether you're a fan of the original Squid Game challenge or just love precision-based games, Dalgona Candy Honeycomb Cookie will provide hours of engaging entertainment.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Tips -->
+                <div class="content-section">
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-apple-light-gray to-white rounded-xl shadow-sm">
+                        <h3 class="text-xl font-bold mb-6 text-apple-blue">Tips for Success</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-green rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">1</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Start Simple</h4>
+                                    <p class="text-sm text-apple-gray">Begin with the simplest patterns to build your confidence.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-blue rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">2</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Steady Hand</h4>
+                                    <p class="text-sm text-apple-gray">Use gentle, steady movements to avoid breaking the candy.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-orange rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">3</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Take Breaks</h4>
+                                    <p class="text-sm text-apple-gray">If you get frustrated, take a short break and come back refreshed.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-purple rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">4</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Precision Over Speed</h4>
+                                    <p class="text-sm text-apple-gray">Focus on accuracy rather than completing the pattern quickly.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-pink rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">5</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Practice Makes Perfect</h4>
+                                    <p class="text-sm text-apple-gray">The more you play, the better you'll become at mastering the patterns.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-apple-red rounded-full mt-1 mr-3 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">6</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-apple-dark-gray">Stay Calm</h4>
+                                    <p class="text-sm text-apple-gray">Remain calm and focused, especially on more difficult patterns.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Games -->
+        <section class="py-16 bg-white w-full">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-apple-dark-gray">More Relaxing Games</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+                    <div class="game-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x250/34C759/FFFFFF?text=Coming+Soon" alt="Coming Soon Game" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 right-4 bg-apple-green text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Soon
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold mb-2 text-apple-dark-gray">Puzzle Adventure</h3>
+                            <p class="text-apple-gray mb-3 text-sm">A relaxing puzzle game with beautiful graphics and challenging levels.</p>
+                            <button disabled class="w-full bg-apple-gray text-white px-4 py-2 rounded-lg text-sm">Coming Soon</button>
+                        </div>
+                    </div>
+
+                    <div class="game-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x250/AF52DE/FFFFFF?text=Coming+Soon" alt="Coming Soon Game" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 right-4 bg-apple-purple text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Soon
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold mb-2 text-apple-dark-gray">Zen Garden</h3>
+                            <p class="text-apple-gray mb-3 text-sm">Create your own peaceful zen garden in this relaxing simulation game.</p>
+                            <button disabled class="w-full bg-apple-gray text-white px-4 py-2 rounded-lg text-sm">Coming Soon</button>
+                        </div>
+                    </div>
+
+                    <div class="game-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/400x250/FF2D92/FFFFFF?text=Coming+Soon" alt="Coming Soon Game" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 right-4 bg-apple-pink text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Soon
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold mb-2 text-apple-dark-gray">Color Match</h3>
+                            <p class="text-apple-gray mb-3 text-sm">A colorful and addictive matching game that will test your reflexes.</p>
+                            <button disabled class="w-full bg-apple-gray text-white px-4 py-2 rounded-lg text-sm">Coming Soon</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-apple-dark-gray text-white py-12 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">RelaxPlayLand</h3>
+                    <p class="text-gray-400">Your ultimate destination for relaxing online games.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="../index.html#games" class="text-gray-400 hover:text-white transition-colors">Games</a></li>
+                        <li><a href="../index.html#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <p class="text-gray-400">Have suggestions or feedback?</p>
+                    <p class="text-gray-400">We'd love to hear from you!</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add loading state for iframe
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframe = document.querySelector('iframe');
+            if (iframe) {
+                iframe.addEventListener('load', function() {
+                    console.log('Game loaded successfully');
+                });
+            }
+        });
+
+        // Add fullscreen functionality
+        function toggleFullscreen() {
+            const iframe = document.querySelector('iframe');
+            if (iframe) {
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.webkitRequestFullscreen) {
+                    iframe.webkitRequestFullscreen();
+                } else if (iframe.msRequestFullscreen) {
+                    iframe.msRequestFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html> 
