@@ -9,6 +9,8 @@ A modern, responsive online gaming website built with HTML, Tailwind CSS, and Ja
 - **Apple-Inspired Design**: Clean, modern interface using Apple's color palette
 - **Fast Loading**: Optimized for performance and user experience
 - **Accessible**: Built with accessibility best practices
+- **Game Submission**: Users can submit their own games to be featured on the platform
+- **Admin Dashboard**: Administrators can review and approve submitted games
 
 ## 🎮 Current Games
 
@@ -23,6 +25,8 @@ A modern, responsive online gaming website built with HTML, Tailwind CSS, and Ja
 - **HTML5**: Semantic markup with proper SEO structure
 - **Tailwind CSS**: Utility-first CSS framework for styling
 - **JavaScript**: Vanilla JS for interactivity
+- **Node.js**: Backend server for game submission and processing
+- **Express**: Web framework for handling API requests
 - **Responsive Design**: Mobile-first approach
 
 ## 📁 Project Structure
@@ -30,15 +34,26 @@ A modern, responsive online gaming website built with HTML, Tailwind CSS, and Ja
 ```
 relaxplayland/
 ├── index.html                 # Homepage
-├── games/
+├── games/                     # Game pages
 │   └── dalgona-candy.html     # Dalgona Candy game page
+├── admin/                     # Admin dashboard
+│   └── game-management.html   # Game management page
 ├── src/
-│   └── input.css             # Tailwind CSS input file
+│   └── input.css              # Tailwind CSS input file
 ├── dist/
-│   └── output.css            # Compiled CSS (generated)
-├── package.json              # Project dependencies
-├── tailwind.config.js        # Tailwind configuration
-└── README.md                 # Project documentation
+│   └── output.css             # Compiled CSS (generated)
+├── templates/                 # HTML templates
+│   ├── game-template.html     # Template for game pages
+│   └── index-template.html    # Template for homepage
+├── data/                      # Data storage (JSON files)
+│   └── games.json             # Game data (generated)
+├── uploads/                   # User uploaded files
+│   └── games/                 # Game images
+├── server.js                  # Express server for game submission
+├── submit-game.html           # Game submission form
+├── package.json               # Project dependencies
+├── tailwind.config.js         # Tailwind configuration
+└── README.md                  # Project documentation
 ```
 
 ## 🚀 Getting Started
@@ -67,7 +82,7 @@ npm run build
 
 4. Start the development server:
 ```bash
-npm run serve
+npm run start
 ```
 
 5. Open your browser and navigate to `http://localhost:3000`
@@ -76,8 +91,46 @@ npm run serve
 
 For development with auto-reload:
 ```bash
+npm run dev:server
+```
+
+For CSS development with auto-reload:
+```bash
 npm run dev
 ```
+
+## 🎨 Game Submission Feature
+
+RelaxPlayLand allows users to submit their own games to be featured on the platform. The submission process includes:
+
+1. **Submit Game Form**: Users fill out a form with game details and iframe embed code
+2. **Review Process**: Administrators review submitted games through the admin dashboard
+3. **Approval/Rejection**: Games can be approved or rejected by administrators
+4. **Automatic Page Generation**: Approved games automatically get their own page created
+
+### How to Submit a Game
+
+1. Navigate to `/submit-game.html`
+2. Fill out the form with:
+   - Game name
+   - Category
+   - Description
+   - How to play instructions
+   - Game features
+   - Game iframe embed code
+   - Developer information
+3. Submit the form
+4. Wait for administrator approval
+
+### Admin Dashboard
+
+Administrators can manage game submissions through the admin dashboard:
+
+1. Navigate to `/admin/game-management.html`
+2. Login with admin credentials
+3. Review pending game submissions
+4. Approve or reject submissions
+5. View all approved and rejected games
 
 ## 🎨 Design System
 
@@ -126,6 +179,12 @@ The website is fully responsive with breakpoints:
 ## 🔧 Customization
 
 ### Adding New Games
+
+1. Use the game submission form at `/submit-game.html`
+2. Wait for administrator approval
+3. Once approved, the game will be automatically added to the homepage
+
+### Manual Game Addition
 
 1. Create a new HTML file in the `games/` directory
 2. Follow the structure of `dalgona-candy.html`

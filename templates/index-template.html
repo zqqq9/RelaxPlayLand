@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RelaxPlayLand - Play Free Online Games</title>
+    <meta name="description" content="RelaxPlayLand is your destination for free online games. Play a variety of casual games directly in your browser without downloads.">
+    <meta name="keywords" content="free online games, browser games, casual games, no download games, relaxing games">
+    <meta name="author" content="RelaxPlayLand">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://relaxplayland.online/">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="RelaxPlayLand - Play Free Online Games">
+    <meta property="og:description" content="Play free online games directly in your browser with no downloads required.">
+    <meta property="og:url" content="https://relaxplayland.online/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="RelaxPlayLand">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RelaxPlayLand - Play Free Online Games">
+    <meta name="twitter:description" content="Play free online games directly in your browser with no downloads required.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <link href="dist/output.css" rel="stylesheet">
+    
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #007AFF, #AF52DE);
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .category-button {
+            transition: all 0.3s ease;
+            border-radius: 50px;
+        }
+        .category-button:hover {
+            transform: translateY(-2px);
+        }
+        .category-button.active {
+            background-color: #007AFF;
+            color: white;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.9);
+            color: #007AFF;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-to-top.visible {
+            opacity: 1;
+        }
+        .scroll-to-top:hover {
+            background: #007AFF;
+            color: white;
+        }
+        .newsletter-form {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .newsletter-input {
+            width: 100%;
+            padding: 12px 120px 12px 20px;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .newsletter-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 7px 20px;
+            border-radius: 50px;
+            background: linear-gradient(to right, #007AFF, #5AC8FA);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .newsletter-button:hover {
+            background: linear-gradient(to right, #0062CC, #4CAAE0);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-apple-light-gray min-h-screen w-full overflow-x-hidden">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-apple-blue">RelaxPlayLand</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="text-apple-blue px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#games" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Games</a>
+                        <a href="#categories" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Categories</a>
+                        <a href="#about" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="submit-game.html" class="bg-apple-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">Submit Game</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-apple-gray hover:text-apple-blue">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#" class="text-apple-blue block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="#games" class="text-apple-gray hover:text-apple-blue block px-3 py-2 rounded-md text-base font-medium transition-colors">Games</a>
+                    <a href="#categories" class="text-apple-gray hover:text-apple-blue block px-3 py-2 rounded-md text-base font-medium transition-colors">Categories</a>
+                    <a href="#about" class="text-apple-gray hover:text-apple-blue block px-3 py-2 rounded-md text-base font-medium transition-colors">About</a>
+                    <a href="submit-game.html" class="bg-apple-blue text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-600 transition-colors">Submit Game</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div class="text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Play Free Online Games</h1>
+                <p class="text-xl md:text-2xl opacity-90 mb-8">Your destination for relaxing and fun browser games</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#games" class="bg-white text-apple-blue px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Start Playing
+                    </a>
+                    <a href="submit-game.html" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-white hover:text-apple-blue transition-colors">
+                        Submit Your Game
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="py-16 bg-white w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 text-apple-dark-gray">Game Categories</h2>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="category-button active px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    All
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Puzzle
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Arcade
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Strategy
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Adventure
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Simulation
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Casual
+                </button>
+                <button class="category-button px-6 py-2 bg-gray-100 text-apple-dark-gray font-medium">
+                    Action
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="py-16 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 text-apple-dark-gray">Featured Games</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Game cards will be inserted here by the server -->
+                {{GAMES_LIST}}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 text-apple-dark-gray">Why Play on RelaxPlayLand?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card p-6 bg-apple-light-gray rounded-xl text-center">
+                    <div class="bg-apple-blue text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-apple-dark-gray">Instant Play</h3>
+                    <p class="text-apple-gray">No downloads required. Play all games directly in your browser.</p>
+                </div>
+                
+                <div class="feature-card p-6 bg-apple-light-gray rounded-xl text-center">
+                    <div class="bg-apple-green text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-apple-dark-gray">100% Free</h3>
+                    <p class="text-apple-gray">All games are completely free to play. No hidden costs or subscriptions.</p>
+                </div>
+                
+                <div class="feature-card p-6 bg-apple-light-gray rounded-xl text-center">
+                    <div class="bg-apple-orange text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-apple-dark-gray">New Games Added</h3>
+                    <p class="text-apple-gray">We regularly add new games to our collection to keep the fun going.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-6 text-apple-dark-gray">About RelaxPlayLand</h2>
+                <div class="prose max-w-none text-apple-gray">
+                    <p>RelaxPlayLand is your destination for free online games that you can play directly in your browser. Our mission is to provide a fun and relaxing gaming experience for players of all ages.</p>
+                    <p>We curate a collection of high-quality games across various categories, from puzzles and arcades to strategy and adventure games. All games are carefully selected to ensure they provide an enjoyable experience without the need for downloads or installations.</p>
+                    <p>Whether you're looking to take a quick break, challenge your mind, or simply have some fun, RelaxPlayLand has something for everyone. Our platform is constantly evolving with new games being added regularly to keep the entertainment fresh and exciting.</p>
+                    <p>We also welcome game developers to submit their games to our platform. If you have a game that you'd like to share with our community, please use our game submission form.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-apple-blue text-white w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">Stay Updated</h2>
+            <p class="text-lg mb-8 opacity-90">Subscribe to our newsletter to get updates on new games and features</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
+                <button type="submit" class="newsletter-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-apple-dark-gray text-white py-12 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">RelaxPlayLand</h3>
+                    <p class="text-gray-400">Your ultimate destination for relaxing online games.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#games" class="text-gray-400 hover:text-white transition-colors">Games</a></li>
+                        <li><a href="#categories" class="text-gray-400 hover:text-white transition-colors">Categories</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a href="submit-game.html" class="text-gray-400 hover:text-white transition-colors">Submit Game</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <p class="text-gray-400">Have suggestions or feedback?</p>
+                    <p class="text-gray-400">We'd love to hear from you!</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <div id="scrollToTop" class="scroll-to-top">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Category buttons
+            const categoryButtons = document.querySelectorAll('.category-button');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter games based on category
+                    const category = this.textContent.trim();
+                    filterGamesByCategory(category);
+                });
+            });
+            
+            // Scroll to top button
+            const scrollToTopButton = document.getElementById('scrollToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollToTopButton.classList.add('visible');
+                } else {
+                    scrollToTopButton.classList.remove('visible');
+                }
+            });
+            
+            scrollToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Newsletter form submission
+            const newsletterForm = document.querySelector('.newsletter-form');
+            
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = this.querySelector('input[type="email"]').value;
+                    
+                    // Here you would typically send the email to your server
+                    // For now, we'll just show an alert
+                    alert(`Thank you for subscribing with ${email}!`);
+                    this.reset();
+                });
+            }
+        });
+        
+        // Function to filter games by category
+        function filterGamesByCategory(category) {
+            const gameCards = document.querySelectorAll('.game-card');
+            
+            if (category === 'All') {
+                // Show all games
+                gameCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+            } else {
+                // Show only games in the selected category
+                gameCards.forEach(card => {
+                    const gameCategory = card.dataset.category;
+                    if (gameCategory === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

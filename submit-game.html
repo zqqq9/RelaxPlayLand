@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Submit Your Game | RelaxPlayLand</title>
+    <meta name="description" content="Submit your game to RelaxPlayLand. Share your game with our community and get featured on our website.">
+    <meta name="keywords" content="submit game, game submission, online games, relaxing games, game developer">
+    <meta name="author" content="RelaxPlayLand">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://relaxplayland.online/submit-game.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Submit Your Game | RelaxPlayLand">
+    <meta property="og:description" content="Share your game with our community and get featured on RelaxPlayLand.">
+    <meta property="og:url" content="https://relaxplayland.online/submit-game.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="RelaxPlayLand">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <link href="dist/output.css" rel="stylesheet">
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #007AFF, #AF52DE);
+        }
+        .form-section {
+            background-color: #f8f9fa;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .input-field {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .input-field:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+            outline: none;
+        }
+        .submit-btn {
+            background: linear-gradient(to right, #007AFF, #5AC8FA);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(to right, #0062CC, #4CAAE0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+        }
+        .preview-container {
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        .preview-active {
+            border-color: #007AFF;
+            background-color: #f0f7ff;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .tag {
+            background-color: #e2e8f0;
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+        }
+        .tag-remove {
+            margin-left: 6px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .tag-remove:hover {
+            color: #ef4444;
+        }
+        .iframe-preview {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-apple-light-gray min-h-screen w-full overflow-x-hidden">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-apple-blue">RelaxPlayLand</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="index.html#games" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Games</a>
+                        <a href="index.html#about" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full overflow-hidden pb-16">
+        <!-- Title Section -->
+        <div class="gradient-bg text-white py-12 w-full">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl md:text-5xl font-bold">Submit Your Game</h1>
+                <p class="text-lg mt-2 opacity-90">Share your game with our community and get featured on RelaxPlayLand</p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="py-12 px-4 w-full">
+            <div class="max-w-4xl mx-auto">
+                <div class="form-section bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                    <form id="gameSubmissionForm" class="space-y-8">
+                        <!-- Basic Information -->
+                        <div>
+                            <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Game Information</h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="gameName" class="form-label">Game Name <span class="text-red-500">*</span></label>
+                                    <input type="text" id="gameName" name="gameName" class="input-field" required>
+                                </div>
+                                
+                                <div>
+                                    <label for="gameCategory" class="form-label">Category <span class="text-red-500">*</span></label>
+                                    <select id="gameCategory" name="gameCategory" class="input-field" required>
+                                        <option value="">Select a category</option>
+                                        <option value="Puzzle">Puzzle</option>
+                                        <option value="Arcade">Arcade</option>
+                                        <option value="Strategy">Strategy</option>
+                                        <option value="Adventure">Adventure</option>
+                                        <option value="Simulation">Simulation</option>
+                                        <option value="Casual">Casual</option>
+                                        <option value="Action">Action</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Details -->
+                        <div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="gameDifficulty" class="form-label">Difficulty</label>
+                                    <select id="gameDifficulty" name="gameDifficulty" class="input-field">
+                                        <option value="">Select difficulty</option>
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="gameControls" class="form-label">Controls</label>
+                                    <select id="gameControls" name="gameControls" class="input-field">
+                                        <option value="">Select controls</option>
+                                        <option value="Mouse">Mouse</option>
+                                        <option value="Touch">Touch</option>
+                                        <option value="Mouse/Touch">Mouse/Touch</option>
+                                        <option value="Keyboard">Keyboard</option>
+                                        <option value="Keyboard/Mouse">Keyboard/Mouse</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="gamePlayers" class="form-label">Players</label>
+                                    <select id="gamePlayers" name="gamePlayers" class="input-field">
+                                        <option value="">Select player mode</option>
+                                        <option value="Single Player">Single Player</option>
+                                        <option value="Multiplayer">Multiplayer</option>
+                                        <option value="Both">Both</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="gameAgeRating" class="form-label">Age Rating</label>
+                                    <select id="gameAgeRating" name="gameAgeRating" class="input-field">
+                                        <option value="">Select age rating</option>
+                                        <option value="All Ages">All Ages</option>
+                                        <option value="7+">7+</option>
+                                        <option value="12+">12+</option>
+                                        <option value="16+">16+</option>
+                                        <option value="18+">18+</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Description -->
+                        <div>
+                            <label for="gameDescription" class="form-label">Game Description <span class="text-red-500">*</span></label>
+                            <textarea id="gameDescription" name="gameDescription" rows="4" class="input-field" required placeholder="Describe your game in detail..."></textarea>
+                        </div>
+
+                        <!-- How to Play -->
+                        <div>
+                            <label for="gameHowToPlay" class="form-label">How to Play <span class="text-red-500">*</span></label>
+                            <textarea id="gameHowToPlay" name="gameHowToPlay" rows="3" class="input-field" required placeholder="Explain how to play the game..."></textarea>
+                        </div>
+
+                        <!-- Game Features -->
+                        <div>
+                            <label for="gameFeatures" class="form-label">Game Features</label>
+                            <textarea id="gameFeatures" name="gameFeatures" rows="3" class="input-field" placeholder="List the main features of your game..."></textarea>
+                        </div>
+
+                        <!-- Game Tags -->
+                        <div>
+                            <label for="gameTags" class="form-label">Tags</label>
+                            <div class="flex items-center">
+                                <input type="text" id="gameTagInput" class="input-field" placeholder="Add tags (press Enter)">
+                                <button type="button" id="addTagBtn" class="ml-2 px-4 py-2 bg-apple-blue text-white rounded-md hover:bg-blue-600 transition-colors">Add</button>
+                            </div>
+                            <div id="tagContainer" class="tag-container"></div>
+                            <input type="hidden" id="gameTags" name="gameTags">
+                        </div>
+
+                        <!-- Game iFrame -->
+                        <div>
+                            <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Game Embed</h2>
+                            
+                            <div class="mb-6">
+                                <label for="gameIframe" class="form-label">iFrame Code <span class="text-red-500">*</span></label>
+                                <textarea id="gameIframe" name="gameIframe" rows="3" class="input-field" required placeholder="Paste your game's iframe embed code here..."></textarea>
+                                <p class="text-sm text-gray-500 mt-1">Example: &lt;iframe src="https://example.com/game" width="100%" height="500" frameborder="0"&gt;&lt;/iframe&gt;</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="form-label">Preview</label>
+                                <div id="iframePreviewContainer" class="preview-container">
+                                    <div id="previewPlaceholder" class="text-center p-4">
+                                        <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <p class="mt-2 text-gray-500">iFrame preview will appear here</p>
+                                    </div>
+                                </div>
+                                <button type="button" id="previewIframeBtn" class="mt-2 px-4 py-2 bg-apple-green text-white rounded-md hover:bg-green-600 transition-colors">Preview iFrame</button>
+                            </div>
+                        </div>
+
+                        <!-- Developer Information -->
+                        <div>
+                            <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Developer Information</h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="developerName" class="form-label">Developer Name <span class="text-red-500">*</span></label>
+                                    <input type="text" id="developerName" name="developerName" class="input-field" required>
+                                </div>
+                                
+                                <div>
+                                    <label for="developerEmail" class="form-label">Email <span class="text-red-500">*</span></label>
+                                    <input type="email" id="developerEmail" name="developerEmail" class="input-field" required>
+                                </div>
+                                
+                                <div>
+                                    <label for="developerWebsite" class="form-label">Website</label>
+                                    <input type="url" id="developerWebsite" name="developerWebsite" class="input-field" placeholder="https://">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="termsConditions" name="termsConditions" type="checkbox" class="h-4 w-4 text-apple-blue focus:ring-apple-blue border-gray-300 rounded" required>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="termsConditions" class="font-medium text-gray-700">I agree to the <a href="#" class="text-apple-blue hover:underline">Terms and Conditions</a> <span class="text-red-500">*</span></label>
+                                <p class="text-gray-500">By submitting this form, you confirm that you have the rights to share this game and grant us permission to host it on our website.</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-center pt-4">
+                            <button type="submit" id="submitGameBtn" class="submit-btn">
+                                Submit Game
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-apple-dark-gray text-white py-12 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">RelaxPlayLand</h3>
+                    <p class="text-gray-400">Your ultimate destination for relaxing online games.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#games" class="text-gray-400 hover:text-white transition-colors">Games</a></li>
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <p class="text-gray-400">Have suggestions or feedback?</p>
+                    <p class="text-gray-400">We'd love to hear from you!</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tags functionality
+            const tagInput = document.getElementById('gameTagInput');
+            const addTagBtn = document.getElementById('addTagBtn');
+            const tagContainer = document.getElementById('tagContainer');
+            const tagsInput = document.getElementById('gameTags');
+            const tags = [];
+
+            function updateTags() {
+                tagsInput.value = JSON.stringify(tags);
+                tagContainer.innerHTML = '';
+                
+                tags.forEach((tag, index) => {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `
+                        ${tag}
+                        <span class="tag-remove" data-index="${index}">×</span>
+                    `;
+                    tagContainer.appendChild(tagElement);
+                });
+
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.tag-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        tags.splice(index, 1);
+                        updateTags();
+                    });
+                });
+            }
+
+            function addTag() {
+                const tag = tagInput.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    tagInput.value = '';
+                    updateTags();
+                }
+            }
+
+            addTagBtn.addEventListener('click', addTag);
+            tagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag();
+                }
+            });
+
+            // iFrame preview functionality
+            const gameIframe = document.getElementById('gameIframe');
+            const previewBtn = document.getElementById('previewIframeBtn');
+            const previewContainer = document.getElementById('iframePreviewContainer');
+            const previewPlaceholder = document.getElementById('previewPlaceholder');
+
+            previewBtn.addEventListener('click', function() {
+                const iframeCode = gameIframe.value.trim();
+                
+                if (iframeCode) {
+                    // Simple security check
+                    if (iframeCode.toLowerCase().includes('<script') || 
+                        iframeCode.toLowerCase().includes('javascript:') ||
+                        iframeCode.toLowerCase().includes('onerror=')) {
+                        alert('Invalid iframe code. Scripts are not allowed.');
+                        return;
+                    }
+                    
+                    previewPlaceholder.style.display = 'none';
+                    previewContainer.classList.add('preview-active');
+                    previewContainer.innerHTML = iframeCode;
+                } else {
+                    alert('Please enter iframe code first.');
+                }
+            });
+
+            // Form submission
+            const form = document.getElementById('gameSubmissionForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!form.checkValidity()) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const gameData = {};
+                
+                formData.forEach((value, key) => {
+                    gameData[key] = value;
+                });
+                
+                // In a real application, you would send this data to a server
+                // For now, we'll simulate success and show a message
+                
+                alert('Thank you for your submission! Our team will review your game and get back to you soon.');
+                
+                // In a real application, you would redirect to a thank you page or show a success message
+                console.log('Game data:', gameData);
+                
+                // Optional: Generate preview of the game page
+                generateGamePreview(gameData);
+            });
+            
+            // Function to generate game preview (simplified for demo)
+            function generateGamePreview(gameData) {
+                // This would typically happen on the server
+                // For demo purposes, we'll just log what would be generated
+                console.log('Game page would be generated for:', gameData.gameName);
+                
+                // In a real application, this would create a new HTML file based on a template
+                // and populate it with the game data
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Management | RelaxPlayLand Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Tailwind CSS -->
+    <link href="../dist/output.css" rel="stylesheet">
+    
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(to bottom, #1a1a1a, #333333);
+            min-height: 100vh;
+        }
+        .admin-content {
+            min-height: 100vh;
+        }
+        .admin-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+        }
+        .admin-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        .status-approved {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+        .status-rejected {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+        .iframe-preview {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div class="admin-sidebar w-full md:w-64 text-white p-4">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">RelaxPlayLand</h1>
+                <p class="text-sm text-gray-400">Admin Dashboard</p>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="game-management.html" class="flex items-center px-4 py-3 rounded-lg bg-blue-600 text-white">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    Game Management
+                </a>
+                <a href="users.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    User Management
+                </a>
+                <a href="settings.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+            
+            <div class="mt-auto pt-8">
+                <a href="../index.html" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Back to Website
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-content flex-grow p-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Game Management</h1>
+                        <p class="text-gray-600">Review and manage game submissions</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div class="flex space-x-3">
+                            <div class="relative">
+                                <input type="text" placeholder="Search games..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <svg class="w-5 h-5 text-gray-400 absolute right-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="mb-8">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px">
+                            <a href="#" class="border-b-2 border-blue-500 text-blue-600 px-4 py-3 text-sm font-medium">
+                                Pending Review (3)
+                            </a>
+                            <a href="#" class="border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-4 py-3 text-sm font-medium">
+                                Approved (12)
+                            </a>
+                            <a href="#" class="border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 px-4 py-3 text-sm font-medium">
+                                Rejected (2)
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Game List -->
+                <div class="space-y-6" id="gamesList">
+                    <!-- Game items will be loaded dynamically -->
+                    <!-- Example Game Item -->
+                    <div class="admin-card bg-white p-6 rounded-xl shadow-sm" data-game-id="123456">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="lg:w-2/3 pr-0 lg:pr-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h2 class="text-xl font-bold text-gray-800">Puzzle Adventure</h2>
+                                        <p class="text-sm text-gray-500">Submitted by: John Developer</p>
+                                        <p class="text-sm text-gray-500">Date: 2024-05-15</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pending Review</span>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h3 class="text-md font-semibold text-gray-700">Description:</h3>
+                                    <p class="text-gray-600 mt-1">A challenging puzzle game where you need to solve increasingly difficult puzzles to progress through an ancient temple. Use your logic and problem-solving skills to overcome obstacles and discover hidden treasures.</p>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Category:</span>
+                                        <p class="text-gray-700">Puzzle</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Difficulty:</span>
+                                        <p class="text-gray-700">Medium</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Controls:</span>
+                                        <p class="text-gray-700">Mouse</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Players:</span>
+                                        <p class="text-gray-700">Single Player</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Age Rating:</span>
+                                        <p class="text-gray-700">All Ages</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:w-1/3 mt-6 lg:mt-0">
+                                <div class="bg-gray-100 rounded-lg p-4">
+                                    <h3 class="text-md font-semibold text-gray-700 mb-2">Game Preview:</h3>
+                                    <div class="iframe-container">
+                                        <iframe src="https://www.crazygames.com/embed/dalgona-candy" class="iframe-preview"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-200 flex flex-wrap gap-3 justify-end">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                                View Details
+                            </button>
+                            <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Reject
+                            </button>
+                            <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors approve-game-btn">
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Example Game Item 2 -->
+                    <div class="admin-card bg-white p-6 rounded-xl shadow-sm" data-game-id="123457">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="lg:w-2/3 pr-0 lg:pr-6">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h2 class="text-xl font-bold text-gray-800">Space Shooter</h2>
+                                        <p class="text-sm text-gray-500">Submitted by: Sarah Games</p>
+                                        <p class="text-sm text-gray-500">Date: 2024-05-14</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pending Review</span>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h3 class="text-md font-semibold text-gray-700">Description:</h3>
+                                    <p class="text-gray-600 mt-1">An action-packed space shooter where you defend Earth from alien invaders. Upgrade your ship, collect power-ups, and defeat increasingly difficult waves of enemies.</p>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Category:</span>
+                                        <p class="text-gray-700">Action</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Difficulty:</span>
+                                        <p class="text-gray-700">Hard</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Controls:</span>
+                                        <p class="text-gray-700">Keyboard</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Players:</span>
+                                        <p class="text-gray-700">Single Player</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Age Rating:</span>
+                                        <p class="text-gray-700">7+</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:w-1/3 mt-6 lg:mt-0">
+                                <div class="bg-gray-100 rounded-lg p-4">
+                                    <h3 class="text-md font-semibold text-gray-700 mb-2">Game Preview:</h3>
+                                    <div class="iframe-container">
+                                        <iframe src="https://www.crazygames.com/embed/dalgona-candy" class="iframe-preview"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-200 flex flex-wrap gap-3 justify-end">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                                View Details
+                            </button>
+                            <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Reject
+                            </button>
+                            <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors approve-game-btn">
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="px-3 py-1 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            Previous
+                        </a>
+                        <a href="#" class="px-3 py-1 rounded-md bg-blue-500 text-white">
+                            1
+                        </a>
+                        <a href="#" class="px-3 py-1 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            2
+                        </a>
+                        <a href="#" class="px-3 py-1 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            3
+                        </a>
+                        <span class="px-2 text-gray-500">...</span>
+                        <a href="#" class="px-3 py-1 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            8
+                        </a>
+                        <a href="#" class="px-3 py-1 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            Next
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for game details -->
+    <div id="gameDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Game Details</h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="gameDetailsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            
+            <div class="mt-8 flex justify-end space-x-3">
+                <button id="closeModalBtn2" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load games data
+            loadGamesData();
+            
+            // Handle approve button clicks
+            document.querySelectorAll('.approve-game-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const gameCard = this.closest('[data-game-id]');
+                    const gameId = gameCard.dataset.gameId;
+                    approveGame(gameId);
+                });
+            });
+            
+            // Handle modal open/close
+            document.querySelectorAll('#closeModalBtn, #closeModalBtn2').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('gameDetailsModal').classList.add('hidden');
+                    document.getElementById('gameDetailsModal').classList.remove('flex');
+                });
+            });
+        });
+        
+        // Function to load games data
+        function loadGamesData() {
+            // In a real application, this would fetch data from the server
+            // For this demo, we're using the hardcoded examples
+            console.log('Loading games data...');
+        }
+        
+        // Function to approve a game
+        function approveGame(gameId) {
+            // In a real application, this would send an API request to approve the game
+            console.log('Approving game with ID:', gameId);
+            
+            // Simulate API call
+            fetch(`/admin/approve-game/${gameId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI to show approved status
+                    const gameCard = document.querySelector(`[data-game-id="${gameId}"]`);
+                    const statusBadge = gameCard.querySelector('.status-badge');
+                    statusBadge.classList.remove('status-pending');
+                    statusBadge.classList.add('status-approved');
+                    statusBadge.textContent = 'Approved';
+                    
+                    // Hide approve/reject buttons
+                    const actionButtons = gameCard.querySelectorAll('button');
+                    actionButtons.forEach(button => {
+                        if (button.textContent.trim() === 'Approve' || button.textContent.trim() === 'Reject') {
+                            button.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show success message
+                    alert('Game approved successfully!');
+                } else {
+                    alert('Failed to approve game. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error approving game:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+        
+        // Function to show game details modal
+        function showGameDetails(gameId) {
+            // In a real application, this would fetch the game details from the server
+            const modal = document.getElementById('gameDetailsModal');
+            const content = document.getElementById('gameDetailsContent');
+            
+            // Simulate loading content
+            content.innerHTML = '<div class="text-center"><p>Loading game details...</p></div>';
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Simulate API call
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Game Information</h3>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Game Name:</p>
+                                    <p class="text-gray-800">Example Game ${gameId}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Category:</p>
+                                    <p class="text-gray-800">Puzzle</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Difficulty:</p>
+                                    <p class="text-gray-800">Medium</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Controls:</p>
+                                    <p class="text-gray-800">Mouse</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Players:</p>
+                                    <p class="text-gray-800">Single Player</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Age Rating:</p>
+                                    <p class="text-gray-800">All Ages</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Description</h3>
+                            <p class="mt-2 text-gray-600">This is a detailed description of the game with ID ${gameId}. It includes information about gameplay, features, and more.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">How to Play</h3>
+                            <p class="mt-2 text-gray-600">Instructions on how to play the game would be displayed here.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Game Features</h3>
+                            <p class="mt-2 text-gray-600">List of game features would be displayed here.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Developer Information</h3>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Developer Name:</p>
+                                    <p class="text-gray-800">John Developer</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Email:</p>
+                                    <p class="text-gray-800">john@example.com</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Website:</p>
+                                    <p class="text-gray-800">https://example.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">Game Preview</h3>
+                            <div class="mt-4">
+                                <iframe src="https://www.crazygames.com/embed/dalgona-candy" class="w-full h-96 rounded-lg"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 500);
+        }
+    </script>
+</body>
+</html> 
