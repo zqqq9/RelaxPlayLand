@@ -61,7 +61,7 @@
         .preview-container {
             border: 2px dashed #e2e8f0;
             border-radius: 12px;
-            min-height: 300px;
+            min-height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -103,10 +103,28 @@
         }
         .iframe-preview {
             width: 100%;
-            height: 400px;
+            height: 500px;
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .back-btn {
+            background: linear-gradient(to right, #8E8E93, #636366);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: linear-gradient(to right, #636366, #48484A);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -307,8 +325,11 @@
                             </div>
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="flex justify-center pt-4">
+                        <!-- Action Buttons -->
+                        <div class="action-buttons pt-4">
+                            <a href="index.html" class="back-btn">
+                                Back to Home
+                            </a>
                             <button type="submit" id="submitGameBtn" class="submit-btn">
                                 Submit Game
                             </button>
@@ -448,11 +469,16 @@
                 
                 alert('Thank you for your submission! Our team will review your game and get back to you soon.');
                 
-                // In a real application, you would redirect to a thank you page or show a success message
+                // Log game data for debugging
                 console.log('Game data:', gameData);
                 
                 // Optional: Generate preview of the game page
                 generateGamePreview(gameData);
+                
+                // Redirect to home page after submission
+                setTimeout(function() {
+                    window.location.href = 'index.html';
+                }, 1000);
             });
             
             // Function to generate game preview (simplified for demo)
