@@ -27,28 +27,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchGames() {
         try {
-            const response = await fetch(`${API_URL}?status=${currentStatus}&search=${searchQuery}`);
+            // Build the URL with query parameters
+            const url = new URL(API_URL, window.location.origin);
+            if (currentStatus) url.searchParams.append('status', currentStatus);
+            if (searchQuery) url.searchParams.append('search', searchQuery);
+            if (currentPage) url.searchParams.append('page', currentPage);
+            
+            const response = await fetch(url);
             if (!response.ok) throw new Error('Network response was not ok');
+            
             const data = await response.json();
-            allGames = data.games || [];
-            updateStats();
-            renderPage(currentPage);
+            
+            // The API now returns a paginated list of games and the full list for stats
+            const gamesForStats = data.allGames || [];
+            const gamesForDisplay = data.games || [];
+
+            updateStats(gamesForStats);
+            renderPage(gamesForDisplay, data.total, data.page, data.totalPages);
+
         } catch (error) {
             console.error('Error fetching games:', error);
             gamesListEl.innerHTML = '<p class="text-red-500">Error loading games. Please try again later.</p>';
         }
     }
 
-    function updateStats() {
-        stats.total.textContent = allGames.length;
-        stats.pending.textContent = allGames.filter(g => g.status === 'pending').length;
-        stats.approved.textContent = allGames.filter(g => g.status === 'approved').length;
-        stats.rejected.textContent = allGames.filter(g => g.status === 'rejected').length;
+    function updateStats(games) {
+        stats.total.textContent = games.length;
+        stats.pending.textContent = games.filter(g => g.status === 'pending').length;
+        stats.approved.textContent = games.filter(g => g.status === 'approved').length;
+        stats.rejected.textContent = games.filter(g => g.status === 'rejected').length;
     }
 
-    function renderPage(page) {
+    function renderPage(gamesToRender, total, page, totalPages) {
         currentPage = page;
-        const gamesToRender = allGames; // In a real scenario, you'd filter/slice for pagination
+        allGames = gamesToRender;
         
         gamesListEl.innerHTML = '';
         if (gamesToRender.length === 0) {
@@ -68,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         addEventListenersToButtons();
-        renderPagination(allGames.length, page);
+        renderPagination(total, page, totalPages);
     }
     
     function getGameHtml(game) {
@@ -99,13 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderPagination(totalItems, page) {
-        // Simplified pagination for now
-        paginationEl.innerHTML = `<p class="text-sm text-gray-600">Page ${page} of 1</p>`;
+    function renderPagination(totalItems, page, totalPages) {
+        paginationEl.innerHTML = `<p class="text-sm text-gray-600">Page ${page} of ${totalPages}</p>`;
     }
 
     function openModal(gameId) {
-        const game = allGames.find(g => g.id === gameId);
+        // We need to find the game in the complete list fetched for stats
+        const allGamesList = JSON.parse(JSON.stringify(allGames));
+        const game = allGamesList.find(g => g.id === gameId);
         if (!game) return;
 
         modal.body.innerHTML = getModalBodyHtml(game);
@@ -155,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.success) {
                 Toastify({ text: `Game ${action}ed successfully`, backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)" }).showToast();
+                // We need to re-fetch all games to update the view
                 fetchGames();
                 closeModal();
             } else {
@@ -180,20 +194,38 @@ document.addEventListener('DOMContentLoaded', () => {
     
     statusFiltersEl.addEventListener('click', e => {
         if (e.target.tagName === 'BUTTON') {
-            currentStatus = e.target.dataset.status;
-            currentPage = 1;
-            // Update active button style
-            statusFiltersEl.querySelectorAll('button').forEach(btn => btn.classList.remove('bg-blue-600', 'text-white'));
-            e.target.classList.add('bg-blue-600', 'text-white');
-            fetchGames();
+            const status = e.target.dataset.status;
+            if (status !== currentStatus) {
+                currentStatus = status;
+                currentPage = 1;
+                // Update active button style
+                statusFiltersEl.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'text-gray-700', 'bg-gray-200');
+                    if (btn.dataset.status === currentStatus) {
+                        btn.classList.add('bg-blue-600', 'text-white');
+                    } else {
+                        btn.classList.add('text-gray-700', 'bg-gray-200');
+                    }
+                });
+                fetchGames();
+            }
         }
     });
 
-    searchInputEl.addEventListener('input', () => {
+    searchInputEl.addEventListener('input', debounce(() => {
         searchQuery = searchInputEl.value;
         currentPage = 1;
         fetchGames();
-    });
+    }, 300));
+
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
 
     // Initial Load
     fetchGames();
