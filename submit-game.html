@@ -267,9 +267,15 @@
                             <input type="hidden" id="gameTags" name="gameTags">
                         </div>
 
-                        <!-- Game iFrame -->
+                        <!-- Game Embed -->
                         <div>
                             <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Game Embed</h2>
+
+                            <div class="mb-6">
+                                <label for="gameImage" class="form-label">Game Image (Thumbnail) <span class="text-red-500">*</span></label>
+                                <input type="file" id="gameImage" name="gameImage" class="input-field" accept="image/*" required>
+                                <p class="text-sm text-gray-500 mt-1">Upload a thumbnail for your game (e.g., JPG, PNG, GIF). Max 5MB.</p>
+                            </div>
                             
                             <div class="mb-6">
                                 <label for="gameIframe" class="form-label">iFrame Code <span class="text-red-500">*</span></label>
@@ -335,6 +341,9 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- Submission Status Message -->
+                    <div id="submissionStatus" class="mt-6 text-center"></div>
                 </div>
             </div>
         </div>
@@ -446,39 +455,58 @@
 
             // Form submission
             const form = document.getElementById('gameSubmissionForm');
+            const submitBtn = document.getElementById('submitGameBtn');
+            const submissionStatus = document.getElementById('submissionStatus');
             
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 // Validate form
                 if (!form.checkValidity()) {
-                    alert('Please fill in all required fields.');
+                    submissionStatus.innerHTML = `<p class="text-red-500">Please fill in all required fields.</p>`;
+                    // Highlight invalid fields
+                    form.reportValidity();
                     return;
                 }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+                submissionStatus.innerHTML = `<p class="text-apple-blue">Submitting your game, please wait...</p>`;
                 
                 // Collect form data
                 const formData = new FormData(form);
-                const gameData = {};
                 
-                formData.forEach((value, key) => {
-                    gameData[key] = value;
-                });
-                
-                // In a real application, you would send this data to a server
-                // For now, we'll simulate success and show a message
-                
-                alert('Thank you for your submission! Our team will review your game and get back to you soon.');
-                
-                // Log game data for debugging
-                console.log('Game data:', gameData);
-                
-                // Optional: Generate preview of the game page
-                generateGamePreview(gameData);
-                
-                // Redirect to home page after submission
-                setTimeout(function() {
-                    window.location.href = 'index.html';
-                }, 1000);
+                try {
+                    const response = await fetch('/api/submit-game', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        submissionStatus.innerHTML = `<p class="text-green-500 font-semibold">${result.message}</p><p>Redirecting to home page...</p>`;
+                        form.reset();
+                        updateTags(); // Clear tags UI
+                        previewContainer.innerHTML = ''; // Clear preview
+                        previewContainer.appendChild(previewPlaceholder);
+                        previewPlaceholder.style.display = 'block';
+
+                        // Redirect to home page after submission
+                        setTimeout(function() {
+                            window.location.href = 'index.html';
+                        }, 3000);
+                    } else {
+                        submissionStatus.innerHTML = `<p class="text-red-500">Error: ${result.message}</p>`;
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Submit Game';
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    submissionStatus.innerHTML = `<p class="text-red-500">A network error occurred. Please try again later.</p>`;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Game';
+                }
             });
             
             // Function to generate game preview (simplified for demo)
