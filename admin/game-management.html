@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Management | RelaxPlayLand Admin</title>
-    <link href="/dist/output.css" rel="stylesheet">
+    <link href="../dist/output.css" rel="stylesheet">
     <style>
         :root {
             --toastify-color-success: #28a745;
@@ -66,11 +66,11 @@
                 <!-- Filters and List -->
                 <div class="bg-white p-5 rounded-lg shadow">
                     <div class="flex justify-between items-center mb-4">
-                        <div id="status-filters" class="flex space-x-2">
-                            <button data-status="" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md">All Games</button>
-                            <button data-status="pending" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Pending</button>
-                            <button data-status="approved" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Approved</button>
-                            <button data-status="rejected" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Rejected</button>
+                        <div id="status-filters" class="flex flex-wrap gap-2 mb-4 md:mb-0">
+                            <button data-status="" class="btn-filter px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">All Games</button>
+                            <button data-status="pending" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Pending</button>
+                            <button data-status="approved" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Approved</button>
+                            <button data-status="rejected" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Rejected</button>
                         </div>
                         <input type="text" id="search-input" placeholder="Search by name..." class="px-4 py-2 border rounded-md">
                     </div>
