@@ -9,7 +9,8 @@
     "serve": "npx http-server . -p 3000",
     "start": "node server.js",
     "dev:server": "nodemon server.js",
-    "init": "node init-data.js"
+    "init": "node init-data.js",
+    "generate-games": "node js/game-template.js"
   },
   "keywords": ["gaming", "casual games", "online games", "relaxing games"],
   "author": "RelaxPlayLand",

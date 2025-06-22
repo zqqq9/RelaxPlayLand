@@ -30,10 +30,26 @@ function getGamesData() {
 function saveGamesData(games) {
     try {
         fs.writeFileSync(dataPath, JSON.stringify(games, null, 2), 'utf8');
+        
+        // Generate game pages for approved games
+        generateGamePages(games);
+        
         return true;
     } catch (error) {
         console.error('Error writing games data:', error);
         return false;
+    }
+}
+
+// Helper function to generate game pages
+function generateGamePages(games) {
+    try {
+        // Execute the game template generator script
+        const { execSync } = require('child_process');
+        execSync('node js/game-template.js', { stdio: 'inherit' });
+        console.log('Game pages generated successfully');
+    } catch (error) {
+        console.error('Error generating game pages:', error);
     }
 }
 

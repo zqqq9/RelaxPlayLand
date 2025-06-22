@@ -28,6 +28,31 @@
     <!-- Tailwind CSS -->
     <link href="./dist/output.css" rel="stylesheet">
     
+    <style>
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #4F46E5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background-color: #4338CA;
+        }
+    </style>
+    
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -235,5 +260,8 @@
             });
         });
     </script>
+    
+    <!-- Game loading script -->
+    <script src="./js/homepage.js"></script>
 </body>
 </html> 
