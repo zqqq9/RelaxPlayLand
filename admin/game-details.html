@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Details | RelaxPlayLand Admin</title>
+    <link href="/dist/output.css" rel="stylesheet">
+    <style>
+        :root {
+            --toastify-color-success: #28a745;
+            --toastify-color-error: #dc3545;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary-color: #7C3AED;
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: white;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+        .badge-approved {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        .badge-rejected {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+        }
+        .admin-nav {
+            display: flex;
+            padding: 0.5rem 1rem;
+            background-color: #1f2937;
+            color: white;
+        }
+        .admin-nav a {
+            color: #d1d5db;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border-radius: 0.25rem;
+            text-decoration: none;
+        }
+        .admin-nav a.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .admin-nav a:hover:not(.active) {
+            background-color: #374151;
+            color: white;
+        }
+        .preview-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .preview-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="gradient-header text-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold mr-8">RelaxPlayLand Admin</h1>
+                    <nav class="admin-nav">
+                        <a href="/admin/game-management.html" class="active">Game Management</a>
+                        <a href="/admin/user-management.html">User Management</a>
+                        <a href="/admin/settings.html">Settings</a>
+                    </nav>
+                </div>
+                <div class="flex items-center">
+                    <span class="mr-4">Admin User</span>
+                    <a href="/index.html" class="mr-4 text-sm text-white hover:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Website
+                    </a>
+                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex items-center mb-6">
+            <a href="/admin/game-management.html" class="text-indigo-600 hover:text-indigo-800 flex items-center mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Game List
+            </a>
+            <h2 class="text-2xl font-bold" id="game-title">Game Details</h2>
+            <span id="game-status-badge" class="ml-4 badge badge-pending">Pending</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Game Info Column -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="mb-4">
+                        <img id="game-image" src="/images/placeholder-game.jpg" alt="Game" class="w-full h-auto object-cover rounded-lg">
+                    </div>
+                    <h3 id="game-name" class="text-xl font-bold mb-2">Game Name</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span id="game-category" class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-1 rounded">Category</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Submitted: <span id="game-date-added">-</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h4 class="section-title">Developer Information</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <div>
+                                <p id="developer-name" class="font-medium">Developer Name</p>
+                                <p id="developer-email" class="text-sm text-gray-500">developer@example.com</p>
+                                <a id="developer-website" href="#" target="_blank" class="text-sm text-indigo-600 hover:text-indigo-800 mt-1 inline-block">Website</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Content Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Game Preview -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h4 class="section-title mb-4">Game Preview</h4>
+                    <div id="game-preview" class="preview-container">
+                        <!-- iframe will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Game Details -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h4 class="section-title">Description</h4>
+                    <div id="game-description" class="bg-gray-50 p-4 rounded-lg mb-6">
+                        Game description will appear here.
+                    </div>
+
+                    <h4 class="section-title">How to Play</h4>
+                    <div id="game-how-to-play" class="bg-gray-50 p-4 rounded-lg mb-6">
+                        Instructions on how to play will appear here.
+                    </div>
+
+                    <h4 class="section-title">iFrame Code</h4>
+                    <pre id="game-iframe-code" class="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap border border-gray-200 overflow-auto mb-6">
+                        <!-- iframe code will appear here -->
+                    </pre>
+
+                    <!-- Review Section (only shown for pending games) -->
+                    <div id="review-section" class="pt-4 border-t border-gray-200 mt-6">
+                        <h4 class="section-title">Review Feedback</h4>
+                        <textarea id="feedback-text" placeholder="Add feedback for the developer (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none mb-4" rows="3"></textarea>
+                        <div class="flex justify-end space-x-4">
+                            <button id="reject-btn" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Reject
+                            </button>
+                            <button id="approve-btn" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Display (only shown for approved/rejected games) -->
+                    <div id="feedback-display" class="pt-4 border-t border-gray-200 mt-6 hidden">
+                        <h4 class="section-title">Review Feedback</h4>
+                        <div id="feedback-content" class="bg-gray-50 p-4 rounded-lg">
+                            No feedback provided.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toastify JS for notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="game-details.js"></script>
+</body>
+</html> 

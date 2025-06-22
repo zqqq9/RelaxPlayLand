@@ -13,12 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         rejected: document.getElementById('rejected-games'),
     };
 
-    const modal = {
-        el: document.getElementById('game-details-modal'),
-        body: document.getElementById('modal-body'),
-        closeBtn: document.getElementById('close-modal-btn'),
-    };
-
     const batchModal = {
         el: document.getElementById('batch-confirm-modal'),
         title: document.getElementById('batch-confirm-title'),
@@ -171,23 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${statusIcons[game.status]}
                         ${game.status.charAt(0).toUpperCase() + game.status.slice(1)}
                     </span>
-                    <button data-id="${game.id}" class="view-details-btn px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center">
+                    <a href="game-details.html?id=${game.id}" class="view-details-btn px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                         View Details
-                    </button>
+                    </a>
                 </div>
             </div>
         `;
     }
 
     function addEventListenersToButtons() {
-        document.querySelectorAll('.view-details-btn').forEach(btn => {
-            btn.addEventListener('click', () => openModal(btn.dataset.id));
-        });
-        
         document.querySelectorAll('.select-game-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 const gameId = checkbox.dataset.id;
@@ -289,279 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function openModal(gameId) {
-        // We need to find the game in the complete list fetched for stats
-        const allGamesList = JSON.parse(JSON.stringify(allGames));
-        const game = allGamesList.find(g => g.id === gameId);
-        if (!game) return;
-
-        modal.body.innerHTML = getModalBodyHtml(game);
-        modal.el.classList.remove('opacity-0', 'pointer-events-none');
-        document.body.classList.add('modal-active');
-        
-        document.getElementById('approve-btn')?.addEventListener('click', () => handleApproval(game.id, true));
-        document.getElementById('reject-btn')?.addEventListener('click', () => handleApproval(game.id, false));
-        
-        // Add event listener for preview button
-        document.getElementById('preview-game-btn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            previewGame(game);
-        });
-    }
-
-    function closeModal() {
-        modal.el.classList.add('opacity-0', 'pointer-events-none');
-        document.body.classList.remove('modal-active');
-    }
-
-    function getModalBodyHtml(game) {
-        const statusColors = {
-            pending: 'bg-yellow-400',
-            approved: 'bg-green-500',
-            rejected: 'bg-red-500',
-        };
-        
-        const statusLabels = {
-            pending: 'Pending Review',
-            approved: 'Approved',
-            rejected: 'Rejected'
-        };
-
-        return `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-1">
-                    <div class="relative">
-                        <img src="${game.image || '/images/placeholder-game.jpg'}" class="w-full h-auto object-cover rounded-lg shadow-md">
-                        <span class="absolute top-3 right-3 px-3 py-1 text-sm font-semibold text-white ${statusColors[game.status]} rounded-full">
-                            ${statusLabels[game.status]}
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="font-bold text-xl mb-2 text-gray-800">${game.name}</h3>
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-1 rounded">${game.category}</span>
-                            ${game.tags && game.tags.length > 0 ? game.tags.map(tag => 
-                                `<span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded">${tag}</span>`
-                            ).join('') : ''}
-                        </div>
-                        <div class="text-sm text-gray-500 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            Submitted: ${new Date(game.dateAdded).toLocaleString()}
-                        </div>
-                        ${game.status === 'pending' ? `
-                        <div class="mt-4">
-                            <a href="#" id="preview-game-btn" class="w-full text-center block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Preview Game
-                            </a>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-                <div class="md:col-span-2 space-y-5">
-                    <div>
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Description</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg">${game.description}</div>
-                    </div>
-                    <div>
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">How to Play</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg">${game.howToPlay}</div>
-                    </div>
-                    <div>
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Developer</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <div>
-                                <p class="font-medium">${game.developer.name}</p>
-                                <p class="text-sm text-gray-500">${game.developer.email}</p>
-                                ${game.developer.website ? `<a href="${game.developer.website}" target="_blank" class="text-sm text-indigo-600 hover:text-indigo-800 mt-1 inline-block">${game.developer.website}</a>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">iFrame Code</h4>
-                        <pre class="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap border border-gray-200 overflow-auto">${escapeHtml(game.iframe)}</pre>
-                    </div>
-                    ${game.status === 'pending' ? `
-                    <div class="pt-4 border-t border-gray-200 mt-6">
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Review Feedback</h4>
-                        <textarea id="feedback-text" placeholder="Add feedback for the developer (optional)" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none" rows="3"></textarea>
-                        <div class="flex justify-end space-x-4 mt-4">
-                            <button id="reject-btn" class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Reject
-                            </button>
-                            <button id="approve-btn" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Approve
-                            </button>
-                        </div>
-                    </div>
-                    ` : ''}
-                    ${game.status !== 'pending' && game.feedback ? `
-                    <div class="pt-4 border-t border-gray-200 mt-6">
-                        <h4 class="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Review Feedback</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg">${game.feedback}</div>
-                    </div>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-    }
-
-    async function handleApproval(gameId, isApproved) {
-        const action = isApproved ? 'approve' : 'reject';
-        const feedback = document.getElementById('feedback-text')?.value || '';
-        
-        try {
-            const response = await fetch(`/api/admin/${action}-game/${gameId}`, { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ feedback })
-            });
-            
-            const result = await response.json();
-            if (result.success) {
-                Toastify({ 
-                    text: `Game ${isApproved ? 'approved' : 'rejected'} successfully`, 
-                    backgroundColor: isApproved ? 
-                        "linear-gradient(to right, #00b09b, #96c93d)" : 
-                        "linear-gradient(to right, #ff5f6d, #ffc371)",
-                    duration: 3000
-                }).showToast();
-                
-                // We need to re-fetch all games to update the view
-                fetchGames();
-                closeModal();
-            } else {
-                throw new Error(result.message);
-            }
-        } catch (error) {
-            Toastify({ 
-                text: `Error: ${error.message}`, 
-                style: { background: "var(--toastify-color-error)" },
-                duration: 4000
-            }).showToast();
-        }
-    }
-
-    function escapeHtml(unsafe) {
-        return unsafe
-             .replace(/&/g, "&amp;")
-             .replace(/</g, "&lt;")
-             .replace(/>/g, "&gt;")
-             .replace(/"/g, "&quot;")
-             .replace(/'/g, "&#039;");
-    }
-
-    // Event Listeners
-    modal.closeBtn.addEventListener('click', closeModal);
-    
-    // Batch modal event listeners
-    batchModal.confirmBtn.addEventListener('click', () => {
-        handleBatchApproval(batchActionType === 'approve');
-        closeBatchModal();
-    });
-    
-    batchModal.cancelBtn.addEventListener('click', closeBatchModal);
-    batchModal.closeBtn.addEventListener('click', closeBatchModal);
-    
-    // Global event listeners
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            closeModal();
-            closeBatchModal();
-        }
-    });
-    
-    statusFiltersEl.addEventListener('click', e => {
-        if (e.target.tagName === 'BUTTON') {
-            const status = e.target.dataset.status;
-            if (status !== currentStatus) {
-                currentStatus = status;
-                currentPage = 1;
-                // Update active button style
-                statusFiltersEl.querySelectorAll('button').forEach(btn => {
-                    btn.classList.remove('bg-indigo-600', 'text-white', 'text-gray-700', 'bg-gray-200');
-                    if (btn.dataset.status === currentStatus) {
-                        btn.classList.add('bg-indigo-600', 'text-white');
-                    } else {
-                        btn.classList.add('text-gray-700', 'bg-gray-200');
-                    }
-                });
-                
-                // Add transition effect
-                e.target.classList.add('transform', 'scale-105');
-                setTimeout(() => {
-                    e.target.classList.remove('transform', 'scale-105');
-                }, 200);
-                
-                fetchGames();
-            }
-        }
-    });
-
-    searchInputEl.addEventListener('input', debounce(() => {
-        searchQuery = searchInputEl.value;
-        currentPage = 1;
-        fetchGames();
-    }, 300));
-
-    function debounce(func, delay) {
-        let timeout;
-        return function(...args) {
-            const context = this;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
-
-    // Add preview game functionality
-    function previewGame(game) {
-        // Create a preview modal
-        const previewModal = document.createElement('div');
-        previewModal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
-        previewModal.id = 'game-preview-modal';
-        
-        previewModal.innerHTML = `
-            <div class="bg-white w-11/12 h-5/6 rounded-lg flex flex-col relative">
-                <div class="p-4 border-b flex justify-between items-center">
-                    <h3 class="font-bold text-lg">Game Preview: ${game.name}</h3>
-                    <button id="close-preview-btn" class="text-gray-500 hover:text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex-1 p-4 overflow-hidden">
-                    <div class="w-full h-full">
-                        ${game.iframe}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(previewModal);
-        
-        // Add event listener to close button
-        document.getElementById('close-preview-btn').addEventListener('click', () => {
-            document.body.removeChild(previewModal);
-        });
-    }
-
     // Batch approval functionality
     function toggleBatchMode() {
         isBatchMode = !isBatchMode;
@@ -652,24 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }).showToast();
         }
     }
-
-    // Event Listeners for batch actions
-    document.getElementById('batch-mode-btn')?.addEventListener('click', toggleBatchMode);
-    document.getElementById('batch-approve-btn')?.addEventListener('click', () => showBatchConfirmation(true));
-    document.getElementById('batch-reject-btn')?.addEventListener('click', () => showBatchConfirmation(false));
-    document.getElementById('select-all-checkbox')?.addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        document.querySelectorAll('.select-game-checkbox').forEach(checkbox => {
-            checkbox.checked = isChecked;
-            const gameId = checkbox.dataset.id;
-            if (isChecked) {
-                selectedGames.add(gameId);
-            } else {
-                selectedGames.delete(gameId);
-            }
-        });
-        updateBatchActions();
-    });
     
     // Batch confirmation modal functions
     function showBatchConfirmation(isApprove) {
@@ -699,6 +398,84 @@ document.addEventListener('DOMContentLoaded', () => {
         batchModal.el.classList.add('opacity-0', 'pointer-events-none');
         document.body.classList.remove('modal-active');
     }
+
+    // Event Listeners
+    
+    // Batch modal event listeners
+    batchModal.confirmBtn.addEventListener('click', () => {
+        handleBatchApproval(batchActionType === 'approve');
+        closeBatchModal();
+    });
+    
+    batchModal.cancelBtn.addEventListener('click', closeBatchModal);
+    batchModal.closeBtn.addEventListener('click', closeBatchModal);
+    
+    // Global event listeners
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            closeBatchModal();
+        }
+    });
+    
+    statusFiltersEl.addEventListener('click', e => {
+        if (e.target.tagName === 'BUTTON') {
+            const status = e.target.dataset.status;
+            if (status !== currentStatus) {
+                currentStatus = status;
+                currentPage = 1;
+                // Update active button style
+                statusFiltersEl.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'text-gray-700', 'bg-gray-200');
+                    if (btn.dataset.status === currentStatus) {
+                        btn.classList.add('bg-indigo-600', 'text-white');
+                    } else {
+                        btn.classList.add('text-gray-700', 'bg-gray-200');
+                    }
+                });
+                
+                // Add transition effect
+                e.target.classList.add('transform', 'scale-105');
+                setTimeout(() => {
+                    e.target.classList.remove('transform', 'scale-105');
+                }, 200);
+                
+                fetchGames();
+            }
+        }
+    });
+
+    searchInputEl.addEventListener('input', debounce(() => {
+        searchQuery = searchInputEl.value;
+        currentPage = 1;
+        fetchGames();
+    }, 300));
+
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Event Listeners for batch actions
+    document.getElementById('batch-mode-btn')?.addEventListener('click', toggleBatchMode);
+    document.getElementById('batch-approve-btn')?.addEventListener('click', () => showBatchConfirmation(true));
+    document.getElementById('batch-reject-btn')?.addEventListener('click', () => showBatchConfirmation(false));
+    document.getElementById('select-all-checkbox')?.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll('.select-game-checkbox').forEach(checkbox => {
+            checkbox.checked = isChecked;
+            const gameId = checkbox.dataset.id;
+            if (isChecked) {
+                selectedGames.add(gameId);
+            } else {
+                selectedGames.delete(gameId);
+            }
+        });
+        updateBatchActions();
+    });
 
     // Initial Load
     fetchGames();
