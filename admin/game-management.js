@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInputEl = document.getElementById('search-input');
     const batchActionsEl = document.getElementById('batch-actions');
     
+    // 检查必要的DOM元素是否存在
+    if (!gamesListEl || !noGamesMessageEl || !paginationEl) {
+        console.error('必要的DOM元素不存在，无法初始化游戏管理页面');
+        return;
+    }
+    
     const stats = {
         total: document.getElementById('total-games'),
         pending: document.getElementById('pending-games'),
@@ -62,11 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 显示错误消息
     function showError(message) {
-        Toastify({
-            text: message,
-            style: { background: "var(--toastify-color-error)" },
-            duration: 5000
-        }).showToast();
+        console.error(message);
+        try {
+            if (typeof Toastify === 'function') {
+                Toastify({
+                    text: message,
+                    style: { background: "#ff5f6d" },
+                    duration: 5000
+                }).showToast();
+            } else {
+                alert(message);
+            }
+        } catch (err) {
+            console.error('Toastify error:', err);
+            alert(message);
+        }
     }
 
     async function fetchGames() {
@@ -390,13 +406,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const result = await response.json();
             if (result.success) {
-                Toastify({ 
-                    text: `${gameIds.length} games ${isApproved ? 'approved' : 'rejected'} successfully`, 
-                    backgroundColor: isApproved ? 
-                        "linear-gradient(to right, #00b09b, #96c93d)" : 
-                        "linear-gradient(to right, #ff5f6d, #ffc371)",
-                    duration: 3000
-                }).showToast();
+                try {
+                    if (typeof Toastify === 'function') {
+                        Toastify({ 
+                            text: `${gameIds.length} games ${isApproved ? 'approved' : 'rejected'} successfully`, 
+                            backgroundColor: isApproved ? 
+                                "linear-gradient(to right, #00b09b, #96c93d)" : 
+                                "linear-gradient(to right, #ff5f6d, #ffc371)",
+                            duration: 3000
+                        }).showToast();
+                    } else {
+                        alert(`${gameIds.length} games ${isApproved ? 'approved' : 'rejected'} successfully`);
+                    }
+                } catch (toastError) {
+                    console.error('Toastify error:', toastError);
+                    alert(`${gameIds.length} games ${isApproved ? 'approved' : 'rejected'} successfully`);
+                }
                 
                 // Reset batch mode and refresh games
                 toggleBatchMode();
@@ -405,11 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.message);
             }
         } catch (error) {
-            Toastify({ 
-                text: `Error: ${error.message}`, 
-                style: { background: "var(--toastify-color-error)" },
-                duration: 4000
-            }).showToast();
+            showError(`Error: ${error.message}`);
         }
     }
     
@@ -503,10 +524,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event Listeners for batch actions
-    document.getElementById('batch-mode-btn')?.addEventListener('click', toggleBatchMode);
-    document.getElementById('batch-approve-btn')?.addEventListener('click', () => showBatchConfirmation(true));
-    document.getElementById('batch-reject-btn')?.addEventListener('click', () => showBatchConfirmation(false));
-    document.getElementById('select-all-checkbox')?.addEventListener('change', (e) => {
+    const batchModeBtn = document.getElementById('batch-mode-btn');
+    const batchApproveBtn = document.getElementById('batch-approve-btn');
+    const batchRejectBtn = document.getElementById('batch-reject-btn');
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    
+    if (batchModeBtn) batchModeBtn.addEventListener('click', toggleBatchMode);
+    if (batchApproveBtn) batchApproveBtn.addEventListener('click', () => showBatchConfirmation(true));
+    if (batchRejectBtn) batchRejectBtn.addEventListener('click', () => showBatchConfirmation(false));
+    if (selectAllCheckbox) selectAllCheckbox.addEventListener('change', (e) => {
         const isChecked = e.target.checked;
         document.querySelectorAll('.select-game-checkbox').forEach(checkbox => {
             checkbox.checked = isChecked;
