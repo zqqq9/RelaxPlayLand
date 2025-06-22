@@ -1,5 +1,34 @@
 [
   {
+    "id": "7",
+    "slug": "lumber-harvest-tree-cutting-game",
+    "name": "Lumber Harvest Tree Cutting Game",
+    "category": "Simulation",
+    "difficulty": "Easy",
+    "controls": "Mouse/Touch",
+    "players": "Single Player",
+    "ageRating": "All Ages",
+    "description": "Become a lumberjack in this relaxing tree cutting simulation. Cut down trees, harvest lumber, and enjoy the peaceful forest environment. Perfect for when you need a break and want to engage in a satisfying, low-stress activity.",
+    "howToPlay": "Click or tap on trees to cut them down. Collect the lumber by clicking on the logs. Upgrade your tools to cut trees faster and collect more resources.",
+    "features": "Relaxing gameplay, beautiful forest environments, tool upgrades, and resource collection.",
+    "iframe": "<iframe src=\"https://www.crazygames.com/embed/lumber-idle\" class=\"game-iframe\" title=\"Lumber Harvest Tree Cutting Game\" allow=\"fullscreen; autoplay; clipboard-write; encrypted-media\" allowfullscreen=\"true\" frameborder=\"0\" scrolling=\"no\"></iframe>",
+    "tags": [
+      "Simulation",
+      "Relaxing",
+      "Idle",
+      "Resource Management"
+    ],
+    "image": "https://imgs.crazygames.com/lumber-idle/20230811162628/lumber-idle-cover?auto=format,compress&q=75&cs=strip&w=360",
+    "developer": {
+      "name": "RelaxPlayLand",
+      "email": "contact@relaxplayland.online",
+      "website": "https://relaxplayland.online"
+    },
+    "dateAdded": "2024-06-10T09:41:58.423Z",
+    "status": "approved",
+    "approvedAt": "2024-06-10T10:15:30.000Z"
+  },
+  {
     "id": "6",
     "slug": "golf-orbit",
     "name": "Golf Orbit",
