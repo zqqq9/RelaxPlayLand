@@ -25,7 +25,122 @@
       "email": "contact@relaxplayland.online",
       "website": "https://relaxplayland.online"
     },
-    "dateAdded": "2025-06-20T09:41:58.423Z",
+    "dateAdded": "2023-06-20T09:41:58.423Z",
     "status": "approved"
+  },
+  {
+    "id": "2",
+    "slug": "bubble-shooter",
+    "name": "Bubble Shooter Classic",
+    "category": "Arcade",
+    "difficulty": "Easy",
+    "controls": "Mouse/Touch",
+    "players": "Single Player",
+    "ageRating": "All Ages",
+    "description": "Match 3 or more bubbles of the same color to pop them and clear the board. A classic arcade game that's easy to learn but hard to master.",
+    "howToPlay": "Aim and shoot bubbles to match 3 or more of the same color. Clear all bubbles to advance to the next level.",
+    "features": "100+ levels, power-ups, special bubbles, and leaderboards.",
+    "iframe": "<iframe src=\"https://www.example.com/embed/bubble-shooter\" class=\"game-iframe\" title=\"Bubble Shooter Game\" allow=\"fullscreen\" frameborder=\"0\"></iframe>",
+    "tags": [
+      "Arcade",
+      "Match 3",
+      "Casual",
+      "Classic"
+    ],
+    "image": "/images/games/bubble-shooter.jpg",
+    "developer": {
+      "name": "GameDev Studios",
+      "email": "contact@gamedev.com",
+      "website": "https://gamedev.com"
+    },
+    "dateAdded": "2023-06-21T10:15:30.000Z",
+    "status": "pending"
+  },
+  {
+    "id": "3",
+    "slug": "space-invaders",
+    "name": "Space Invaders Reloaded",
+    "category": "Shooter",
+    "difficulty": "Medium",
+    "controls": "Keyboard",
+    "players": "Single Player",
+    "ageRating": "Teen",
+    "description": "Defend Earth from waves of alien invaders in this modern remake of the classic arcade game.",
+    "howToPlay": "Use arrow keys to move and spacebar to shoot. Destroy all aliens before they reach the bottom of the screen.",
+    "features": "Modern graphics, power-ups, boss battles, and multiple difficulty levels.",
+    "iframe": "<iframe src=\"https://www.example.com/embed/space-invaders\" class=\"game-iframe\" title=\"Space Invaders Game\" allow=\"fullscreen\" frameborder=\"0\"></iframe>",
+    "tags": [
+      "Shooter",
+      "Arcade",
+      "Classic",
+      "Space"
+    ],
+    "image": "/images/games/space-invaders.jpg",
+    "developer": {
+      "name": "Retro Games Inc",
+      "email": "info@retrogames.com",
+      "website": "https://retrogames.com"
+    },
+    "dateAdded": "2023-06-22T14:30:45.000Z",
+    "status": "rejected",
+    "adminFeedback": "Game contains copyrighted material that needs to be removed before approval.",
+    "rejectedAt": "2023-06-23T09:20:15.000Z"
+  },
+  {
+    "id": "4",
+    "slug": "candy-crush",
+    "name": "Sweet Candy Match",
+    "category": "Puzzle",
+    "difficulty": "Easy",
+    "controls": "Mouse/Touch",
+    "players": "Single Player",
+    "ageRating": "All Ages",
+    "description": "Match candies in this sweet puzzle game. Create combos to unlock special candies and power-ups.",
+    "howToPlay": "Swap adjacent candies to create matches of 3 or more. Complete level objectives to advance.",
+    "features": "Hundreds of levels, special candies, boosters, and daily challenges.",
+    "iframe": "<iframe src=\"https://www.example.com/embed/candy-match\" class=\"game-iframe\" title=\"Sweet Candy Match Game\" allow=\"fullscreen\" frameborder=\"0\"></iframe>",
+    "tags": [
+      "Puzzle",
+      "Match 3",
+      "Casual",
+      "Sweet"
+    ],
+    "image": "/images/games/candy-match.jpg",
+    "developer": {
+      "name": "Sweet Games",
+      "email": "support@sweetgames.com",
+      "website": "https://sweetgames.com"
+    },
+    "dateAdded": "2023-06-24T11:45:22.000Z",
+    "status": "pending"
+  },
+  {
+    "id": "5",
+    "slug": "racing-fever",
+    "name": "Racing Fever 3D",
+    "category": "Racing",
+    "difficulty": "Hard",
+    "controls": "Keyboard/Gamepad",
+    "players": "Multiplayer",
+    "ageRating": "Everyone",
+    "description": "Experience high-speed racing action with realistic physics and stunning 3D graphics.",
+    "howToPlay": "Use arrow keys or WASD to control your car. Compete against AI or other players online.",
+    "features": "20+ tracks, 30+ cars, multiplayer mode, car customization, and realistic physics.",
+    "iframe": "<iframe src=\"https://www.example.com/embed/racing-fever\" class=\"game-iframe\" title=\"Racing Fever 3D Game\" allow=\"fullscreen\" frameborder=\"0\"></iframe>",
+    "tags": [
+      "Racing",
+      "3D",
+      "Action",
+      "Multiplayer"
+    ],
+    "image": "/images/games/racing-fever.jpg",
+    "developer": {
+      "name": "Speed Studios",
+      "email": "contact@speedstudios.com",
+      "website": "https://speedstudios.com"
+    },
+    "dateAdded": "2023-06-25T16:20:10.000Z",
+    "status": "approved",
+    "approvedAt": "2023-06-26T10:15:30.000Z"
   }
 ]

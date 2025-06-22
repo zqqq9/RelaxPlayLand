@@ -1,22 +1,13 @@
 /**
- * Admin API endpoint to approve a game
+ * Admin API endpoint to fetch games with filtering, sorting, and pagination
  * @param {EventContext} context - The context of the request.
- * @returns {Promise<Response>} - The response indicating success or failure.
+ * @returns {Promise<Response>} - The response containing the list of games.
  */
-export async function onRequestPost(context) {
+export async function onRequestGet(context) {
     try {
-        const { request, env, params } = context;
-        const gameId = params.id;
-        
-        if (!gameId) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: 'Game ID is required'
-            }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
+        const { request, env } = context;
+        const url = new URL(request.url);
+        const { status, search, page = 1, limit = 10 } = Object.fromEntries(url.searchParams);
 
         // Validate authentication
         const authHeader = request.headers.get('Authorization');
@@ -31,6 +22,7 @@ export async function onRequestPost(context) {
         }
 
         // In production, you would validate the API key here
+        // For now, we'll just check if it exists
         const apiKey = authHeader.split(' ')[1];
         if (!apiKey) {
             return new Response(JSON.stringify({
@@ -41,10 +33,6 @@ export async function onRequestPost(context) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
-        // Parse request body for feedback
-        const requestData = await request.json();
-        const { feedback } = requestData;
 
         // Try to get games from KV store
         let allGames;
@@ -69,70 +57,61 @@ export async function onRequestPost(context) {
             allGames = [];
         }
 
-        // Find the game and update its status
-        const gameIndex = allGames.findIndex(game => game.id === gameId);
-        
-        if (gameIndex === -1) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: `Game with ID ${gameId} not found`
-            }), {
-                status: 404,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-                }
-            });
+        // Filter games based on query parameters
+        let filteredGames = [...allGames];
+
+        if (status) {
+            filteredGames = filteredGames.filter(game => game.status === status);
         }
 
-        // Update the game
-        allGames[gameIndex] = {
-            ...allGames[gameIndex],
-            status: 'approved',
-            adminFeedback: feedback || '',
-            approvedAt: new Date().toISOString()
+        if (search) {
+            const searchTerm = search.toLowerCase();
+            filteredGames = filteredGames.filter(game =>
+                game.name.toLowerCase().includes(searchTerm) ||
+                (game.description && game.description.toLowerCase().includes(searchTerm))
+            );
+        }
+
+        // Sort games by date added, newest first
+        filteredGames.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+
+        // Apply pagination
+        const pageNum = parseInt(page, 10) || 1;
+        const pageSize = parseInt(limit, 10) || 10;
+        const startIndex = (pageNum - 1) * pageSize;
+        const endIndex = pageNum * pageSize;
+        const paginatedGames = filteredGames.slice(startIndex, endIndex);
+
+        const responsePayload = {
+            success: true,
+            total: filteredGames.length,
+            page: pageNum,
+            totalPages: Math.ceil(filteredGames.length / pageSize),
+            games: paginatedGames,
+            allGames: allGames // For admin stats
         };
 
-        // Save updated games
-        try {
-            await env.DB.put('games', JSON.stringify(allGames));
-        } catch (error) {
-            console.error('Error updating KV store:', error);
-            // Fallback to local file if KV store fails
-            const fs = require('fs');
-            const path = require('path');
-            const dataPath = path.join(process.cwd(), 'data', 'games.json');
-            
-            fs.writeFileSync(dataPath, JSON.stringify(allGames, null, 2), 'utf8');
-        }
-
-        return new Response(JSON.stringify({
-            success: true,
-            message: `Game ${gameId} has been approved`,
-            game: allGames[gameIndex]
-        }), {
+        return new Response(JSON.stringify(responsePayload), {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization'
             }
         });
 
     } catch (error) {
-        console.error('Error approving game:', error);
+        console.error('Error in admin games API:', error);
         return new Response(JSON.stringify({
             success: false,
-            message: 'Failed to approve game',
+            message: 'Failed to fetch games',
             error: error.message
         }), {
             status: 500,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization'
             }
         });
@@ -146,7 +125,7 @@ export function onRequestOptions() {
     return new Response(null, {
         headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             'Access-Control-Max-Age': '86400'
         }

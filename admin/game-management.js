@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 检查是否已登录
+    function checkLoginStatus() {
+        const apiKey = localStorage.getItem('api_key');
+        if (!apiKey) {
+            // 没有API密钥，重定向到登录页面
+            window.location.href = 'login.html';
+            return false;
+        }
+        return true;
+    }
+    
+    // 检查登录状态
+    if (!checkLoginStatus()) {
+        return; // 如果未登录，停止执行后续代码
+    }
+    
     const gamesListEl = document.getElementById('games-list');
     const noGamesMessageEl = document.getElementById('no-games-message');
     const paginationEl = document.getElementById('pagination');
@@ -49,22 +65,42 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBatchMode = false;
     let batchActionType = null; // 'approve' or 'reject'
 
-    const API_URL = 'https://relaxplayland.online/api/admin/games';
+    // Use a local API URL for development, or the production URL in production
+    const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const API_URL = isLocalDev ? '/api/admin/games' : 'https://relaxplayland.online/api/admin/games';
+    const API_KEY = localStorage.getItem('api_key') || '';
     
     // 检查API连接状态
     async function checkApiConnection() {
         try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+            
+            // 添加认证头（如果有）
+            if (API_KEY) {
+                headers['Authorization'] = `Bearer ${API_KEY}`;
+            }
+            
             const response = await fetch(API_URL, {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: headers
             });
             
             if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error('认证失败，请重新登录');
+                }
                 throw new Error(`API连接失败: ${response.status} ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.error('API返回了非JSON格式的数据:', contentType);
+                throw new Error(`API返回了非JSON格式的数据: ${contentType}`);
             }
             
             console.log('API连接成功');
@@ -105,19 +141,38 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log(`正在请求API: ${url.toString()}`);
             
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+            
+            // 添加认证头（如果有）
+            if (API_KEY) {
+                headers['Authorization'] = `Bearer ${API_KEY}`;
+            }
+            
             const response = await fetch(url, {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
+                headers: headers
             });
             
             console.log(`API响应状态: ${response.status} ${response.statusText}`);
             
-            if (!response.ok) throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+            if (!response.ok) {
+                // 如果是401或403，可能是认证问题
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error('认证失败，请重新登录');
+                }
+                throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.error('API返回了非JSON格式的数据:', contentType);
+                throw new Error(`API返回了非JSON格式的数据: ${contentType}`);
+            }
             
             const responseText = await response.text();
             console.log(`API响应内容: ${responseText.substring(0, 200)}...`);
@@ -127,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data = JSON.parse(responseText);
             } catch (parseError) {
                 console.error('JSON解析错误:', parseError);
-                console.error('原始响应:', responseText);
+                console.error('原始响应:', responseText.substring(0, 500));
                 throw new Error('无法解析API响应为JSON格式');
             }
             
@@ -136,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gamesForDisplay = data.games || [];
 
             console.log(`获取到${gamesForDisplay.length}个游戏, 总计${data.total || 0}个游戏`);
-            
+
             updateStats(gamesForStats);
             renderPage(gamesForDisplay, data.total, data.page, data.totalPages);
 
@@ -222,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${checkboxHtml}
                 <div class="flex items-center mb-4 md:mb-0">
                     <div class="relative">
-                        <img src="${game.image || '/images/placeholder-game.jpg'}" alt="${game.name}" class="w-16 h-16 object-cover rounded-md mr-4">
+                    <img src="${game.image || '/images/placeholder-game.jpg'}" alt="${game.name}" class="w-16 h-16 object-cover rounded-md mr-4">
                         ${game.status === 'pending' ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>' : ''}
                     </div>
                     <div>
@@ -429,21 +484,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const apiUrl = `https://relaxplayland.online/api/admin/games/batch-${action}`;
             console.log(`请求API: ${apiUrl}`);
             
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
+            
+            // 添加认证头（如果有）
+            if (API_KEY) {
+                headers['Authorization'] = `Bearer ${API_KEY}`;
+            }
+            
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 mode: 'cors',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: headers,
                 body: JSON.stringify({ gameIds, feedback })
             });
             
             console.log(`API响应状态: ${response.status} ${response.statusText}`);
             
             if (!response.ok) {
+                // 如果是401或403，可能是认证问题
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error('认证失败，请重新登录');
+                }
                 throw new Error(`批量${isApproved ? '批准' : '拒绝'}失败: ${response.status} ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.error('API返回了非JSON格式的数据:', contentType);
+                throw new Error(`API返回了非JSON格式的数据: ${contentType}`);
             }
             
             const responseText = await response.text();
@@ -454,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 result = JSON.parse(responseText);
             } catch (parseError) {
                 console.error('JSON解析错误:', parseError);
-                console.error('原始响应:', responseText);
+                console.error('原始响应:', responseText.substring(0, 500));
                 throw new Error('无法解析API响应为JSON格式');
             }
             
@@ -553,6 +625,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // Logout functionality
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('api_key');
+            window.location.href = 'login.html';
+        });
+    }
+    
     statusFiltersEl.addEventListener('click', e => {
         if (e.target.tagName === 'BUTTON') {
             const status = e.target.dataset.status;
@@ -621,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Load
     checkApiConnection().then(isConnected => {
         if (isConnected) {
-            fetchGames();
+    fetchGames();
         }
     });
 }); 

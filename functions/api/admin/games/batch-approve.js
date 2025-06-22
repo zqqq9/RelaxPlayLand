@@ -1,23 +1,12 @@
 /**
- * Admin API endpoint to approve a game
+ * Admin API endpoint to batch approve games
  * @param {EventContext} context - The context of the request.
  * @returns {Promise<Response>} - The response indicating success or failure.
  */
 export async function onRequestPost(context) {
     try {
-        const { request, env, params } = context;
-        const gameId = params.id;
+        const { request, env } = context;
         
-        if (!gameId) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: 'Game ID is required'
-            }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
         // Validate authentication
         const authHeader = request.headers.get('Authorization');
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -42,9 +31,19 @@ export async function onRequestPost(context) {
             });
         }
 
-        // Parse request body for feedback
+        // Parse request body
         const requestData = await request.json();
-        const { feedback } = requestData;
+        const { gameIds, feedback } = requestData;
+
+        if (!gameIds || !Array.isArray(gameIds) || gameIds.length === 0) {
+            return new Response(JSON.stringify({
+                success: false,
+                message: 'Game IDs are required'
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
         // Try to get games from KV store
         let allGames;
@@ -69,35 +68,24 @@ export async function onRequestPost(context) {
             allGames = [];
         }
 
-        // Find the game and update its status
-        const gameIndex = allGames.findIndex(game => game.id === gameId);
-        
-        if (gameIndex === -1) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: `Game with ID ${gameId} not found`
-            }), {
-                status: 404,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-                }
-            });
-        }
-
-        // Update the game
-        allGames[gameIndex] = {
-            ...allGames[gameIndex],
-            status: 'approved',
-            adminFeedback: feedback || '',
-            approvedAt: new Date().toISOString()
-        };
+        // Update game statuses
+        let updatedCount = 0;
+        const updatedGames = allGames.map(game => {
+            if (gameIds.includes(game.id)) {
+                updatedCount++;
+                return {
+                    ...game,
+                    status: 'approved',
+                    adminFeedback: feedback || '',
+                    approvedAt: new Date().toISOString()
+                };
+            }
+            return game;
+        });
 
         // Save updated games
         try {
-            await env.DB.put('games', JSON.stringify(allGames));
+            await env.DB.put('games', JSON.stringify(updatedGames));
         } catch (error) {
             console.error('Error updating KV store:', error);
             // Fallback to local file if KV store fails
@@ -105,13 +93,13 @@ export async function onRequestPost(context) {
             const path = require('path');
             const dataPath = path.join(process.cwd(), 'data', 'games.json');
             
-            fs.writeFileSync(dataPath, JSON.stringify(allGames, null, 2), 'utf8');
+            fs.writeFileSync(dataPath, JSON.stringify(updatedGames, null, 2), 'utf8');
         }
 
         return new Response(JSON.stringify({
             success: true,
-            message: `Game ${gameId} has been approved`,
-            game: allGames[gameIndex]
+            message: `Successfully approved ${updatedCount} games`,
+            updatedCount
         }), {
             headers: {
                 'Content-Type': 'application/json',
@@ -122,10 +110,10 @@ export async function onRequestPost(context) {
         });
 
     } catch (error) {
-        console.error('Error approving game:', error);
+        console.error('Error in batch approve:', error);
         return new Response(JSON.stringify({
             success: false,
-            message: 'Failed to approve game',
+            message: 'Failed to approve games',
             error: error.message
         }), {
             status: 500,

@@ -1,9 +1,9 @@
 /**
- * Admin API endpoint to approve a game
+ * Admin API endpoint to fetch a specific game by ID
  * @param {EventContext} context - The context of the request.
- * @returns {Promise<Response>} - The response indicating success or failure.
+ * @returns {Promise<Response>} - The response containing the game data.
  */
-export async function onRequestPost(context) {
+export async function onRequestGet(context) {
     try {
         const { request, env, params } = context;
         const gameId = params.id;
@@ -42,10 +42,6 @@ export async function onRequestPost(context) {
             });
         }
 
-        // Parse request body for feedback
-        const requestData = await request.json();
-        const { feedback } = requestData;
-
         // Try to get games from KV store
         let allGames;
         try {
@@ -69,10 +65,10 @@ export async function onRequestPost(context) {
             allGames = [];
         }
 
-        // Find the game and update its status
-        const gameIndex = allGames.findIndex(game => game.id === gameId);
+        // Find the game by ID
+        const game = allGames.find(g => g.id === gameId);
         
-        if (gameIndex === -1) {
+        if (!game) {
             return new Response(JSON.stringify({
                 success: false,
                 message: `Game with ID ${gameId} not found`
@@ -81,58 +77,36 @@ export async function onRequestPost(context) {
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
                 }
             });
         }
 
-        // Update the game
-        allGames[gameIndex] = {
-            ...allGames[gameIndex],
-            status: 'approved',
-            adminFeedback: feedback || '',
-            approvedAt: new Date().toISOString()
-        };
-
-        // Save updated games
-        try {
-            await env.DB.put('games', JSON.stringify(allGames));
-        } catch (error) {
-            console.error('Error updating KV store:', error);
-            // Fallback to local file if KV store fails
-            const fs = require('fs');
-            const path = require('path');
-            const dataPath = path.join(process.cwd(), 'data', 'games.json');
-            
-            fs.writeFileSync(dataPath, JSON.stringify(allGames, null, 2), 'utf8');
-        }
-
         return new Response(JSON.stringify({
             success: true,
-            message: `Game ${gameId} has been approved`,
-            game: allGames[gameIndex]
+            game
         }), {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization'
             }
         });
 
     } catch (error) {
-        console.error('Error approving game:', error);
+        console.error('Error fetching game:', error);
         return new Response(JSON.stringify({
             success: false,
-            message: 'Failed to approve game',
+            message: 'Failed to fetch game',
             error: error.message
         }), {
             status: 500,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization'
             }
         });
@@ -146,7 +120,7 @@ export function onRequestOptions() {
     return new Response(null, {
         headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             'Access-Control-Max-Age': '86400'
         }
