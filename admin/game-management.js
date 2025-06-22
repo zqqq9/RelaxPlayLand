@@ -434,15 +434,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         const batchModeBtn = document.getElementById('batch-mode-btn');
-        if (isBatchMode) {
-            batchModeBtn.textContent = 'Cancel Selection';
-            batchModeBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-            batchModeBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
-        } else {
-            batchModeBtn.textContent = 'Select Games';
-            batchModeBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-            batchModeBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-            selectedGames.clear();
+        if (batchModeBtn) {
+            if (isBatchMode) {
+                batchModeBtn.textContent = 'Cancel Selection';
+                batchModeBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                batchModeBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+            } else {
+                batchModeBtn.textContent = 'Select Games';
+                batchModeBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                batchModeBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                selectedGames.clear();
+            }
         }
         
         updateBatchActions();
@@ -475,7 +477,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const action = isApproved ? 'approve' : 'reject';
         const gameIds = Array.from(selectedGames);
-        const feedback = document.getElementById('batch-feedback')?.value || '';
+        const feedbackElement = document.getElementById('batch-feedback');
+        const feedback = feedbackElement ? feedbackElement.value || '' : '';
         
         console.log(`正在批量${isApproved ? '批准' : '拒绝'}游戏, 数量: ${gameIds.length}, 反馈: ${feedback}`);
         console.log('游戏ID列表:', gameIds);
