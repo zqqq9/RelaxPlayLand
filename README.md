@@ -215,4 +215,113 @@ For support or questions, please contact us through the website.
 
 ---
 
-**RelaxPlayLand** - Your ultimate destination for relaxing online games. 
+**RelaxPlayLand** - Your ultimate destination for relaxing online games.
+
+## Project Structure
+
+- `admin/` - Admin interface for game management
+- `data/` - JSON data files for games
+- `dist/` - Compiled CSS files
+- `functions/` - API endpoints for Cloudflare Workers
+- `images/` - Game and site images
+- `src/` - Source CSS files for Tailwind
+- `server.js` - Local development server
+
+## Setup Instructions
+
+1. Install dependencies:
+   ```
+   npm install
+   ```
+
+2. Build the CSS:
+   ```
+   npm run build
+   ```
+
+3. Start the local development server:
+   ```
+   npm start
+   ```
+
+4. Access the admin interface:
+   ```
+   http://localhost:3000/admin/login.html
+   ```
+   Use the API key: `dev-api-key-123` for development
+
+## Game Management Page Fix
+
+The game management page was not displaying games due to missing API endpoints. The following changes were made to fix the issue:
+
+1. Created the missing API endpoints:
+   - `/api/admin/games` - Get all games with filtering and pagination
+   - `/api/admin/games/:id` - Get a specific game by ID
+   - `/api/admin/approve-game/:id` - Approve a game
+   - `/api/admin/reject-game/:id` - Reject a game
+   - `/api/admin/games/batch-approve` - Batch approve games
+   - `/api/admin/games/batch-reject` - Batch reject games
+
+2. Updated the frontend code to use local API URLs in development mode:
+   ```javascript
+   const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+   const API_URL = isLocalDev ? '/api/admin/games' : 'https://relaxplayland.online/api/admin/games';
+   ```
+
+3. Added test games data to the `data/games.json` file with different statuses (approved, pending, rejected)
+
+4. Created a simple Express server (`server.js`) that serves the static files and implements the API endpoints for local development
+
+## API Endpoints
+
+### Admin API
+
+- `GET /api/admin/games` - Get all games with filtering and pagination
+  - Query parameters: `status`, `search`, `page`, `limit`
+  - Requires Authorization header: `Bearer <api_key>`
+
+- `GET /api/admin/games/:id` - Get a specific game by ID
+  - Requires Authorization header: `Bearer <api_key>`
+
+- `POST /api/admin/approve-game/:id` - Approve a game
+  - Request body: `{ "feedback": "Optional feedback" }`
+  - Requires Authorization header: `Bearer <api_key>`
+
+- `POST /api/admin/reject-game/:id` - Reject a game
+  - Request body: `{ "feedback": "Rejection reason" }`
+  - Requires Authorization header: `Bearer <api_key>`
+
+- `POST /api/admin/games/batch-approve` - Batch approve games
+  - Request body: `{ "gameIds": ["1", "2"], "feedback": "Optional feedback" }`
+  - Requires Authorization header: `Bearer <api_key>`
+
+- `POST /api/admin/games/batch-reject` - Batch reject games
+  - Request body: `{ "gameIds": ["3", "4"], "feedback": "Rejection reason" }`
+  - Requires Authorization header: `Bearer <api_key>`
+
+### Public API
+
+- `GET /api/games` - Get all approved games with filtering and pagination
+  - Query parameters: `category`, `search`, `page`, `limit`
+
+## Development
+
+For development with automatic CSS rebuilding and server restarting:
+
+```
+npm run build
+npm run dev:server
+```
+
+## Deployment
+
+For production deployment, build the CSS and start the server:
+
+```
+npm run build
+npm start
+```
+
+## License
+
+MIT 
