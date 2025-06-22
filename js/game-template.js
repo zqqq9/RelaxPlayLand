@@ -82,7 +82,7 @@ function generateGameHTML(game) {
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
     <!-- Tailwind CSS -->
-    <link href="../dist/output.css" rel="stylesheet">
+    <link href="/dist/output.css" rel="stylesheet">
     
     <style>
         .game-iframe {
