@@ -59,6 +59,30 @@
             background-color: #FEE2E2;
             color: #B91C1C;
         }
+        .game-fallback {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+        .game-fallback h3 {
+            color: #4B5563;
+            margin-bottom: 10px;
+        }
+        .game-fallback p {
+            color: #6B7280;
+            margin-bottom: 15px;
+        }
+        .game-fallback a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3B82F6;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -105,7 +129,17 @@
             <div class="p-6">
                 <!-- Game Iframe -->
                 <div class="bg-gray-800 rounded-lg overflow-hidden mb-8">
-                    <iframe src="https://www.crazygames.com/embed/lumber-idle" class="game-iframe" title="Lumber Harvest Tree Cutting Game" allow="fullscreen; autoplay; clipboard-write; encrypted-media" allowfullscreen="true" frameborder="0" scrolling="no"></iframe>
+                    <iframe id="game-iframe" src="/public/games/lumber-harvest/index.html" class="game-iframe" title="Lumber Harvest Tree Cutting Game" allowfullscreen frameborder="0"></iframe>
+                    <!-- Fallback content if game fails to load -->
+                    <div id="game-fallback" class="game-fallback">
+                        <h3>Game Loading Issue</h3>
+                        <p>Sorry, the game couldn't be loaded properly. Please try one of these options:</p>
+                        <div class="space-y-3">
+                            <a href="/public/games/lumber-harvest/index.html" target="_blank" class="inline-block">Play in New Window</a>
+                            <p>or</p>
+                            <button id="reload-game" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Reload Game</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Game Info -->
@@ -189,5 +223,57 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameIframe = document.getElementById('game-iframe');
+            const gameFallback = document.getElementById('game-fallback');
+            const reloadButton = document.getElementById('reload-game');
+            
+            // Check if iframe loaded correctly
+            gameIframe.addEventListener('load', function() {
+                // Try to access iframe content to check if it loaded
+                try {
+                    // Just trying to access contentWindow can throw error if blocked
+                    const iframeContent = gameIframe.contentWindow;
+                    console.log('Game loaded successfully');
+                } catch (error) {
+                    console.error('Game iframe access error:', error);
+                    showFallback();
+                }
+            });
+            
+            // Handle iframe errors
+            gameIframe.addEventListener('error', function() {
+                console.error('Game iframe failed to load');
+                showFallback();
+            });
+            
+            // Reload button functionality
+            reloadButton.addEventListener('click', function() {
+                gameIframe.src = gameIframe.src;
+                gameFallback.style.display = 'none';
+                gameIframe.style.display = 'block';
+            });
+            
+            // Function to show fallback content
+            function showFallback() {
+                gameIframe.style.display = 'none';
+                gameFallback.style.display = 'block';
+            }
+            
+            // Set a timeout to check if the game is loaded
+            setTimeout(function() {
+                try {
+                    // If we can't access iframe content after timeout, show fallback
+                    if (gameIframe.contentDocument === null) {
+                        showFallback();
+                    }
+                } catch (e) {
+                    showFallback();
+                }
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

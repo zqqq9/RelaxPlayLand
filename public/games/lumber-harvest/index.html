@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumber Harvest Tree Cutting Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+            font-family: Arial, sans-serif;
+        }
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 600px;
+            overflow: hidden;
+        }
+        #game-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+        #game-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #8B4513 60%, #8B4513 100%);
+        }
+        .tree {
+            position: absolute;
+            bottom: 40%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .tree:hover {
+            transform: scale(1.05);
+        }
+        .tree-trunk {
+            width: 30px;
+            height: 80px;
+            background-color: #8B4513;
+            margin: 0 auto;
+        }
+        .tree-top {
+            width: 80px;
+            height: 120px;
+            background-color: #228B22;
+            border-radius: 50% 50% 10% 10%;
+            margin: 0 auto;
+            position: relative;
+            left: -25px;
+        }
+        .log {
+            position: absolute;
+            width: 30px;
+            height: 20px;
+            background-color: #A0522D;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        #upgrade-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+        button {
+            display: block;
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #45a049;
+        }
+        .falling {
+            animation: fall 1s forwards;
+        }
+        @keyframes fall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(90deg); bottom: 40%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-stats">
+            <h3>Lumber Harvest</h3>
+            <p>Wood: <span id="wood-count">0</span></p>
+            <p>Trees Cut: <span id="trees-cut">0</span></p>
+        </div>
+        <div id="upgrade-panel">
+            <h3>Upgrades</h3>
+            <button id="axe-upgrade">Upgrade Axe (10 wood)</button>
+            <button id="auto-collect">Auto Collect (50 wood)</button>
+        </div>
+        <div id="game-area"></div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            wood: 0,
+            treesCut: 0,
+            axeLevel: 1,
+            hasAutoCollect: false,
+            treesOnScreen: 0,
+            maxTrees: 5
+        };
+
+        // DOM elements
+        const gameArea = document.getElementById('game-area');
+        const woodCount = document.getElementById('wood-count');
+        const treesCut = document.getElementById('trees-cut');
+        const axeUpgradeBtn = document.getElementById('axe-upgrade');
+        const autoCollectBtn = document.getElementById('auto-collect');
+
+        // Update UI
+        function updateUI() {
+            woodCount.textContent = gameState.wood;
+            treesCut.textContent = gameState.treesCut;
+            
+            // Update upgrade buttons
+            axeUpgradeBtn.disabled = gameState.wood < 10 * gameState.axeLevel;
+            axeUpgradeBtn.textContent = `Upgrade Axe (${10 * gameState.axeLevel} wood)`;
+            
+            autoCollectBtn.disabled = gameState.wood < 50 || gameState.hasAutoCollect;
+            if (gameState.hasAutoCollect) {
+                autoCollectBtn.textContent = 'Auto Collect (Active)';
+            }
+        }
+
+        // Create a tree
+        function createTree(x) {
+            if (gameState.treesOnScreen >= gameState.maxTrees) return;
+            
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.left = `${x}px`;
+            
+            const treeTop = document.createElement('div');
+            treeTop.className = 'tree-top';
+            
+            const treeTrunk = document.createElement('div');
+            treeTrunk.className = 'tree-trunk';
+            
+            tree.appendChild(treeTop);
+            tree.appendChild(treeTrunk);
+            
+            tree.addEventListener('click', () => cutTree(tree));
+            
+            gameArea.appendChild(tree);
+            gameState.treesOnScreen++;
+        }
+
+        // Cut a tree
+        function cutTree(tree) {
+            tree.classList.add('falling');
+            gameState.treesCut++;
+            gameState.treesOnScreen--;
+            
+            setTimeout(() => {
+                const treeRect = tree.getBoundingClientRect();
+                tree.remove();
+                
+                // Create logs
+                const logsCount = Math.floor(Math.random() * 2) + 1 + Math.floor(gameState.axeLevel / 2);
+                for (let i = 0; i < logsCount; i++) {
+                    createLog(treeRect.left + Math.random() * 30, treeRect.bottom - 30);
+                }
+                
+                // Spawn new tree after delay
+                setTimeout(() => {
+                    const randomX = Math.random() * (gameArea.clientWidth - 100);
+                    createTree(randomX);
+                }, 2000);
+                
+                updateUI();
+            }, 1000);
+        }
+
+        // Create a log
+        function createLog(x, y) {
+            const log = document.createElement('div');
+            log.className = 'log';
+            log.style.left = `${x}px`;
+            log.style.bottom = `${gameArea.clientHeight - y}px`;
+            
+            log.addEventListener('click', () => collectLog(log));
+            
+            gameArea.appendChild(log);
+            
+            if (gameState.hasAutoCollect) {
+                setTimeout(() => {
+                    if (log.parentNode) {
+                        collectLog(log);
+                    }
+                }, 1000);
+            }
+        }
+
+        // Collect a log
+        function collectLog(log) {
+            gameState.wood++;
+            log.remove();
+            updateUI();
+        }
+
+        // Initialize game
+        function initGame() {
+            // Create initial trees
+            for (let i = 0; i < gameState.maxTrees; i++) {
+                const randomX = Math.random() * (gameArea.clientWidth - 100);
+                createTree(randomX);
+            }
+            
+            // Set up upgrade buttons
+            axeUpgradeBtn.addEventListener('click', () => {
+                const cost = 10 * gameState.axeLevel;
+                if (gameState.wood >= cost) {
+                    gameState.wood -= cost;
+                    gameState.axeLevel++;
+                    updateUI();
+                }
+            });
+            
+            autoCollectBtn.addEventListener('click', () => {
+                if (gameState.wood >= 50 && !gameState.hasAutoCollect) {
+                    gameState.wood -= 50;
+                    gameState.hasAutoCollect = true;
+                    updateUI();
+                }
+            });
+            
+            updateUI();
+        }
+
+        // Start the game when window loads
+        window.onload = initGame;
+    </script>
+</body>
+</html> 
