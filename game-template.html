@@ -180,8 +180,9 @@
                         <h3>Game Loading Issue</h3>
                         <p>Sorry, the game couldn't be loaded properly. Please try one of these options:</p>
                         <div class="space-y-3">
-                            <button id="reload-game" class="bg-blue-600  text-white font-medium py-3 px-6 rounded-lg transition-colors text-lg">Reload Game</button>
-                            <p class="text-sm text-gray-500">If the game still doesn't load, try refreshing the page or using a different browser.</p>
+                            <a id="new-window-link" href="#" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Play in New Window</a>
+                            <p>or</p>
+                            <button id="reload-game" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Reload Game</button>
                         </div>
                     </div>
                 </div>
@@ -314,73 +315,38 @@
             }
             
             // Set up iframe error handling
-            const gameIframe = document.getElementById('game-iframe');
             const gameFallback = document.getElementById('game-fallback');
             const reloadButton = document.getElementById('reload-game');
             const newWindowLink = document.getElementById('new-window-link');
             const directIframeContainer = document.getElementById('direct-iframe-container');
             
-            // Check if iframe loaded correctly
-            gameIframe.addEventListener('load', function() {
-                try {
-                    // Just trying to access contentWindow can throw error if blocked
-                    const iframeContent = gameIframe.contentWindow;
-                    console.log('Game loaded successfully');
+            // Function to set up iframe event listeners
+            function setupIframeEventListeners(iframe) {
+                if (!iframe) return;
+                
+                // Check if iframe loaded correctly
+                iframe.addEventListener('load', function() {
+                    console.log('Iframe load event fired');
                     
-                    // Additional check for cross-origin issues
-                    try {
-                        // If we can access document, it's same origin and we can check more
-                        const iframeDoc = iframeContent.document;
-                        console.log('Same origin iframe loaded successfully');
-                    } catch (e) {
-                        // Cross-origin iframe, which is normal - we just can't check content
-                        console.log('Cross-origin iframe loaded (this is normal)');
-                    }
-                } catch (error) {
-                    console.error('Game iframe access error:', error);
-                    // Try automatic reload once before showing fallback
-                    if (!gameIframe.dataset.autoReloaded) {
-                        console.log('Auto-reloading iframe...');
-                        gameIframe.dataset.autoReloaded = "true";
-                        
-                        // Store current src
-                        const currentSrc = gameIframe.src;
-                        
-                        // Clear and reset src after a short delay
-                        gameIframe.src = "";
-                        setTimeout(() => {
-                            gameIframe.src = currentSrc;
-                        }, 200);
-                    } else {
-                        showFallback();
-                    }
-                }
-            });
-            
-            // Handle iframe errors
-            gameIframe.addEventListener('error', function(e) {
-                console.error('Game iframe failed to load:', e);
-                // Try automatic reload once before showing fallback
-                if (!gameIframe.dataset.autoReloaded) {
-                    console.log('Auto-reloading iframe after error...');
-                    gameIframe.dataset.autoReloaded = "true";
-                    
-                    // Store current src
-                    const currentSrc = gameIframe.src;
-                    
-                    // Clear and reset src after a short delay
-                    gameIframe.src = "";
-                    setTimeout(() => {
-                        gameIframe.src = currentSrc;
-                    }, 200);
-                } else {
+                    // Hide the fallback if it was showing
+                    gameFallback.style.display = 'none';
+                    iframe.style.display = 'block';
+                });
+                
+                // Handle iframe errors
+                iframe.addEventListener('error', function(e) {
+                    console.error('Game iframe failed to load:', e);
                     showFallback();
-                }
-            });
+                });
+            }
+            
+            // Set up initial iframe event listeners
+            setupIframeEventListeners(document.getElementById('game-iframe'));
             
             // Reload button functionality
             reloadButton.addEventListener('click', function() {
                 // Show loading state on button
+                const originalText = reloadButton.textContent;
                 reloadButton.textContent = "Loading...";
                 reloadButton.disabled = true;
                 
@@ -398,7 +364,7 @@
                             
                             // Reset button state after a delay
                             setTimeout(() => {
-                                reloadButton.textContent = "Reload Game";
+                                reloadButton.textContent = originalText;
                                 reloadButton.disabled = false;
                             }, 1000);
                         }, 200);
@@ -411,80 +377,129 @@
                             
                             // Reset button state after a delay
                             setTimeout(() => {
-                                reloadButton.textContent = "Reload Game";
+                                reloadButton.textContent = originalText;
                                 reloadButton.disabled = false;
                             }, 1000);
                         }, 200);
                     }
                 } else {
                     // Using the regular iframe
-                    const currentSrc = gameIframe.src;
-                    gameIframe.src = '';
-                    setTimeout(() => {
-                        gameIframe.src = currentSrc;
+                    const gameIframe = document.getElementById('game-iframe');
+                    if (gameIframe) {
+                        const currentSrc = gameIframe.src;
                         
-                        // Reset button state after a delay
-                        setTimeout(() => {
-                            reloadButton.textContent = "Reload Game";
-                            reloadButton.disabled = false;
-                        }, 1000);
-                    }, 200);
+                        // For CrazyGames, try a special reload approach
+                        if (currentSrc.includes('crazygames.com')) {
+                            console.log('Reloading CrazyGames iframe with special approach');
+                            
+                            // Get the game slug
+                            const slugMatch = currentSrc.match(/\/embed\/([^/?#]+)/);
+                            if (slugMatch && slugMatch[1]) {
+                                const gameSlug = slugMatch[1];
+                                
+                                // Create a new iframe to replace the old one
+                                const newIframe = document.createElement('iframe');
+                                newIframe.id = 'game-iframe';
+                                newIframe.className = 'game-iframe';
+                                newIframe.src = `https://www.crazygames.com/embed/${gameSlug}`;
+                                newIframe.title = gameIframe.title || 'Game';
+                                newIframe.allow = 'fullscreen; autoplay; gamepad *;';
+                                newIframe.allowFullscreen = true;
+                                newIframe.frameBorder = '0';
+                                
+                                // Replace the old iframe
+                                gameIframe.parentNode.replaceChild(newIframe, gameIframe);
+                                
+                                // Set up event listeners for the new iframe
+                                setupIframeEventListeners(newIframe);
+                                
+                                // Reset button state after a delay
+                                setTimeout(() => {
+                                    reloadButton.textContent = originalText;
+                                    reloadButton.disabled = false;
+                                }, 1000);
+                            } else {
+                                // Standard reload approach
+                                gameIframe.src = '';
+                                setTimeout(() => {
+                                    gameIframe.src = currentSrc;
+                                    
+                                    // Reset button state after a delay
+                                    setTimeout(() => {
+                                        reloadButton.textContent = originalText;
+                                        reloadButton.disabled = false;
+                                    }, 1000);
+                                }, 200);
+                            }
+                        } else {
+                            // Standard reload approach
+                            gameIframe.src = '';
+                            setTimeout(() => {
+                                gameIframe.src = currentSrc;
+                                
+                                // Reset button state after a delay
+                                setTimeout(() => {
+                                    reloadButton.textContent = originalText;
+                                    reloadButton.disabled = false;
+                                }, 1000);
+                            }, 200);
+                        }
+                    } else {
+                        // No iframe found
+                        reloadButton.textContent = originalText;
+                        reloadButton.disabled = false;
+                    }
                 }
                 
                 gameFallback.style.display = 'none';
                 if (directIframeContainer.style.display === 'block') {
-                    gameIframe.style.display = 'none';
+                    document.getElementById('game-iframe').style.display = 'none';
                     directIframeContainer.style.display = 'block';
                 } else {
-                    gameIframe.style.display = 'block';
+                    document.getElementById('game-iframe').style.display = 'block';
                 }
-                
-                // Reset auto-reload flags to allow the auto-reload mechanism to work again
-                gameIframe.dataset.autoReloaded = "";
-                directIframeContainer.dataset.autoReloaded = "";
             });
             
             // Function to show fallback content
             function showFallback() {
-                gameIframe.style.display = 'none';
-                document.getElementById('direct-iframe-container').style.display = 'none';
+                const gameIframe = document.getElementById('game-iframe');
+                if (gameIframe) {
+                    gameIframe.style.display = 'none';
+                }
+                directIframeContainer.style.display = 'none';
                 gameFallback.style.display = 'block';
             }
             
             // Set a timeout to check if the game is loaded
             setTimeout(function() {
+                const gameIframe = document.getElementById('game-iframe');
+                if (!gameIframe) return;
+                
                 try {
-                    // If we can't access iframe content after timeout, show fallback
+                    // If we can't access iframe content after timeout, check status
                     if (gameIframe.contentDocument === null) {
                         console.log('Timeout reached, checking iframe status');
                         
-                        // Check if iframe has a valid src and hasn't been auto-reloaded yet
-                        if (gameIframe.src && gameIframe.src !== 'about:blank' && !gameIframe.dataset.autoReloaded) {
-                            console.log('Auto-reloading iframe after timeout...');
-                            gameIframe.dataset.autoReloaded = "true";
-                            
-                            // Store current src
-                            const currentSrc = gameIframe.src;
-                            
-                            // Clear and reset src after a short delay
-                            gameIframe.src = "";
+                        // For CrazyGames, don't show fallback immediately as they can take longer to load
+                        if (gameIframe.src && gameIframe.src.includes('crazygames.com')) {
+                            console.log('CrazyGames iframe detected, giving extra time to load');
+                            // Give extra time for CrazyGames to load
                             setTimeout(() => {
-                                gameIframe.src = currentSrc;
-                            }, 200);
-                        } else if (gameIframe.dataset.autoReloaded) {
-                            // Already tried reloading, show fallback
-                            showFallback();
+                                // Only show fallback if the game is still not visible
+                                if (gameIframe.offsetHeight === 0 || gameIframe.offsetWidth === 0) {
+                                    showFallback();
+                                }
+                            }, 5000); // Extra 5 seconds
+                        } else {
+                            // For non-CrazyGames, check if iframe is empty
+                            if (gameIframe.src === '' || gameIframe.src === 'about:blank') {
+                                showFallback();
+                            }
                         }
                     }
                 } catch (e) {
                     // This is expected for cross-origin iframes
                     console.log('Cross-origin iframe detected (normal behavior)');
-                    
-                    // Additional check - if iframe is empty or has issues
-                    if (gameIframe.src === '' || gameIframe.src === 'about:blank') {
-                        console.error('Empty iframe source detected');
-                        showFallback();
-                    }
                 }
             }, 5000);
             
@@ -657,25 +672,43 @@
                     console.log('Processing iframe HTML:', gameData.iframe);
                     
                     try {
-                        // Create a temporary container to parse the iframe HTML
-                        const tempDiv = document.createElement('div');
-                        // Clean up the iframe string by removing escaped quotes
-                        const cleanIframeHtml = gameData.iframe.replace(/\\"/g, '"');
-                        tempDiv.innerHTML = cleanIframeHtml;
-                        
-                        const tempIframe = tempDiv.querySelector('iframe');
-                        if (tempIframe && tempIframe.src) {
-                            console.log('Successfully extracted iframe src:', tempIframe.src);
+                        // Check if it's a CrazyGames iframe
+                        if (gameData.iframe.includes('crazygames.com')) {
+                            console.log('CrazyGames iframe detected, using direct creation approach');
                             
-                            // Special handling for CrazyGames iframes
-                            const isCrazyGames = tempIframe.src.includes('crazygames.com');
-                            if (isCrazyGames) {
-                                console.log('CrazyGames iframe detected, using special handling');
+                            // Extract the game slug from the iframe src
+                            let gameSlug = '';
+                            const srcMatch = gameData.iframe.match(/src=["']https:\/\/www\.crazygames\.com\/embed\/([^"']+)["']/);
+                            if (srcMatch && srcMatch[1]) {
+                                gameSlug = srcMatch[1];
+                                console.log('Extracted CrazyGames slug:', gameSlug);
                                 
-                                // For CrazyGames, ensure we have the right attributes
-                                gameIframe.allow = "fullscreen; autoplay; gamepad *;";
-                                gameIframe.allowFullscreen = true;
-                                gameIframe.setAttribute('frameborder', '0');
+                                // Create a completely new iframe directly
+                                const gameContainer = document.querySelector('.bg-gray-800.rounded-lg');
+                                
+                                // Remove existing iframe
+                                if (gameIframe.parentNode) {
+                                    gameIframe.remove();
+                                }
+                                
+                                // Create new iframe with proper attributes
+                                const newIframe = document.createElement('iframe');
+                                newIframe.id = 'game-iframe';
+                                newIframe.className = 'game-iframe';
+                                newIframe.src = `https://www.crazygames.com/embed/${gameSlug}`;
+                                newIframe.title = gameData.name || 'Game';
+                                newIframe.allow = 'fullscreen; autoplay; gamepad *;';
+                                newIframe.allowFullscreen = true;
+                                newIframe.frameBorder = '0';
+                                
+                                // Insert the new iframe
+                                gameContainer.insertBefore(newIframe, document.getElementById('direct-iframe-container'));
+                                
+                                // Update the reference
+                                gameIframe = newIframe;
+                                
+                                // Set up event listeners for the new iframe
+                                setupIframeEventListeners(newIframe);
                                 
                                 // Add special meta tag for CrazyGames
                                 const metaTag = document.createElement('meta');
@@ -683,121 +716,17 @@
                                 metaTag.content = 'no-referrer-when-downgrade';
                                 document.head.appendChild(metaTag);
                                 
-                                // Set src with a slight delay
-                                setTimeout(() => {
-                                    gameIframe.src = tempIframe.src;
-                                    console.log('Set CrazyGames iframe src with delay:', tempIframe.src);
-                                }, 100);
+                                // Update new window link
+                                const newWindowLink = document.getElementById('new-window-link');
+                                newWindowLink.href = `https://www.crazygames.com/game/${gameSlug}`;
                             } else {
-                                // Instead of setting src directly, use a more reliable approach
-                                // First set other attributes
-                                if (tempIframe.allow) {
-                                    gameIframe.allow = tempIframe.allow;
-                                } else {
-                                    // Set common permissions that games need
-                                    gameIframe.allow = "fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture";
-                                }
-                                
-                                if (tempIframe.hasAttribute('allowfullscreen')) {
-                                    gameIframe.allowFullscreen = true;
-                                } else {
-                                    gameIframe.allowFullscreen = true; // Enable fullscreen by default
-                                }
-                                
-                                // Copy any other attributes that might be important
-                                Array.from(tempIframe.attributes).forEach(attr => {
-                                    if (!['src', 'allow', 'allowfullscreen'].includes(attr.name)) {
-                                        gameIframe.setAttribute(attr.name, attr.value);
-                                    }
-                                });
-                                
-                                // Now set the src after a small delay to ensure the iframe is ready
-                                setTimeout(() => {
-                                    gameIframe.src = tempIframe.src;
-                                    console.log('Set iframe src with delay:', tempIframe.src);
-                                }, 100);
+                                console.error('Could not extract CrazyGames slug');
+                                // Fall back to normal processing
+                                processCrazyGamesIframeNormally(gameData.iframe);
                             }
                         } else {
-                            // Extract using regex as fallback
-                            const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/);
-                            if (srcMatch && srcMatch[1]) {
-                                console.log('Extracted iframe src using regex:', srcMatch[1]);
-                                
-                                // Special handling for CrazyGames iframes
-                                const isCrazyGames = srcMatch[1].includes('crazygames.com');
-                                if (isCrazyGames) {
-                                    console.log('CrazyGames iframe detected (regex), using special handling');
-                                    
-                                    // For CrazyGames, ensure we have the right attributes
-                                    gameIframe.allow = "fullscreen; autoplay; gamepad *;";
-                                    gameIframe.allowFullscreen = true;
-                                    gameIframe.setAttribute('frameborder', '0');
-                                    
-                                    // Add special meta tag for CrazyGames
-                                    const metaTag = document.createElement('meta');
-                                    metaTag.name = 'referrer';
-                                    metaTag.content = 'no-referrer-when-downgrade';
-                                    document.head.appendChild(metaTag);
-                                    
-                                    // Set src with a slight delay
-                                    setTimeout(() => {
-                                        gameIframe.src = srcMatch[1];
-                                        console.log('Set CrazyGames iframe src with delay (regex):', srcMatch[1]);
-                                    }, 100);
-                                } else {
-                                    // Set common attributes
-                                    gameIframe.allowFullscreen = true;
-                                    gameIframe.allow = "fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture";
-                                    gameIframe.frameBorder = "0";
-                                    
-                                    // Set the src after a small delay
-                                    setTimeout(() => {
-                                        gameIframe.src = srcMatch[1];
-                                        console.log('Set iframe src with delay (regex):', srcMatch[1]);
-                                    }, 100);
-                                }
-                            } else {
-                                // Final fallback: Try to insert the iframe HTML directly
-                                console.log('Using direct iframe insertion as fallback');
-                                const directIframeContainer = document.getElementById('direct-iframe-container');
-                                
-                                // Check if it's a CrazyGames iframe
-                                const isCrazyGames = cleanIframeHtml.includes('crazygames.com');
-                                if (isCrazyGames) {
-                                    console.log('CrazyGames iframe detected (direct insertion), using special handling');
-                                    
-                                    // Add special meta tag for CrazyGames
-                                    const metaTag = document.createElement('meta');
-                                    metaTag.name = 'referrer';
-                                    metaTag.content = 'no-referrer-when-downgrade';
-                                    document.head.appendChild(metaTag);
-                                    
-                                    // Modify the iframe HTML to add proper attributes
-                                    const enhancedHtml = cleanIframeHtml
-                                        .replace(/frameborder=["']0["']/i, 'frameborder="0"')
-                                        .replace(/allowfullscreen/i, 'allowfullscreen')
-                                        .replace(/allow=["'][^"']*["']/i, 'allow="fullscreen; autoplay; gamepad *;"');
-                                    
-                                    // Set with a slight delay
-                                    setTimeout(() => {
-                                        directIframeContainer.innerHTML = enhancedHtml;
-                                    }, 100);
-                                } else {
-                                    directIframeContainer.innerHTML = cleanIframeHtml;
-                                }
-                                
-                                // Hide the regular iframe and show the direct container
-                                gameIframe.style.display = 'none';
-                                directIframeContainer.style.display = 'block';
-                                
-                                // If direct insertion didn't work, show error
-                                if (!directIframeContainer.querySelector('iframe')) {
-                                    console.error('Failed to insert iframe directly');
-                                    gameIframe.style.display = 'block';
-                                    directIframeContainer.style.display = 'none';
-                                    gameIframe.src = gameData.gameUrl || '';
-                                }
-                            }
+                            // Process non-CrazyGames iframes normally
+                            processNormalIframe(gameData.iframe);
                         }
                     } catch (error) {
                         console.error('Error processing iframe:', error);
@@ -809,33 +738,109 @@
                 }
                 gameIframe.title = gameData.name;
                 
-                // Set new window link
-                const newWindowLink = document.getElementById('new-window-link');
-                if (gameData.iframe && gameData.iframe.includes('<iframe')) {
-                    try {
-                        // Try DOM parsing first
-                        const tempDiv = document.createElement('div');
-                        const cleanIframeHtml = gameData.iframe.replace(/\\"/g, '"');
-                        tempDiv.innerHTML = cleanIframeHtml;
+                // Function to process CrazyGames iframe normally as fallback
+                function processCrazyGamesIframeNormally(iframeHtml) {
+                    // Create a temporary container to parse the iframe HTML
+                    const tempDiv = document.createElement('div');
+                    // Clean up the iframe string by removing escaped quotes
+                    const cleanIframeHtml = iframeHtml.replace(/\\"/g, '"');
+                    tempDiv.innerHTML = cleanIframeHtml;
+                    
+                    const tempIframe = tempDiv.querySelector('iframe');
+                    if (tempIframe && tempIframe.src) {
+                        console.log('Fallback: extracted iframe src:', tempIframe.src);
                         
-                        const tempIframe = tempDiv.querySelector('iframe');
-                        if (tempIframe && tempIframe.src) {
-                            newWindowLink.href = tempIframe.src;
+                        // For CrazyGames, ensure we have the right attributes
+                        gameIframe.allow = "fullscreen; autoplay; gamepad *;";
+                        gameIframe.allowFullscreen = true;
+                        gameIframe.frameBorder = "0";
+                        gameIframe.src = tempIframe.src;
+                        
+                        // Update new window link
+                        const newWindowLink = document.getElementById('new-window-link');
+                        newWindowLink.href = tempIframe.src;
+                    }
+                }
+                
+                // Function to process normal iframes
+                function processNormalIframe(iframeHtml) {
+                    // Create a temporary container to parse the iframe HTML
+                    const tempDiv = document.createElement('div');
+                    // Clean up the iframe string by removing escaped quotes
+                    const cleanIframeHtml = iframeHtml.replace(/\\"/g, '"');
+                    tempDiv.innerHTML = cleanIframeHtml;
+                    
+                    const tempIframe = tempDiv.querySelector('iframe');
+                    if (tempIframe && tempIframe.src) {
+                        console.log('Successfully extracted iframe src:', tempIframe.src);
+                        
+                        // Set attributes
+                        if (tempIframe.allow) {
+                            gameIframe.allow = tempIframe.allow;
                         } else {
-                            // Try regex as fallback
-                            const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/);
-                            if (srcMatch && srcMatch[1]) {
-                                newWindowLink.href = srcMatch[1];
+                            gameIframe.allow = "fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture";
+                        }
+                        
+                        if (tempIframe.hasAttribute('allowfullscreen')) {
+                            gameIframe.allowFullscreen = true;
+                        } else {
+                            gameIframe.allowFullscreen = true;
+                        }
+                        
+                        // Copy any other attributes
+                        Array.from(tempIframe.attributes).forEach(attr => {
+                            if (!['src', 'allow', 'allowfullscreen'].includes(attr.name)) {
+                                gameIframe.setAttribute(attr.name, attr.value);
+                            }
+                        });
+                        
+                        // Set src
+                        gameIframe.src = tempIframe.src;
+                        
+                        // Update new window link
+                        const newWindowLink = document.getElementById('new-window-link');
+                        newWindowLink.href = tempIframe.src;
+                    } else {
+                        // Extract using regex as fallback
+                        const srcMatch = iframeHtml.match(/src=["']([^"']+)["']/);
+                        if (srcMatch && srcMatch[1]) {
+                            console.log('Extracted iframe src using regex:', srcMatch[1]);
+                            
+                            // Set common attributes
+                            gameIframe.allowFullscreen = true;
+                            gameIframe.allow = "fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture";
+                            gameIframe.frameBorder = "0";
+                            gameIframe.src = srcMatch[1];
+                            
+                            // Update new window link
+                            const newWindowLink = document.getElementById('new-window-link');
+                            newWindowLink.href = srcMatch[1];
+                        } else {
+                            // Final fallback: Try to insert the iframe HTML directly
+                            console.log('Using direct iframe insertion as fallback');
+                            const directIframeContainer = document.getElementById('direct-iframe-container');
+                            directIframeContainer.innerHTML = cleanIframeHtml;
+                            
+                            // Hide the regular iframe and show the direct container
+                            gameIframe.style.display = 'none';
+                            directIframeContainer.style.display = 'block';
+                            
+                            // If direct insertion didn't work, show error
+                            if (!directIframeContainer.querySelector('iframe')) {
+                                console.error('Failed to insert iframe directly');
+                                gameIframe.style.display = 'block';
+                                directIframeContainer.style.display = 'none';
+                                gameIframe.src = gameData.gameUrl || '';
                             } else {
-                                newWindowLink.href = gameData.gameUrl || '#';
+                                // Update new window link if possible
+                                const directIframe = directIframeContainer.querySelector('iframe');
+                                if (directIframe && directIframe.src) {
+                                    const newWindowLink = document.getElementById('new-window-link');
+                                    newWindowLink.href = directIframe.src;
+                                }
                             }
                         }
-                    } catch (error) {
-                        console.error('Error processing iframe for new window link:', error);
-                        newWindowLink.href = gameData.gameUrl || '#';
                     }
-                } else {
-                    newWindowLink.href = gameData.iframe || gameData.gameUrl || '#';
                 }
                 
                 // Add category and difficulty badges
