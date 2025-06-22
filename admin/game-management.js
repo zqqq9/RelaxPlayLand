@@ -33,7 +33,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBatchMode = false;
     let batchActionType = null; // 'approve' or 'reject'
 
-    const API_URL = '/api/games';
+    const API_URL = 'https://relaxplayland.online/api/games';
+    
+    // 检查API连接状态
+    async function checkApiConnection() {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API连接失败: ${response.status} ${response.statusText}`);
+            }
+            
+            console.log('API连接成功');
+            return true;
+        } catch (error) {
+            console.error('API连接错误:', error);
+            showError(`无法连接到API: ${error.message}`);
+            return false;
+        }
+    }
+    
+    // 显示错误消息
+    function showError(message) {
+        Toastify({
+            text: message,
+            style: { background: "var(--toastify-color-error)" },
+            duration: 5000
+        }).showToast();
+    }
 
     async function fetchGames() {
         try {
@@ -43,7 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchQuery) url.searchParams.append('search', searchQuery);
             if (currentPage) url.searchParams.append('page', currentPage);
             
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) throw new Error('Network response was not ok');
             
             const data = await response.json();
@@ -337,8 +378,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const feedback = document.getElementById('batch-feedback')?.value || '';
         
         try {
-            const response = await fetch(`/api/admin/batch-${action}`, {
+            const response = await fetch(`https://relaxplayland.online/api/admin/batch-${action}`, {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -478,5 +521,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial Load
-    fetchGames();
+    checkApiConnection().then(isConnected => {
+        if (isConnected) {
+            fetchGames();
+        }
+    });
 }); 

@@ -30,7 +30,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Constants
-    const API_URL = `/api/games/${gameId}`;
+    const API_URL = `https://relaxplayland.online/api/games/${gameId}`;
+    
+    // 检查API连接状态
+    async function checkApiConnection() {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API连接失败: ${response.status} ${response.statusText}`);
+            }
+            
+            console.log('API连接成功');
+            return true;
+        } catch (error) {
+            console.error('API连接错误:', error);
+            showError(`无法连接到API: ${error.message}`);
+            return false;
+        }
+    }
     
     // Status badge classes
     const statusClasses = {
@@ -42,7 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load game data
     async function loadGameData() {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 throw new Error('Failed to load game data');
             }
@@ -125,8 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const feedback = feedbackText.value.trim();
         
         try {
-            const response = await fetch(`/api/admin/${action}-game/${gameId}`, {
+            const response = await fetch(`https://relaxplayland.online/api/admin/${action}-game/${gameId}`, {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -177,5 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     rejectBtn?.addEventListener('click', () => handleApproval(false));
 
     // Load game data on page load
-    loadGameData();
+    checkApiConnection().then(isConnected => {
+        if (isConnected) {
+            loadGameData();
+        }
+    });
 }); 

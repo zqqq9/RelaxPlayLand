@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, PUT, DELETE, OPTIONS">
+    <meta http-equiv="Access-Control-Allow-Headers" content="Content-Type, Authorization">
     <title>Game Details | RelaxPlayLand Admin</title>
     <link href="/dist/output.css" rel="stylesheet">
     <style>
@@ -95,24 +98,10 @@
                     <h1 class="text-2xl font-bold mr-8">RelaxPlayLand Admin</h1>
                     <nav class="admin-nav">
                         <a href="/admin/game-management.html" class="active">Game Management</a>
-                        <a href="/admin/user-management.html">User Management</a>
-                        <a href="/admin/settings.html">Settings</a>
                     </nav>
                 </div>
                 <div class="flex items-center">
-                    <span class="mr-4">Admin User</span>
-                    <a href="/index.html" class="mr-4 text-sm text-white hover:text-gray-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Back to Website
-                    </a>
-                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Logout
-                    </button>
+                    <span class="mr-4">Admin</span>
                 </div>
             </div>
         </div>
