@@ -330,14 +330,32 @@
         // Function to fetch game data from API
         async function fetchGameData(gameId) {
             try {
-                const response = await fetch(`/api/games/${gameId}`);
+                // Determine if we're in local development or production
+                const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiUrl = isLocalDev ? `/api/games/${gameId}` : `https://relaxplayland.online/api/games/${gameId}`;
+                
+                console.log(`Fetching game data from: ${apiUrl}`);
+                
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 
-                const gameData = await response.json();
-                populateGameData(gameData);
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error(`Expected JSON response but got ${contentType}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to load game data');
+                }
+                
+                // Access the game data from the response
+                populateGameData(data.game);
             } catch (error) {
                 console.error('Error fetching game data:', error);
                 showError('Failed to load game data');
@@ -346,72 +364,98 @@
         
         // Function to populate the page with game data
         function populateGameData(game) {
-            // Update page title and meta tags
-            document.title = `${game.name} | RelaxPlayLand`;
-            document.querySelector('meta[name="description"]').setAttribute('content', game.description);
-            document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
-            document.querySelector('meta[property="og:description"]').setAttribute('content', game.description);
-            document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
-            document.querySelector('meta[name="twitter:description"]').setAttribute('content', game.description);
-            
-            // Update game content
-            document.getElementById('game-title').textContent = game.name;
-            document.getElementById('game-description').textContent = game.description || 'No description available.';
-            document.getElementById('game-instructions').textContent = game.instructions || 'No instructions available.';
-            document.getElementById('game-features').textContent = game.features || 'No features listed.';
-            
-            // Update game details
-            document.getElementById('game-category').textContent = game.category || '-';
-            document.getElementById('game-difficulty').textContent = game.difficulty || '-';
-            document.getElementById('game-controls').textContent = game.controls || '-';
-            document.getElementById('game-players').textContent = game.players || '-';
-            document.getElementById('game-age-rating').textContent = game.ageRating || '-';
-            
-            // Update developer info
-            if (game.developer) {
-                document.getElementById('game-developer').textContent = game.developer.name || '-';
-                const developerUrlElement = document.getElementById('game-developer-url').querySelector('a');
-                developerUrlElement.textContent = game.developer.url || '-';
-                developerUrlElement.href = game.developer.url || '#';
+            if (!game) {
+                showError('Invalid game data received');
+                return;
             }
             
-            // Set iframe source
-            const gameIframe = document.getElementById('game-iframe');
-            gameIframe.src = game.gameUrl;
-            gameIframe.title = game.name;
-            
-            // Set new window link
-            document.getElementById('new-window-link').href = game.gameUrl;
-            
-            // Add category and difficulty badges
-            const badgesContainer = document.getElementById('game-badges');
-            badgesContainer.innerHTML = '';
-            
-            if (game.category) {
-                const categoryBadge = document.createElement('span');
-                categoryBadge.className = 'badge bg-blue-100 text-blue-800';
-                categoryBadge.textContent = game.category;
-                badgesContainer.appendChild(categoryBadge);
+            try {
+                // Update page title and meta tags
+                document.title = `${game.name} | RelaxPlayLand`;
+                document.querySelector('meta[name="description"]').setAttribute('content', game.description || '');
+                document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
+                document.querySelector('meta[property="og:description"]').setAttribute('content', game.description || '');
+                document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
+                document.querySelector('meta[name="twitter:description"]').setAttribute('content', game.description || '');
+                
+                // Update game content
+                document.getElementById('game-title').textContent = game.name;
+                document.getElementById('game-description').textContent = game.description || 'No description available.';
+                document.getElementById('game-instructions').textContent = game.instructions || game.howToPlay || 'No instructions available.';
+                document.getElementById('game-features').textContent = game.features || 'No features listed.';
+                
+                // Update game details
+                document.getElementById('game-category').textContent = game.category || '-';
+                document.getElementById('game-difficulty').textContent = game.difficulty || '-';
+                document.getElementById('game-controls').textContent = game.controls || '-';
+                document.getElementById('game-players').textContent = game.players || '-';
+                document.getElementById('game-age-rating').textContent = game.ageRating || '-';
+                
+                // Update developer info
+                if (game.developer) {
+                    document.getElementById('game-developer').textContent = game.developer.name || '-';
+                    const developerUrlElement = document.getElementById('game-developer-url').querySelector('a');
+                    developerUrlElement.textContent = game.developer.website || game.developer.url || '-';
+                    developerUrlElement.href = game.developer.website || game.developer.url || '#';
+                }
+                
+                // Set iframe source - use iframe URL directly if available, or fallback to gameUrl
+                const gameIframe = document.getElementById('game-iframe');
+                gameIframe.src = game.iframe || game.gameUrl || '';
+                gameIframe.title = game.name;
+                
+                // Set new window link
+                const newWindowLink = document.getElementById('new-window-link');
+                newWindowLink.href = game.iframe || game.gameUrl || '';
+                
+                // Add category and difficulty badges
+                const badgesContainer = document.getElementById('game-badges');
+                badgesContainer.innerHTML = '';
+                
+                if (game.category) {
+                    const categoryBadge = document.createElement('span');
+                    categoryBadge.className = 'badge bg-blue-100 text-blue-800';
+                    categoryBadge.textContent = game.category;
+                    badgesContainer.appendChild(categoryBadge);
+                }
+                
+                if (game.difficulty) {
+                    const difficultyBadge = document.createElement('span');
+                    difficultyBadge.className = `badge badge-difficulty-${game.difficulty.toLowerCase()}`;
+                    difficultyBadge.textContent = game.difficulty;
+                    badgesContainer.appendChild(difficultyBadge);
+                }
+                
+                // Hide loading state and show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('game-content').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error populating game data:', error);
+                showError('Error displaying game content');
             }
-            
-            if (game.difficulty) {
-                const difficultyBadge = document.createElement('span');
-                difficultyBadge.className = `badge badge-difficulty-${game.difficulty.toLowerCase()}`;
-                difficultyBadge.textContent = game.difficulty;
-                badgesContainer.appendChild(difficultyBadge);
-            }
-            
-            // Hide loading state and show content
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('game-content').style.display = 'block';
         }
         
         // Function to show error message
         function showError(message) {
             document.getElementById('loading').style.display = 'none';
             const errorElement = document.getElementById('error-message');
+            
+            // Add more detailed error message
+            const errorTitle = errorElement.querySelector('h2');
+            const errorText = errorElement.querySelector('p');
+            
+            if (errorTitle && errorText) {
+                errorTitle.textContent = 'Game Not Found';
+                errorText.textContent = message || 'Sorry, we couldn\'t find the game you\'re looking for.';
+            }
+            
             errorElement.style.display = 'block';
             console.error(message);
+            
+            // Add debugging info
+            const gameId = new URLSearchParams(window.location.search).get('id');
+            console.log(`Attempted to load game with ID: ${gameId}`);
         }
     </script>
 </body>

@@ -41,8 +41,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: 'relaxplayland-secret-key',
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
 }));
 app.use(express.static('.'));
 
@@ -519,6 +519,11 @@ app.get('/api/games/:id', (req, res) => {
         console.error('Error in /api/games/:id:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
+});
+
+// Add specific route for game template
+app.get('/game-template', (req, res) => {
+    res.sendFile(path.join(__dirname, 'game-template.html'));
 });
 
 // Start server
