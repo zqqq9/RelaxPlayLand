@@ -173,6 +173,8 @@
                 <!-- Game Iframe -->
                 <div class="bg-gray-800 rounded-lg overflow-hidden mb-8">
                     <iframe id="game-iframe" src="" class="game-iframe" title="Game" allowfullscreen frameborder="0"></iframe>
+                    <!-- Direct iframe container for fallback -->
+                    <div id="direct-iframe-container" style="display: none; width: 100%; height: 600px;"></div>
                     <!-- Fallback content if game fails to load -->
                     <div id="game-fallback" class="game-fallback">
                         <h3>Game Loading Issue</h3>
@@ -279,7 +281,15 @@
             if (gameDataParam) {
                 try {
                     const gameData = JSON.parse(decodeURIComponent(gameDataParam));
-                    console.log('Using game data from URL parameter');
+                    console.log('Using game data from URL parameter:', gameData);
+                    
+                    // Validate that we have the minimum required fields
+                    if (!gameData.name) {
+                        console.warn('Game data missing name field, trying API');
+                        fetchGameDataWithRetry(gameId, 3);
+                        return;
+                    }
+                    
                     populateGameData(gameData);
                 } catch (error) {
                     console.error('Error parsing game data from URL:', error);
@@ -297,6 +307,7 @@
             const gameFallback = document.getElementById('game-fallback');
             const reloadButton = document.getElementById('reload-game');
             const newWindowLink = document.getElementById('new-window-link');
+            const directIframeContainer = document.getElementById('direct-iframe-container');
             
             // Check if iframe loaded correctly
             gameIframe.addEventListener('load', function() {
@@ -304,6 +315,16 @@
                     // Just trying to access contentWindow can throw error if blocked
                     const iframeContent = gameIframe.contentWindow;
                     console.log('Game loaded successfully');
+                    
+                    // Additional check for cross-origin issues
+                    try {
+                        // If we can access document, it's same origin and we can check more
+                        const iframeDoc = iframeContent.document;
+                        console.log('Same origin iframe loaded successfully');
+                    } catch (e) {
+                        // Cross-origin iframe, which is normal - we just can't check content
+                        console.log('Cross-origin iframe loaded (this is normal)');
+                    }
                 } catch (error) {
                     console.error('Game iframe access error:', error);
                     showFallback();
@@ -311,21 +332,51 @@
             });
             
             // Handle iframe errors
-            gameIframe.addEventListener('error', function() {
-                console.error('Game iframe failed to load');
+            gameIframe.addEventListener('error', function(e) {
+                console.error('Game iframe failed to load:', e);
                 showFallback();
             });
             
             // Reload button functionality
             reloadButton.addEventListener('click', function() {
-                gameIframe.src = gameIframe.src;
+                const directIframeContainer = document.getElementById('direct-iframe-container');
+                
+                // Check which display mode we're in
+                if (directIframeContainer.style.display === 'block') {
+                    // We're using the direct container, reload that
+                    const iframeElement = directIframeContainer.querySelector('iframe');
+                    if (iframeElement) {
+                        const currentSrc = iframeElement.src;
+                        iframeElement.src = '';
+                        setTimeout(() => {
+                            iframeElement.src = currentSrc;
+                        }, 100);
+                    } else {
+                        // No iframe found, try reloading the container
+                        const currentHTML = directIframeContainer.innerHTML;
+                        directIframeContainer.innerHTML = '';
+                        setTimeout(() => {
+                            directIframeContainer.innerHTML = currentHTML;
+                        }, 100);
+                    }
+                } else {
+                    // Using the regular iframe
+                    gameIframe.src = gameIframe.src;
+                }
+                
                 gameFallback.style.display = 'none';
-                gameIframe.style.display = 'block';
+                if (directIframeContainer.style.display === 'block') {
+                    gameIframe.style.display = 'none';
+                    directIframeContainer.style.display = 'block';
+                } else {
+                    gameIframe.style.display = 'block';
+                }
             });
             
             // Function to show fallback content
             function showFallback() {
                 gameIframe.style.display = 'none';
+                document.getElementById('direct-iframe-container').style.display = 'none';
                 gameFallback.style.display = 'block';
             }
             
@@ -334,10 +385,29 @@
                 try {
                     // If we can't access iframe content after timeout, show fallback
                     if (gameIframe.contentDocument === null) {
+                        console.log('Timeout reached, checking iframe status');
                         showFallback();
                     }
                 } catch (e) {
-                    showFallback();
+                    // This is expected for cross-origin iframes
+                    console.log('Cross-origin iframe detected (normal behavior)');
+                    
+                    // Additional check - if iframe is empty or has issues
+                    if (gameIframe.src === '' || gameIframe.src === 'about:blank') {
+                        console.error('Empty iframe source detected');
+                        showFallback();
+                    }
+                }
+            }, 5000);
+            
+            // Also check the direct iframe container if it's being used
+            setTimeout(function() {
+                if (directIframeContainer.style.display === 'block') {
+                    const directIframe = directIframeContainer.querySelector('iframe');
+                    if (!directIframe || directIframe.src === '' || directIframe.src === 'about:blank') {
+                        console.error('Direct iframe container has issues');
+                        showFallback();
+                    }
                 }
             }, 5000);
         });
@@ -458,12 +528,106 @@
                 
                 // Set iframe source - use iframe URL directly if available, or fallback to gameUrl
                 const gameIframe = document.getElementById('game-iframe');
-                gameIframe.src = gameData.iframe || gameData.gameUrl;
+                
+                // Check if iframe data is an HTML string containing an iframe tag
+                if (gameData.iframe && gameData.iframe.includes('<iframe')) {
+                    console.log('Processing iframe HTML:', gameData.iframe);
+                    
+                    try {
+                        // Create a temporary container to parse the iframe HTML
+                        const tempDiv = document.createElement('div');
+                        // Clean up the iframe string by removing escaped quotes
+                        const cleanIframeHtml = gameData.iframe.replace(/\\"/g, '"');
+                        tempDiv.innerHTML = cleanIframeHtml;
+                        
+                        const tempIframe = tempDiv.querySelector('iframe');
+                        if (tempIframe && tempIframe.src) {
+                            console.log('Successfully extracted iframe src:', tempIframe.src);
+                            gameIframe.src = tempIframe.src;
+                            
+                            // Copy important attributes
+                            if (tempIframe.allow) {
+                                gameIframe.allow = tempIframe.allow;
+                            }
+                            
+                            if (tempIframe.hasAttribute('allowfullscreen')) {
+                                gameIframe.allowFullscreen = true;
+                            }
+                            
+                            // Copy any other attributes that might be important
+                            Array.from(tempIframe.attributes).forEach(attr => {
+                                if (!['src', 'allow', 'allowfullscreen'].includes(attr.name)) {
+                                    gameIframe.setAttribute(attr.name, attr.value);
+                                }
+                            });
+                        } else {
+                            // Extract using regex as fallback
+                            const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/);
+                            if (srcMatch && srcMatch[1]) {
+                                console.log('Extracted iframe src using regex:', srcMatch[1]);
+                                gameIframe.src = srcMatch[1];
+                                
+                                // Set common attributes
+                                gameIframe.allowFullscreen = true;
+                                gameIframe.allow = "fullscreen";
+                                gameIframe.frameBorder = "0";
+                            } else {
+                                // Final fallback: Try to insert the iframe HTML directly
+                                console.log('Using direct iframe insertion as fallback');
+                                const directIframeContainer = document.getElementById('direct-iframe-container');
+                                directIframeContainer.innerHTML = cleanIframeHtml;
+                                
+                                // Hide the regular iframe and show the direct container
+                                gameIframe.style.display = 'none';
+                                directIframeContainer.style.display = 'block';
+                                
+                                // If direct insertion didn't work, show error
+                                if (!directIframeContainer.querySelector('iframe')) {
+                                    console.error('Failed to insert iframe directly');
+                                    gameIframe.style.display = 'block';
+                                    directIframeContainer.style.display = 'none';
+                                    gameIframe.src = gameData.gameUrl || '';
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error processing iframe:', error);
+                        gameIframe.src = gameData.gameUrl || '';
+                    }
+                } else {
+                    console.log('Using direct iframe URL:', gameData.iframe || gameData.gameUrl || '');
+                    gameIframe.src = gameData.iframe || gameData.gameUrl || '';
+                }
                 gameIframe.title = gameData.name;
                 
                 // Set new window link
                 const newWindowLink = document.getElementById('new-window-link');
-                newWindowLink.href = gameData.iframe || gameData.gameUrl;
+                if (gameData.iframe && gameData.iframe.includes('<iframe')) {
+                    try {
+                        // Try DOM parsing first
+                        const tempDiv = document.createElement('div');
+                        const cleanIframeHtml = gameData.iframe.replace(/\\"/g, '"');
+                        tempDiv.innerHTML = cleanIframeHtml;
+                        
+                        const tempIframe = tempDiv.querySelector('iframe');
+                        if (tempIframe && tempIframe.src) {
+                            newWindowLink.href = tempIframe.src;
+                        } else {
+                            // Try regex as fallback
+                            const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/);
+                            if (srcMatch && srcMatch[1]) {
+                                newWindowLink.href = srcMatch[1];
+                            } else {
+                                newWindowLink.href = gameData.gameUrl || '#';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error processing iframe for new window link:', error);
+                        newWindowLink.href = gameData.gameUrl || '#';
+                    }
+                } else {
+                    newWindowLink.href = gameData.iframe || gameData.gameUrl || '#';
+                }
                 
                 // Add category and difficulty badges
                 const badgesContainer = document.getElementById('game-badges');
