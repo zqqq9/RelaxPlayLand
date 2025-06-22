@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBatchMode = false;
     let batchActionType = null; // 'approve' or 'reject'
 
-    const API_URL = 'https://relaxplayland.online/api/games';
+    const API_URL = 'https://relaxplayland.online/api/admin/games';
     
     // 检查API连接状态
     async function checkApiConnection() {
@@ -103,28 +103,47 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchQuery) url.searchParams.append('search', searchQuery);
             if (currentPage) url.searchParams.append('page', currentPage);
             
+            console.log(`正在请求API: ${url.toString()}`);
+            
             const response = await fetch(url, {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 }
             });
-            if (!response.ok) throw new Error('Network response was not ok');
             
-            const data = await response.json();
+            console.log(`API响应状态: ${response.status} ${response.statusText}`);
+            
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+            
+            const responseText = await response.text();
+            console.log(`API响应内容: ${responseText.substring(0, 200)}...`);
+            
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON解析错误:', parseError);
+                console.error('原始响应:', responseText);
+                throw new Error('无法解析API响应为JSON格式');
+            }
             
             // The API now returns a paginated list of games and the full list for stats
             const gamesForStats = data.allGames || [];
             const gamesForDisplay = data.games || [];
 
+            console.log(`获取到${gamesForDisplay.length}个游戏, 总计${data.total || 0}个游戏`);
+            
             updateStats(gamesForStats);
             renderPage(gamesForDisplay, data.total, data.page, data.totalPages);
 
         } catch (error) {
             console.error('Error fetching games:', error);
             gamesListEl.innerHTML = '<p class="text-red-500">Error loading games. Please try again later.</p>';
+            showError(`加载游戏列表失败: ${error.message}`);
         }
     }
 
@@ -375,23 +394,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateBatchActions() {
-        const batchCount = document.getElementById('batch-selected-count');
-        const batchApproveBtn = document.getElementById('batch-approve-btn');
-        const batchRejectBtn = document.getElementById('batch-reject-btn');
+        const selectedCountEl = document.getElementById('selected-count');
+        const approveAllBtn = document.getElementById('approve-all-btn');
+        const rejectAllBtn = document.getElementById('reject-all-btn');
         
-        if (batchCount) {
-            batchCount.textContent = selectedGames.size;
+        if (selectedCountEl) {
+            selectedCountEl.textContent = `${selectedGames.size} games selected`;
             
             if (selectedGames.size > 0) {
-                batchApproveBtn.disabled = false;
-                batchRejectBtn.disabled = false;
-                batchApproveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                batchRejectBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.disabled = false;
+                rejectAllBtn.disabled = false;
+                approveAllBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                rejectAllBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                batchApproveBtn.disabled = true;
-                batchRejectBtn.disabled = true;
-                batchApproveBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                batchRejectBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.disabled = true;
+                rejectAllBtn.disabled = true;
+                approveAllBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                rejectAllBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
     }
@@ -403,19 +422,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const gameIds = Array.from(selectedGames);
         const feedback = document.getElementById('batch-feedback')?.value || '';
         
+        console.log(`正在批量${isApproved ? '批准' : '拒绝'}游戏, 数量: ${gameIds.length}, 反馈: ${feedback}`);
+        console.log('游戏ID列表:', gameIds);
+        
         try {
-            const response = await fetch(`https://relaxplayland.online/api/admin/batch-${action}`, {
+            const apiUrl = `https://relaxplayland.online/api/admin/games/batch-${action}`;
+            console.log(`请求API: ${apiUrl}`);
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({ gameIds, feedback })
             });
             
-            const result = await response.json();
+            console.log(`API响应状态: ${response.status} ${response.statusText}`);
+            
+            if (!response.ok) {
+                throw new Error(`批量${isApproved ? '批准' : '拒绝'}失败: ${response.status} ${response.statusText}`);
+            }
+            
+            const responseText = await response.text();
+            console.log(`API响应内容: ${responseText}`);
+            
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON解析错误:', parseError);
+                console.error('原始响应:', responseText);
+                throw new Error('无法解析API响应为JSON格式');
+            }
+            
             if (result.success) {
+                console.log(`批量${isApproved ? '批准' : '拒绝'}成功, 处理了${gameIds.length}个游戏`);
                 try {
                     if (typeof Toastify === 'function') {
                         Toastify({ 
@@ -437,9 +481,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleBatchMode();
                 fetchGames();
             } else {
-                throw new Error(result.message);
+                throw new Error(result.message || `批量${isApproved ? '批准' : '拒绝'}失败`);
             }
         } catch (error) {
+            console.error(`批量${isApproved ? '批准' : '拒绝'}错误:`, error);
             showError(`Error: ${error.message}`);
         }
     }
@@ -552,13 +597,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event Listeners for batch actions
     const batchModeBtn = document.getElementById('batch-mode-btn');
-    const batchApproveBtn = document.getElementById('batch-approve-btn');
-    const batchRejectBtn = document.getElementById('batch-reject-btn');
-    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const approveAllBtn = document.getElementById('approve-all-btn');
+    const rejectAllBtn = document.getElementById('reject-all-btn');
+    const selectAllCheckbox = document.getElementById('select-all');
     
     if (batchModeBtn) batchModeBtn.addEventListener('click', toggleBatchMode);
-    if (batchApproveBtn) batchApproveBtn.addEventListener('click', () => showBatchConfirmation(true));
-    if (batchRejectBtn) batchRejectBtn.addEventListener('click', () => showBatchConfirmation(false));
+    if (approveAllBtn) approveAllBtn.addEventListener('click', () => showBatchConfirmation(true));
+    if (rejectAllBtn) rejectAllBtn.addEventListener('click', () => showBatchConfirmation(false));
     if (selectAllCheckbox) selectAllCheckbox.addEventListener('change', (e) => {
         const isChecked = e.target.checked;
         document.querySelectorAll('.select-game-checkbox').forEach(checkbox => {

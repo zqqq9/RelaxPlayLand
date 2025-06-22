@@ -336,36 +336,29 @@
             <!-- Batch Actions -->
             <div id="batch-actions" class="mb-6 hidden">
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Select Games</h3>
                         <div class="flex items-center">
-                            <button id="batch-mode-btn" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
-                                Select Games
-                            </button>
-                            <div class="ml-4 flex items-center">
-                                <input type="checkbox" id="select-all-checkbox" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
-                                <label for="select-all-checkbox" class="ml-2 text-sm text-gray-700">Select All</label>
-                            </div>
-                            <div class="ml-4 text-sm">
-                                <span id="batch-selected-count">0</span> games selected
-                            </div>
+                            <label class="inline-flex items-center mr-4">
+                                <input id="select-all" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600">
+                                <span class="ml-2 text-gray-700">Select All</span>
+                            </label>
+                            <span id="selected-count" class="text-sm text-gray-500">0 games selected</span>
                         </div>
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <textarea id="batch-feedback" placeholder="Add feedback for selected games (optional)" class="w-full md:w-64 p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none" rows="1"></textarea>
-                            <div class="flex gap-2">
-                                <button id="batch-reject-btn" class="px-3 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center" disabled>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Reject All
-                                </button>
-                                <button id="batch-approve-btn" class="px-3 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center" disabled>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Approve All
-                                </button>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="flex space-x-4 mb-4">
+                        <button id="reject-all-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Reject All
+                        </button>
+                        <button id="approve-all-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Approve All
+                        </button>
                     </div>
                 </div>
             </div>

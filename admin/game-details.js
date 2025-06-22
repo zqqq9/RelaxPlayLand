@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Constants
-    const API_URL = `https://relaxplayland.online/api/games/${gameId}`;
+    const API_URL = `https://relaxplayland.online/api/admin/games/${gameId}`;
     
     // 检查API连接状态
     async function checkApiConnection() {
@@ -67,21 +67,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load game data
     async function loadGameData() {
         try {
+            console.log(`正在请求游戏数据: ${API_URL}`);
+            
             const response = await fetch(API_URL, {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 }
             });
+            
+            console.log(`API响应状态: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
-                throw new Error('Failed to load game data');
+                throw new Error(`Failed to load game data: ${response.status} ${response.statusText}`);
             }
             
-            const game = await response.json();
+            const responseText = await response.text();
+            console.log(`API响应内容: ${responseText.substring(0, 200)}...`);
+            
+            let game;
+            try {
+                game = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON解析错误:', parseError);
+                console.error('原始响应:', responseText);
+                throw new Error('无法解析API响应为JSON格式');
+            }
+            
+            console.log('游戏数据:', game);
             renderGameData(game);
         } catch (error) {
+            console.error('Error loading game data:', error);
             showError(`Error loading game data: ${error.message}`);
         }
     }
@@ -156,24 +175,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const action = isApproved ? 'approve' : 'reject';
         const feedback = feedbackText.value.trim();
         
+        console.log(`正在${isApproved ? '批准' : '拒绝'}游戏 ${gameId}, 反馈: ${feedback}`);
+        
         try {
-            const response = await fetch(`https://relaxplayland.online/api/admin/${action}-game/${gameId}`, {
+            const apiUrl = `https://relaxplayland.online/api/admin/games/${gameId}/${action}`;
+            console.log(`请求API: ${apiUrl}`);
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({ feedback })
             });
             
+            console.log(`API响应状态: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
-                throw new Error(`Failed to ${action} game`);
+                throw new Error(`Failed to ${action} game: ${response.status} ${response.statusText}`);
             }
             
-            const result = await response.json();
+            const responseText = await response.text();
+            console.log(`API响应内容: ${responseText}`);
+            
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON解析错误:', parseError);
+                console.error('原始响应:', responseText);
+                throw new Error('无法解析API响应为JSON格式');
+            }
             
             if (result.success) {
+                console.log(`游戏${isApproved ? '批准' : '拒绝'}成功`);
                 showSuccess(`Game ${isApproved ? 'approved' : 'rejected'} successfully`);
                 
                 // Reload game data after a short delay
@@ -184,26 +222,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.message || `Failed to ${action} game`);
             }
         } catch (error) {
+            console.error(`Error ${action} game:`, error);
             showError(`Error: ${error.message}`);
         }
     }
 
     // Show success notification
     function showSuccess(message) {
-        Toastify({
-            text: message,
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            duration: 3000
-        }).showToast();
+        console.log(message);
+        try {
+            if (typeof Toastify === 'function') {
+                Toastify({
+                    text: message,
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    duration: 3000
+                }).showToast();
+            } else {
+                alert(message);
+            }
+        } catch (err) {
+            console.error('Toastify error:', err);
+            alert(message);
+        }
     }
 
     // Show error notification
     function showError(message) {
-        Toastify({
-            text: message,
-            style: { background: "var(--toastify-color-error)" },
-            duration: 4000
-        }).showToast();
+        console.error(message);
+        try {
+            if (typeof Toastify === 'function') {
+                Toastify({
+                    text: message,
+                    style: { background: "#ff5f6d" },
+                    duration: 5000
+                }).showToast();
+            } else {
+                alert(message);
+            }
+        } catch (err) {
+            console.error('Toastify error:', err);
+            alert(message);
+        }
     }
 
     // Event listeners
