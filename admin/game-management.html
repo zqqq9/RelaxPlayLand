@@ -15,6 +15,7 @@
             --primary-color: #4F46E5;
             --primary-hover: #4338CA;
             --secondary-color: #7C3AED;
+            --button-text: #ffffff;
         }
         .modal {
             transition: opacity 0.25s ease;
@@ -36,7 +37,7 @@
             -webkit-line-clamp: 4;
         }
         .gradient-header {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            background: linear-gradient(135deg, #3B82F6, #6366F1);
             color: white;
         }
         .card-hover {
@@ -66,10 +67,10 @@
             opacity: 1;
         }
         .stat-total {
-            border-color: #4F46E5;
+            border-color: #3B82F6;
         }
         .stat-pending {
-            border-color: #FBBF24;
+            border-color: #F59E0B;
         }
         .stat-approved {
             border-color: #10B981;
@@ -115,13 +116,13 @@
         }
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
             }
         }
         
@@ -145,7 +146,7 @@
             background-color: #ffffff;
         }
         .bg-indigo-600 {
-            background-color: #4f46e5;
+            background-color: #3B82F6;
         }
         .text-white {
             color: #ffffff;
@@ -218,23 +219,124 @@
         .admin-nav {
             display: flex;
             padding: 0.5rem 1rem;
-            background-color: #1f2937;
+            background-color: rgba(0, 0, 0, 0.1);
             color: white;
+            border-radius: 0.5rem;
         }
         .admin-nav a {
-            color: #d1d5db;
+            color: #ffffff;
             padding: 0.5rem 1rem;
             margin-right: 0.5rem;
             border-radius: 0.25rem;
             text-decoration: none;
         }
         .admin-nav a.active {
-            background-color: #4f46e5;
+            background-color: #3B82F6;
             color: white;
         }
         .admin-nav a:hover:not(.active) {
-            background-color: #374151;
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
+        }
+        
+        /* Button improvements */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: #3B82F6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563EB;
+        }
+        
+        .btn-secondary {
+            background-color: #6366F1;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4F46E5;
+        }
+        
+        .btn-danger {
+            background-color: #EF4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #DC2626;
+        }
+        
+        .btn-success {
+            background-color: #10B981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        /* Game list horizontal layout */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .game-card {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-card-image {
+            height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .game-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .game-card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-card-footer {
+            padding: 0.75rem 1rem;
+            background-color: #f9fafb;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
@@ -250,7 +352,7 @@
                 </div>
                 <div class="flex items-center">
                     <span class="mr-4">Admin</span>
-                    <button id="logout-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center">
+                    <button id="logout-btn" class="btn btn-danger px-4 py-2 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
@@ -272,8 +374,8 @@
                         <h3 class="text-gray-500 text-sm uppercase font-medium">Total Games</h3>
                         <p id="total-games" class="text-3xl font-bold text-gray-800">0</p>
                     </div>
-                    <div class="bg-indigo-100 p-2 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="bg-blue-100 p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                         </svg>
                     </div>
@@ -324,10 +426,10 @@
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
                 <div id="status-filters" class="flex flex-wrap gap-2 mb-4 md:mb-0">
-                    <button data-status="" class="btn-filter px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">All Games</button>
-                    <button data-status="pending" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Pending</button>
-                    <button data-status="approved" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Approved</button>
-                    <button data-status="rejected" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Rejected</button>
+                    <button data-status="" class="btn btn-primary px-4 py-2 text-sm font-medium">All Games</button>
+                    <button data-status="pending" class="btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300">Pending</button>
+                    <button data-status="approved" class="btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300">Approved</button>
+                    <button data-status="rejected" class="btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300">Rejected</button>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -335,7 +437,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    <input type="text" id="search-input" placeholder="Search by name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full">
+                    <input type="text" id="search-input" placeholder="Search by name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full">
                 </div>
             </div>
 
@@ -346,21 +448,21 @@
                         <h3 class="text-lg font-semibold">Select Games</h3>
                         <div class="flex items-center">
                             <label class="inline-flex items-center mr-4">
-                                <input id="select-all" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600">
+                                <input id="select-all" type="checkbox" class="form-checkbox h-5 w-5 text-blue-600">
                                 <span class="ml-2 text-gray-700">Select All</span>
                             </label>
                             <span id="selected-count" class="text-sm text-gray-500">0 games selected</span>
                         </div>
                     </div>
                     <div class="flex space-x-4 mb-4">
-                        <button id="batch-mode-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors">Select Games</button>
-                        <button id="reject-all-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <button id="batch-mode-btn" class="btn btn-primary px-4 py-2">Select Games</button>
+                        <button id="reject-all-btn" class="btn btn-danger px-4 py-2 flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Reject All
                         </button>
-                        <button id="approve-all-btn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <button id="approve-all-btn" class="btn btn-success px-4 py-2 flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -369,12 +471,12 @@
                     </div>
                     <div class="mb-4">
                         <label for="batch-feedback" class="block text-sm font-medium text-gray-700 mb-1">Feedback (optional)</label>
-                        <textarea id="batch-feedback" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add feedback for selected games..."></textarea>
+                        <textarea id="batch-feedback" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Add feedback for selected games..."></textarea>
                     </div>
                 </div>
             </div>
 
-            <div id="games-list" class="space-y-4">
+            <div id="games-list" class="game-grid">
                 <!-- Game items will be injected here by JavaScript -->
             </div>
             <div id="no-games-message" class="text-center py-10 text-gray-500 hidden">
@@ -411,8 +513,8 @@
                     </div>
                 </div>
                 <div class="flex justify-end space-x-3 pt-2 border-t">
-                    <button id="batch-cancel-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors">Cancel</button>
-                    <button id="batch-confirm-btn" class="px-4 py-2 text-white rounded-md transition-colors">Confirm</button>
+                    <button id="batch-cancel-btn" class="btn px-4 py-2 bg-gray-300 text-gray-800 hover:bg-gray-400">Cancel</button>
+                    <button id="batch-confirm-btn" class="btn btn-primary px-4 py-2">Confirm</button>
                 </div>
             </div>
         </div>
@@ -425,7 +527,7 @@
             color: #ffffff;
             display: inline-block;
             box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-            background: linear-gradient(135deg, #73a5ff, #5477f5);
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
             position: fixed;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);

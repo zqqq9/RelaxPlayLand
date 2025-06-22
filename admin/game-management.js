@@ -234,9 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         gamesToRender.forEach(game => {
             const gameEl = document.createElement('div');
-            gameEl.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
             gameEl.innerHTML = getGameHtml(game);
-            gamesListEl.appendChild(gameEl);
+            gamesListEl.appendChild(gameEl.firstElementChild);
         });
 
         addEventListenersToButtons();
@@ -267,46 +266,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedTime = dateAdded.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
         const checkboxHtml = game.status === 'pending' ? `
-            <div class="flex-shrink-0 mr-3 ${isBatchMode ? '' : 'hidden'}" id="checkbox-container-${game.id}">
-                <input type="checkbox" id="select-game-${game.id}" data-id="${game.id}" class="select-game-checkbox w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <div class="absolute top-2 left-2 z-10 ${isBatchMode ? '' : 'hidden'}" id="checkbox-container-${game.id}">
+                <input type="checkbox" id="select-game-${game.id}" data-id="${game.id}" class="select-game-checkbox w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
             </div>
         ` : '';
         
         return `
-            <div class="game-item flex flex-col md:flex-row md:items-center justify-between p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div class="game-card game-item">
                 ${checkboxHtml}
-                <div class="flex items-center mb-4 md:mb-0">
-                    <div class="relative">
-                    <img src="${game.image || '/images/placeholder-game.jpg'}" alt="${game.name}" class="w-16 h-16 object-cover rounded-md mr-4">
-                        ${game.status === 'pending' ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>' : ''}
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-lg text-gray-800">${game.name}</h4>
-                        <div class="flex items-center mt-1">
-                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-0.5 rounded mr-2">${game.category}</span>
-                            <span class="text-sm text-gray-500 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                ${formattedDate} at ${formattedTime}
-                            </span>
-                        </div>
-                        ${game.developer ? `
-                        <div class="text-xs text-gray-500 mt-1 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            ${game.developer.name}
-                        </div>
-                        ` : ''}
-                    </div>
+                <div class="game-card-image">
+                    <img src="${game.image || '/images/placeholder-game.jpg'}" alt="${game.name}" class="w-full h-full object-cover">
+                    ${game.status === 'pending' ? '<div class="absolute top-2 right-2 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>' : ''}
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="game-card-content">
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">${game.name}</h4>
+                    <div class="flex flex-wrap gap-1 mb-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">${game.category}</span>
+                    </div>
+                    <div class="text-sm text-gray-500 flex items-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        ${formattedDate} at ${formattedTime}
+                    </div>
+                    ${game.developer ? `
+                    <div class="text-xs text-gray-500 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        ${game.developer.name}
+                    </div>
+                    ` : ''}
+                </div>
+                <div class="game-card-footer">
                     <span class="badge flex items-center ${badgeClasses[game.status]}">
                         ${statusIcons[game.status]}
                         ${game.status.charAt(0).toUpperCase() + game.status.slice(1)}
                     </span>
-                    <a href="game-details.html?id=${game.id}" class="view-details-btn px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center">
+                    <a href="game-details.html?id=${game.id}" class="btn btn-primary px-3 py-1 text-sm flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -339,9 +336,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const createPageButton = (pageNum, isActive = false, isDisabled = false) => {
-            const baseClasses = "px-3 py-1 rounded-md text-sm font-medium";
+            const baseClasses = "btn px-3 py-1 text-sm font-medium";
             const activeClasses = isActive 
-                ? "bg-indigo-600 text-white" 
+                ? "btn-primary" 
                 : "bg-white text-gray-700 hover:bg-gray-50";
             const disabledClasses = isDisabled 
                 ? "opacity-50 cursor-not-allowed" 
@@ -358,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Previous button
         paginationHTML += `
-            <button data-page="${page - 1}" class="px-3 py-1 rounded-md text-sm font-medium ${page === 1 ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50 cursor-pointer'}" ${page === 1 ? 'disabled' : ''}>
+            <button data-page="${page - 1}" class="btn px-3 py-1 text-sm font-medium ${page === 1 ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50 cursor-pointer'}" ${page === 1 ? 'disabled' : ''}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -394,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Next button
         paginationHTML += `
-            <button data-page="${page + 1}" class="px-3 py-1 rounded-md text-sm font-medium ${page === totalPages ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50 cursor-pointer'}" ${page === totalPages ? 'disabled' : ''}>
+            <button data-page="${page + 1}" class="btn px-3 py-1 text-sm font-medium ${page === totalPages ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50 cursor-pointer'}" ${page === totalPages ? 'disabled' : ''}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -437,12 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (batchModeBtn) {
             if (isBatchMode) {
                 batchModeBtn.textContent = 'Cancel Selection';
-                batchModeBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                batchModeBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                batchModeBtn.classList.remove('btn-primary');
+                batchModeBtn.classList.add('bg-gray-500', 'hover:bg-gray-600', 'text-white');
             } else {
                 batchModeBtn.textContent = 'Select Games';
-                batchModeBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-                batchModeBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                batchModeBtn.classList.add('btn-primary');
+                batchModeBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600', 'text-white');
                 selectedGames.clear();
             }
         }
@@ -451,24 +448,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateBatchActions() {
-        const selectedCountEl = document.getElementById('selected-count');
-        const approveAllBtn = document.getElementById('approve-all-btn');
+        const selectedCount = document.getElementById('selected-count');
         const rejectAllBtn = document.getElementById('reject-all-btn');
+        const approveAllBtn = document.getElementById('approve-all-btn');
+        const selectAllCheckbox = document.getElementById('select-all');
         
-        if (selectedCountEl) {
-            selectedCountEl.textContent = `${selectedGames.size} games selected`;
-            
+        if (selectedCount) {
+            selectedCount.textContent = `${selectedGames.size} games selected`;
+        }
+        
+        if (rejectAllBtn && approveAllBtn) {
             if (selectedGames.size > 0) {
-                approveAllBtn.disabled = false;
                 rejectAllBtn.disabled = false;
-                approveAllBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.disabled = false;
                 rejectAllBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                approveAllBtn.disabled = true;
                 rejectAllBtn.disabled = true;
-                approveAllBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.disabled = true;
                 rejectAllBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                approveAllBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
+        }
+        
+        if (selectAllCheckbox) {
+            const allCheckboxes = document.querySelectorAll('.select-game-checkbox');
+            const allChecked = allCheckboxes.length > 0 && Array.from(allCheckboxes).every(cb => cb.checked);
+            selectAllCheckbox.checked = allChecked;
         }
     }
     
@@ -566,29 +572,33 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Batch confirmation modal functions
     function showBatchConfirmation(isApprove) {
-        if (selectedGames.size === 0) return;
-        
-        // 检查必要的DOM元素是否存在
         if (!isBatchModalComplete) {
-            console.error('批量操作模态框元素不完整，无法显示确认对话框');
+            console.error('批量操作模态框的某些元素不存在，无法显示确认对话框');
             return;
         }
         
         batchActionType = isApprove ? 'approve' : 'reject';
         
         batchModal.title.textContent = isApprove ? 'Confirm Approval' : 'Confirm Rejection';
-        batchModal.message.textContent = `Are you sure you want to ${batchActionType} the selected games?`;
-        batchModal.count.textContent = selectedGames.size;
+        batchModal.message.textContent = isApprove 
+            ? 'Are you sure you want to approve all selected games?' 
+            : 'Are you sure you want to reject all selected games?';
+        batchModal.count.textContent = `${selectedGames.size}`;
         
-        const feedback = document.getElementById('batch-feedback')?.value;
-        if (feedback && feedback.trim()) {
+        const feedbackText = document.getElementById('batch-feedback').value.trim();
+        if (feedbackText) {
+            batchModal.feedbackText.textContent = feedbackText;
             batchModal.feedbackPreview.classList.remove('hidden');
-            batchModal.feedbackText.textContent = feedback;
         } else {
             batchModal.feedbackPreview.classList.add('hidden');
         }
         
-        batchModal.confirmBtn.className = `px-4 py-2 text-white rounded-md transition-colors ${isApprove ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`;
+        batchModal.confirmBtn.classList.remove('bg-indigo-600', 'bg-red-500', 'bg-green-500');
+        if (isApprove) {
+            batchModal.confirmBtn.classList.add('btn-success');
+        } else {
+            batchModal.confirmBtn.classList.add('btn-danger');
+        }
         
         batchModal.el.classList.remove('opacity-0', 'pointer-events-none');
         document.body.classList.add('modal-active');
