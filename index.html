@@ -110,58 +110,15 @@
                 </a>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Dalgona Candy Game Card -->
-                <div class="card overflow-hidden">
-                    <div class="relative">
-                        <img src="https://imgs.crazygames.com/dalgona-candy-honeycomb-cookie-kam_16x9/20250521050634/dalgona-candy-honeycomb-cookie-kam_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2" alt="Dalgona Candy Honeycomb Cookie Game" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 right-4 bg-apple-orange text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Popular
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-3 text-apple-dark-gray">Dalgona Candy Honeycomb Cookie</h3>
-                        <p class="text-apple-gray mb-4">Experience the viral sensation from Squid Game! Carve intricate patterns into honeycomb candy without breaking it. Test your patience and precision in this addictive puzzle game.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-apple-gray">Difficulty: Medium</span>
-                            <a href="./games/dalgona-candy.html" class="btn-primary">Play Now</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Coming Soon Cards -->
-                <div class="card overflow-hidden opacity-60">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/400x250/34C759/FFFFFF?text=Coming+Soon" alt="Coming Soon Game" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 right-4 bg-apple-green text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Soon
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-3 text-apple-dark-gray">More Games Coming</h3>
-                        <p class="text-apple-gray mb-4">We're constantly adding new relaxing games to our collection. Stay tuned for more exciting titles!</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-apple-gray">Coming Soon</span>
-                            <button disabled class="bg-apple-gray text-white px-4 py-2 rounded-lg text-sm">Coming Soon</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card overflow-hidden opacity-60">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/400x250/AF52DE/FFFFFF?text=Coming+Soon" alt="Coming Soon Game" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 right-4 bg-apple-purple text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Soon
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-3 text-apple-dark-gray">More Games Coming</h3>
-                        <p class="text-apple-gray mb-4">We're constantly adding new relaxing games to our collection. Stay tuned for more exciting titles!</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-apple-gray">Coming Soon</span>
-                            <button disabled class="bg-apple-gray text-white px-4 py-2 rounded-lg text-sm">Coming Soon</button>
-                        </div>
-                    </div>
+            <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Games will be loaded dynamically by homepage.js -->
+                <!-- Loading indicator -->
+                <div class="col-span-full text-center py-10">
+                    <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-4 text-gray-600">Loading games...</p>
                 </div>
             </div>
         </div>

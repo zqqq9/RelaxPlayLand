@@ -2,14 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get the games container element
     const gamesContainer = document.getElementById('games-container');
     
-    // If the games container doesn't exist, create it
     if (!gamesContainer) {
-        console.error('Games container not found. Creating one...');
-        const gamesSection = document.querySelector('#games .max-w-7xl .grid');
-        if (gamesSection) {
-            gamesSection.innerHTML = ''; // Clear existing content
-            gamesSection.id = 'games-container';
-        }
+        console.error('Games container not found');
+        return; // Exit early if container not found
     }
     
     // Fetch approved games from the API
@@ -46,25 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function renderGames(games) {
-        const gamesSection = document.querySelector('#games .max-w-7xl .grid');
-        if (!gamesSection) {
-            console.error('Games section not found');
-            return;
-        }
-        
         // Clear existing content
-        gamesSection.innerHTML = '';
+        gamesContainer.innerHTML = '';
         
         // If no games are available, show placeholder
         if (games.length === 0) {
-            renderPlaceholders(gamesSection);
+            renderPlaceholders(gamesContainer);
             return;
         }
         
         // Render each game
         games.forEach(game => {
             const gameCard = createGameCard(game);
-            gamesSection.appendChild(gameCard);
+            gamesContainer.appendChild(gameCard);
         });
         
         // If we have fewer than 3 games, add placeholders
@@ -72,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const placeholdersNeeded = 3 - games.length;
             for (let i = 0; i < placeholdersNeeded; i++) {
                 const placeholderCard = createPlaceholderCard();
-                gamesSection.appendChild(placeholderCard);
+                gamesContainer.appendChild(placeholderCard);
             }
         }
     }
@@ -100,9 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         card.innerHTML = `
             <div class="relative">
-                <img src="${game.image || 'https://via.placeholder.com/400x250/0A84FF/FFFFFF?text=Game'}" 
-                     alt="${game.name}" 
-                     class="w-full h-48 object-cover">
+                ${game.image ? 
+                  `<img src="${game.image}" alt="${game.name}" class="w-full h-48 object-cover">` : 
+                  `<div style="background-color: #0A84FF; height: 12rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem;">
+                      ${game.name}
+                   </div>`
+                }
                 <div class="absolute top-4 right-4 ${badgeColor} text-white px-3 py-1 rounded-full text-sm font-semibold">
                     ${badgeLabel}
                 </div>
@@ -125,14 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'card overflow-hidden opacity-60';
         
         // Generate a random color for the placeholder
-        const colors = ['34C759', 'AF52DE', '0A84FF', 'FF9F0A', 'FF3B30'];
+        const colors = ['#34C759', '#AF52DE', '#0A84FF', '#FF9F0A', '#FF3B30'];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         
         card.innerHTML = `
             <div class="relative">
-                <img src="https://via.placeholder.com/400x250/${randomColor}/FFFFFF?text=Coming+Soon" 
-                     alt="Coming Soon Game" 
-                     class="w-full h-48 object-cover">
+                <div style="background-color: ${randomColor}; height: 12rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem;">
+                    Coming Soon
+                </div>
                 <div class="absolute top-4 right-4 bg-apple-green text-white px-3 py-1 rounded-full text-sm font-semibold">
                     Soon
                 </div>
@@ -151,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function renderPlaceholders(container) {
+        container.innerHTML = ''; // Clear the container first
         for (let i = 0; i < 3; i++) {
             const placeholderCard = createPlaceholderCard();
             container.appendChild(placeholderCard);
@@ -158,15 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function renderErrorMessage(message) {
-        const gamesSection = document.querySelector('#games .max-w-7xl .grid');
-        if (!gamesSection) return;
-        
-        gamesSection.innerHTML = `
+        gamesContainer.innerHTML = `
             <div class="col-span-full text-center py-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-apple-gray mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <p class="text-lg font-medium text-apple-dark-gray">${message}</p>
+                <p class="text-lg font-medium text-gray-800">${message}</p>
             </div>
         `;
     }
