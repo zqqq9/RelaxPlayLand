@@ -9,6 +9,9 @@
         :root {
             --toastify-color-success: #28a745;
             --toastify-color-error: #dc3545;
+            --primary-color: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary-color: #7C3AED;
         }
         .modal {
             transition: opacity 0.25s ease;
@@ -42,6 +45,22 @@
         }
         .stat-card {
             border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .stat-card:hover::before {
+            opacity: 1;
         }
         .stat-total {
             border-color: #4F46E5;
@@ -61,8 +80,70 @@
         .btn-filter:hover {
             transform: translateY(-1px);
         }
+        .game-item {
+            transition: all 0.3s ease;
+        }
+        .game-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        .sidebar-link {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background-color: var(--primary-color);
+            opacity: 0.2;
+            transition: width 0.2s ease;
+        }
+        .sidebar-link:hover::before {
+            width: 4px;
+        }
+        .sidebar-link.active::before {
+            width: 4px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+        .badge-approved {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        .badge-rejected {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+            }
+        }
         
-        /* 基础样式，以防 Tailwind 加载失败 */
+        /* Base styles in case Tailwind fails to load */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             background-color: #f3f4f6;
@@ -164,19 +245,19 @@
                 <p class="text-gray-400 text-sm mb-6">Admin Dashboard</p>
             </div>
             <nav class="px-4">
-                <a href="#" class="flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 bg-indigo-600 text-white">
+                <a href="#" class="sidebar-link active flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 bg-indigo-600 text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
                     </svg>
                     Game Management
                 </a>
-                <a href="#" class="flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+                <a href="#" class="sidebar-link flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     User Management
                 </a>
-                <a href="#" class="flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+                <a href="#" class="sidebar-link flex items-center py-3 px-4 rounded-lg mb-2 transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -233,7 +314,7 @@
                                 <h3 class="text-gray-500 text-sm uppercase font-medium">Pending Review</h3>
                                 <p id="pending-games" class="text-3xl font-bold text-gray-800">0</p>
                             </div>
-                            <div class="bg-yellow-100 p-2 rounded-full">
+                            <div class="bg-yellow-100 p-2 rounded-full pulse-animation">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -287,6 +368,43 @@
                         </div>
                     </div>
 
+                    <!-- Batch Actions -->
+                    <div id="batch-actions" class="mb-6 hidden">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex items-center">
+                                    <button id="batch-mode-btn" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                                        Select Games
+                                    </button>
+                                    <div class="ml-4 flex items-center">
+                                        <input type="checkbox" id="select-all-checkbox" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                                        <label for="select-all-checkbox" class="ml-2 text-sm text-gray-700">Select All</label>
+                                    </div>
+                                    <div class="ml-4 text-sm">
+                                        <span id="batch-selected-count">0</span> games selected
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:flex-row gap-3">
+                                    <textarea id="batch-feedback" placeholder="Add feedback for selected games (optional)" class="w-full md:w-64 p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none" rows="1"></textarea>
+                                    <div class="flex gap-2">
+                                        <button id="batch-reject-btn" class="px-3 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center" disabled>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Reject All
+                                        </button>
+                                        <button id="batch-approve-btn" class="px-3 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center" disabled>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Approve All
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="games-list" class="space-y-4">
                         <!-- Game items will be injected here by JavaScript -->
                     </div>
@@ -320,6 +438,32 @@
                 </div>
                 <div id="modal-body" class="max-h-[80vh] overflow-y-auto py-4">
                     <!-- Details will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Confirmation Modal -->
+    <div id="batch-confirm-modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded-lg shadow-lg z-50">
+            <div class="modal-content py-4 text-left px-6">
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <p id="batch-confirm-title" class="text-xl font-bold text-gray-800">Confirm Action</p>
+                    <button id="close-batch-modal-btn" class="modal-close cursor-pointer z-50 p-1 rounded-full hover:bg-gray-200 transition-colors">
+                        <svg class="fill-current text-gray-700" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg>
+                    </button>
+                </div>
+                <div class="py-4">
+                    <p id="batch-confirm-message" class="text-gray-700 mb-4">Are you sure you want to perform this action on the selected games?</p>
+                    <div class="bg-gray-50 p-3 rounded-lg mb-4 text-sm">
+                        <p><span id="batch-count" class="font-semibold"></span> games selected</p>
+                        <p id="batch-feedback-preview" class="mt-2 italic text-gray-600 hidden">Feedback: <span id="batch-feedback-text"></span></p>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2 border-t">
+                    <button id="batch-cancel-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors">Cancel</button>
+                    <button id="batch-confirm-btn" class="px-4 py-2 text-white rounded-md transition-colors">Confirm</button>
                 </div>
             </div>
         </div>
