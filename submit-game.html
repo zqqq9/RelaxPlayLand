@@ -161,7 +161,7 @@
         <div class="py-12 px-4 w-full">
             <div class="max-w-4xl mx-auto">
                 <div class="form-section bg-white p-6 md:p-8 rounded-xl shadow-sm">
-                    <form id="gameSubmissionForm" class="space-y-8">
+                    <form id="gameSubmissionForm" class="space-y-8" enctype="multipart/form-data">
                         <!-- Basic Information -->
                         <div>
                             <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Game Information</h2>
@@ -272,9 +272,14 @@
                             <h2 class="text-2xl font-bold mb-6 text-apple-dark-gray">Game Embed</h2>
 
                             <div class="mb-6">
-                                <label for="gameImage" class="form-label">Game Image URL <span class="text-red-500">*</span></label>
-                                <input type="url" id="gameImage" name="gameImage" class="input-field" placeholder="https://example.com/image.jpg" required>
-                                <p class="text-sm text-gray-500 mt-1">Provide a direct link to a thumbnail image for your game.</p>
+                                <label for="gameImageFile" class="form-label">Game Image <span class="text-red-500">*</span></label>
+                                <input type="file" id="gameImageFile" name="gameImageFile" class="input-field" accept="image/*" required>
+                                <p class="text-sm text-gray-500 mt-1">Upload a thumbnail image for your game (JPG, PNG, or GIF).</p>
+                            </div>
+                            <div class="mb-6">
+                                <label for="gameImage" class="form-label">Or Game Image URL</label>
+                                <input type="url" id="gameImage" name="gameImage" class="input-field" placeholder="https://example.com/image.jpg">
+                                <p class="text-sm text-gray-500 mt-1">Alternatively, provide a direct link to a thumbnail image.</p>
                             </div>
                             
                             <div class="mb-6">
@@ -475,6 +480,17 @@
                 
                 // Collect form data
                 const formData = new FormData(form);
+                
+                // Validate file or URL is provided
+                const imageFile = document.getElementById('gameImageFile').files[0];
+                const imageUrl = document.getElementById('gameImage').value;
+                
+                if (!imageFile && !imageUrl) {
+                    submissionStatus.innerHTML = `<p class="text-red-500">Please provide either an image file or image URL.</p>`;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Game';
+                    return;
+                }
                 
                 try {
                     const response = await fetch('/api/submit-game', {

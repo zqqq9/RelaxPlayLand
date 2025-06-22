@@ -3,13 +3,47 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const session = require('express-session');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = path.join(__dirname, 'images', 'games');
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+    },
+    filename: function (req, file, cb) {
+        // Create a safe filename
+        const gameName = req.body.gameName || 'game';
+        const slug = gameName.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+        
+        const extension = file.originalname.split('.').pop();
+        cb(null, `${slug}-${Date.now()}.${extension}`);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'relaxplayland-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+}));
 app.use(express.static('.'));
 
 // API Routes
@@ -53,22 +87,31 @@ function generateGamePages(games) {
     }
 }
 
+// Admin credentials (in a real app, these would be stored securely)
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'admin123';
+const ADMIN_API_KEY = 'secret-api-key-' + Date.now();
+
 // Authentication middleware
 function authenticate(req, res, next) {
+    // Check for API key in header
     const authHeader = req.headers.authorization;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Authentication required' });
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const apiKey = authHeader.split(' ')[1];
+        
+        // Validate API key
+        if (apiKey === ADMIN_API_KEY) {
+            return next();
+        }
     }
     
-    const apiKey = authHeader.split(' ')[1];
-    
-    // For development, accept any API key
-    if (!apiKey) {
-        return res.status(401).json({ success: false, message: 'Invalid API key' });
+    // Check for session-based authentication
+    if (req.session && req.session.isAdmin) {
+        return next();
     }
     
-    next();
+    return res.status(401).json({ success: false, message: 'Authentication required' });
 }
 
 // API endpoint to get all games (admin)
@@ -273,6 +316,129 @@ app.post('/api/admin/games/batch-reject', authenticate, (req, res) => {
     }
 });
 
+// API endpoint to submit a new game
+app.post('/api/submit-game', upload.single('gameImageFile'), (req, res) => {
+    try {
+        const { 
+            gameName, gameCategory, gameDifficulty, gameControls, 
+            gamePlayers, gameAgeRating, gameDescription, gameHowToPlay,
+            gameFeatures, gameTags, gameImage, gameIframe,
+            developerName, developerEmail, developerWebsite
+        } = req.body;
+        
+        // Validate required fields
+        if (!gameName || !gameCategory || !gameDescription || !gameHowToPlay || !gameIframe || !developerName || !developerEmail) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+        
+        // Create slug from game name
+        const slug = gameName.toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-')     // Replace spaces with hyphens
+            .replace(/-+/g, '-');     // Remove consecutive hyphens
+        
+        // Get existing games
+        const allGames = getGamesData();
+        
+        // Check if slug already exists
+        if (allGames.some(g => g.slug === slug)) {
+            return res.status(400).json({ success: false, message: 'A game with a similar name already exists' });
+        }
+        
+        // Generate a new ID
+        const newId = (Math.max(...allGames.map(g => parseInt(g.id))) + 1).toString();
+        
+        // Parse tags
+        let parsedTags = [];
+        try {
+            parsedTags = gameTags ? JSON.parse(gameTags) : [];
+        } catch (e) {
+            console.error('Error parsing tags:', e);
+            parsedTags = [];
+        }
+        
+        // Handle image path
+        let imagePath = gameImage || '';
+        
+        // If a file was uploaded, use its path
+        if (req.file) {
+            // Convert backslashes to forward slashes for web paths
+            imagePath = '/' + path.relative('.', req.file.path).replace(/\\/g, '/');
+        }
+        
+        // Create new game object
+        const newGame = {
+            id: newId,
+            slug,
+            name: gameName,
+            category: gameCategory,
+            difficulty: gameDifficulty || 'Medium',
+            controls: gameControls || 'Mouse/Touch',
+            players: gamePlayers || 'Single Player',
+            ageRating: gameAgeRating || 'All Ages',
+            description: gameDescription,
+            howToPlay: gameHowToPlay,
+            features: gameFeatures || '',
+            iframe: gameIframe,
+            tags: parsedTags,
+            image: imagePath,
+            developer: {
+                name: developerName,
+                email: developerEmail,
+                website: developerWebsite || ''
+            },
+            dateAdded: new Date().toISOString(),
+            status: 'pending'
+        };
+        
+        // Add new game to the list
+        allGames.push(newGame);
+        
+        // Save updated games
+        if (!saveGamesData(allGames)) {
+            return res.status(500).json({ success: false, message: 'Failed to save game data' });
+        }
+        
+        res.json({ success: true, message: 'Game submitted successfully and is pending approval', game: newGame });
+    } catch (error) {
+        console.error('Error in /api/submit-game:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Admin login API
+app.post('/api/admin/login', (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Validate credentials
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            // Set session
+            req.session.isAdmin = true;
+            
+            res.json({
+                success: true,
+                message: 'Login successful',
+                apiKey: ADMIN_API_KEY
+            });
+        } else {
+            res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
+    } catch (error) {
+        console.error('Error in /api/admin/login:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Admin logout API
+app.post('/api/admin/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ success: true, message: 'Logged out successfully' });
+});
+
 // Public API endpoint to get approved games
 app.get('/api/games', (req, res) => {
     try {
@@ -326,4 +492,15 @@ app.get('/api/games', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Admin interface: http://localhost:${PORT}/admin/login.html`);
+    
+    // Log available games on startup
+    try {
+        const games = getGamesData();
+        const approvedGames = games.filter(game => game.status === 'approved');
+        console.log(`Total games: ${games.length}`);
+        console.log(`Approved games: ${approvedGames.length}`);
+        console.log('Approved game slugs:', approvedGames.map(g => g.slug).join(', '));
+    } catch (error) {
+        console.error('Error logging game data:', error);
+    }
 }); 

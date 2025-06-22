@@ -161,7 +161,9 @@ function generateGameHTML(game) {
             <div class="p-6">
                 <!-- Game Iframe -->
                 <div class="bg-gray-800 rounded-lg overflow-hidden mb-8">
-                    ${game.iframe || '<div class="flex items-center justify-center h-96 bg-gray-700 text-white">Game preview not available</div>'}
+                    ${game.iframe ? 
+                      game.iframe.replace('frameborder="0"', 'allow="fullscreen; autoplay; clipboard-write; encrypted-media" allowfullscreen="true" frameborder="0" scrolling="no"') : 
+                      '<div class="flex items-center justify-center h-96 bg-gray-700 text-white">Game preview not available</div>'}
                 </div>
 
                 <!-- Game Info -->

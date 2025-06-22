@@ -246,98 +246,98 @@
                     <h1 class="text-2xl font-bold mr-8">RelaxPlayLand Admin</h1>
                     <nav class="admin-nav">
                         <a href="/admin/game-management.html" class="active">Game Management</a>
-            </nav>
-        </div>
-                    <div class="flex items-center">
+                    </nav>
+                </div>
+                <div class="flex items-center">
                     <span class="mr-4">Admin</span>
                     <button id="logout-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
                         登出
-                        </button>
+                    </button>
                 </div>
-                    </div>
-                </div>
-            </header>
+            </div>
+        </div>
+    </header>
 
     <main class="container mx-auto px-4 py-6">
         <h2 class="text-2xl font-bold mb-6">Game Management</h2>
         
-                <!-- Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                    <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-total card-hover">
-                        <div class="flex justify-between">
-                            <div>
-                                <h3 class="text-gray-500 text-sm uppercase font-medium">Total Games</h3>
-                                <p id="total-games" class="text-3xl font-bold text-gray-800">0</p>
-                            </div>
-                            <div class="bg-indigo-100 p-2 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                                </svg>
-                            </div>
-                        </div>
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-total card-hover">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm uppercase font-medium">Total Games</h3>
+                        <p id="total-games" class="text-3xl font-bold text-gray-800">0</p>
                     </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-pending card-hover">
-                        <div class="flex justify-between">
-                            <div>
-                                <h3 class="text-gray-500 text-sm uppercase font-medium">Pending Review</h3>
-                                <p id="pending-games" class="text-3xl font-bold text-gray-800">0</p>
-                            </div>
-                    <div class="bg-yellow-100 p-2 rounded-full pulse-animation">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-approved card-hover">
-                        <div class="flex justify-between">
-                            <div>
-                                <h3 class="text-gray-500 text-sm uppercase font-medium">Approved</h3>
-                                <p id="approved-games" class="text-3xl font-bold text-gray-800">0</p>
-                            </div>
-                            <div class="bg-green-100 p-2 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-rejected card-hover">
-                        <div class="flex justify-between">
-                            <div>
-                                <h3 class="text-gray-500 text-sm uppercase font-medium">Rejected</h3>
-                                <p id="rejected-games" class="text-3xl font-bold text-gray-800">0</p>
-                            </div>
-                            <div class="bg-red-100 p-2 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                        </div>
+                    <div class="bg-indigo-100 p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                        </svg>
                     </div>
                 </div>
-
-                <!-- Filters and List -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
-                        <div id="status-filters" class="flex flex-wrap gap-2 mb-4 md:mb-0">
-                            <button data-status="" class="btn-filter px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">All Games</button>
-                            <button data-status="pending" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Pending</button>
-                            <button data-status="approved" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Approved</button>
-                            <button data-status="rejected" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Rejected</button>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                            <input type="text" id="search-input" placeholder="Search by name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full">
-                        </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-pending card-hover">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm uppercase font-medium">Pending Review</h3>
+                        <p id="pending-games" class="text-3xl font-bold text-gray-800">0</p>
                     </div>
+                    <div class="bg-yellow-100 p-2 rounded-full pulse-animation">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-approved card-hover">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm uppercase font-medium">Approved</h3>
+                        <p id="approved-games" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                    <div class="bg-green-100 p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-lg shadow-sm stat-card stat-rejected card-hover">
+                <div class="flex justify-between">
+                    <div>
+                        <h3 class="text-gray-500 text-sm uppercase font-medium">Rejected</h3>
+                        <p id="rejected-games" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                    <div class="bg-red-100 p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and List -->
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
+                <div id="status-filters" class="flex flex-wrap gap-2 mb-4 md:mb-0">
+                    <button data-status="" class="btn-filter px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">All Games</button>
+                    <button data-status="pending" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Pending</button>
+                    <button data-status="approved" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Approved</button>
+                    <button data-status="rejected" class="btn-filter px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">Rejected</button>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="search-input" placeholder="Search by name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full">
+                </div>
+            </div>
 
             <!-- Batch Actions -->
             <div id="batch-actions" class="mb-6 hidden">
@@ -366,26 +366,26 @@
                             Approve All
                         </button>
                     </div>
-                        </div>
-                    </div>
-
-                    <div id="games-list" class="space-y-4">
-                        <!-- Game items will be injected here by JavaScript -->
-                    </div>
-                    <div id="no-games-message" class="text-center py-10 text-gray-500 hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p class="text-lg font-medium">No games found.</p>
-                        <p class="text-sm text-gray-400">Try changing your filters or search query.</p>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div id="pagination" class="mt-6 flex justify-between items-center">
-                        <!-- Pagination controls will be injected here -->
-                    </div>
                 </div>
-            </main>
+            </div>
+
+            <div id="games-list" class="space-y-4">
+                <!-- Game items will be injected here by JavaScript -->
+            </div>
+            <div id="no-games-message" class="text-center py-10 text-gray-500 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-lg font-medium">No games found.</p>
+                <p class="text-sm text-gray-400">Try changing your filters or search query.</p>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="mt-6 flex justify-between items-center">
+                <!-- Pagination controls will be injected here -->
+            </div>
+        </div>
+    </main>
 
     <!-- Batch Confirmation Modal -->
     <div id="batch-confirm-modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">

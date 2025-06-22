@@ -3,156 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
-    <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, PUT, DELETE, OPTIONS">
-    <meta http-equiv="Access-Control-Allow-Headers" content="Content-Type, Authorization">
     <title>Admin Login | RelaxPlayLand</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
     <link href="/dist/output.css" rel="stylesheet">
+    
     <style>
-        :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #4338CA;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
-        }
-        /* Base styles in case Tailwind fails to load */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-            line-height: 1.5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-col {
-            flex-direction: column;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .justify-center {
-            justify-content: center;
-        }
-        .min-h-screen {
-            min-height: 100vh;
-        }
-        .bg-white {
-            background-color: #ffffff;
-        }
-        .rounded-lg {
-            border-radius: 0.5rem;
-        }
-        .shadow-lg {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .p-8 {
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
             padding: 2rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .mb-6 {
-            margin-bottom: 1.5rem;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-2xl {
-            font-size: 1.5rem;
-            line-height: 2rem;
-        }
-        .font-bold {
-            font-weight: 700;
-        }
-        .text-gray-700 {
-            color: #374151;
-        }
-        .w-full {
+        .input-field {
             width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            transition: border-color 0.3s;
         }
-        .mt-4 {
-            margin-top: 1rem;
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-btn:hover {
+            background-color: #4338CA;
+        }
+        .error-message {
+            color: #EF4444;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-700">RelaxPlayLand Admin</h1>
-                <p class="text-gray-500">Enter your API key to continue</p>
+<body class="bg-gray-100 min-h-screen">
+    <div class="login-container">
+        <h1 class="text-2xl font-bold mb-6 text-center">Admin Login</h1>
+        
+        <div id="error-message" class="error-message hidden"></div>
+        
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 mb-2">Username</label>
+                <input type="text" id="username" name="username" class="input-field" required>
             </div>
             
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label for="api-key" class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
-                    <input type="password" id="api-key" name="api-key" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-                
-                <div id="error-message" class="text-red-500 text-sm hidden"></div>
-                
-                <div>
-                    <button type="submit" class="w-full gradient-bg text-white py-2 px-4 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors">
-                        Login
-                    </button>
-                </div>
-            </form>
-            
-            <div class="mt-4 text-center text-sm text-gray-500">
-                <p>For development purposes, use the API key: <code>dev-api-key-123</code></p>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 mb-2">Password</label>
+                <input type="password" id="password" name="password" class="input-field" required>
             </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <a href="/" class="text-blue-600 hover:underline">Back to Homepage</a>
         </div>
     </div>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('login-form');
-            const apiKeyInput = document.getElementById('api-key');
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
             const errorMessage = document.getElementById('error-message');
             
-            // Check if already logged in
-            const storedApiKey = localStorage.getItem('api_key');
-            if (storedApiKey) {
-                window.location.href = 'game-management.html';
-                return;
-            }
-            
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const apiKey = apiKeyInput.value.trim();
-                if (!apiKey) {
-                    showError('API key is required');
-                    return;
-                }
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
                 
-                // For development, accept any key but in production would validate against server
-                const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                
-                if (isLocalDev || apiKey === 'dev-api-key-123') {
-                    // Store API key in localStorage
-                    localStorage.setItem('api_key', apiKey);
+                try {
+                    const response = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
                     
-                    // Redirect to game management page
-                    window.location.href = 'game-management.html';
-                } else {
-                    showError('Invalid API key');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Store API key in localStorage
+                        localStorage.setItem('adminApiKey', data.apiKey);
+                        
+                        // Redirect to admin dashboard
+                        window.location.href = '/admin/game-management.html';
+                    } else {
+                        errorMessage.textContent = data.message || 'Login failed';
+                        errorMessage.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    errorMessage.textContent = 'An error occurred. Please try again.';
+                    errorMessage.classList.remove('hidden');
                 }
             });
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.classList.remove('hidden');
-                
-                // Hide error after 3 seconds
-                setTimeout(() => {
-                    errorMessage.classList.add('hidden');
-                }, 3000);
-            }
         });
     </script>
 </body>

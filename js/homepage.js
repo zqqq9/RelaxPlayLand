@@ -87,10 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
             badgeColor = 'bg-apple-purple';
         }
         
+        // Check if the image path exists or is valid
+        const imageSrc = game.image || '';
+        const useImagePlaceholder = !imageSrc || imageSrc.startsWith('/images/') && !imageSrc.includes('http');
+        
         card.innerHTML = `
             <div class="relative">
-                ${game.image ? 
-                  `<img src="${game.image}" alt="${game.name}" class="w-full h-48 object-cover">` : 
+                ${!useImagePlaceholder ? 
+                  `<img src="${imageSrc}" alt="${game.name}" class="w-full h-48 object-cover">` : 
                   `<div style="background-color: #0A84FF; height: 12rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem;">
                       ${game.name}
                    </div>`
