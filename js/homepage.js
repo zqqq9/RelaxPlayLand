@@ -70,7 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'card overflow-hidden';
         
-        const gameUrl = `./games/${game.slug}.html`;
+        // Link to the template page with game ID or slug as parameter
+        const gameUrl = `./game-template.html?id=${game.id || game.slug}`;
         
         // Create badge label based on category or a default
         const badgeLabel = game.category || 'Featured';

@@ -60,31 +60,23 @@ function getGamesData() {
     }
 }
 
-// Helper function to write games data
+// Helper function to save games data
 function saveGamesData(games) {
     try {
-        fs.writeFileSync(dataPath, JSON.stringify(games, null, 2), 'utf8');
-        
-        // Generate game pages for approved games
-        generateGamePages(games);
-        
+        fs.writeFileSync(dataPath, JSON.stringify(games, null, 2));
+        // No need to generate individual game pages anymore since we're using a template approach
         return true;
     } catch (error) {
-        console.error('Error writing games data:', error);
+        console.error('Error saving games data:', error);
         return false;
     }
 }
 
-// Helper function to generate game pages
+// Helper function to generate game pages (kept for backward compatibility but no longer used)
 function generateGamePages(games) {
-    try {
-        // Execute the game template generator script
-        const { execSync } = require('child_process');
-        execSync('node js/game-template.js', { stdio: 'inherit' });
-        console.log('Game pages generated successfully');
-    } catch (error) {
-        console.error('Error generating game pages:', error);
-    }
+    // This function is no longer needed as we're using a template approach
+    console.log('Game page generation skipped - using template approach instead');
+    return true;
 }
 
 // Admin credentials (in a real app, these would be stored securely)
@@ -484,6 +476,47 @@ app.get('/api/games', (req, res) => {
         });
     } catch (error) {
         console.error('Error in /api/games:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Public API endpoint to get a specific game by ID
+app.get('/api/games/:id', (req, res) => {
+    try {
+        const gameId = req.params.id;
+        const allGames = getGamesData();
+        
+        // Find the game by ID or slug
+        const game = allGames.find(g => g.id === gameId || g.slug === gameId);
+        
+        if (!game) {
+            return res.status(404).json({ success: false, message: 'Game not found' });
+        }
+        
+        // For public API, only return approved games
+        if (game.status !== 'approved') {
+            // Check if the request is from an admin (would need authentication)
+            const isAdmin = req.session.isAdmin || req.headers.authorization === `Bearer ${ADMIN_API_KEY}`;
+            
+            if (!isAdmin) {
+                return res.status(404).json({ success: false, message: 'Game not found' });
+            }
+        }
+        
+        // Format game data for the template
+        const gameData = {
+            ...game,
+            gameUrl: game.iframe || `/public/games/${game.slug}/index.html`,
+            instructions: game.howToPlay || 'No instructions available.',
+            features: game.features || 'No features listed.'
+        };
+        
+        res.json({
+            success: true,
+            game: gameData
+        });
+    } catch (error) {
+        console.error('Error in /api/games/:id:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });

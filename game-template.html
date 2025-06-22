@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumber Harvest Tree Cutting Game | RelaxPlayLand</title>
-    <meta name="description" content="Become a lumberjack in this relaxing tree cutting simulation. Cut down trees, harvest lumber, and enjoy the peaceful forest environment. Perfect for when you need a break and want to engage in a satisfying, low-stress activity.">
-    <meta name="keywords" content="Simulation, Relaxing, Idle, Resource Management">
+    <title>Game | RelaxPlayLand</title>
+    <meta name="description" content="Play relaxing games on RelaxPlayLand">
+    <meta name="keywords" content="games, relaxing, online games">
     <meta name="author" content="RelaxPlayLand">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://relaxplayland.online/games/lumber-harvest-tree-cutting-game.html">
+    <link rel="canonical" href="https://relaxplayland.online/game-template.html">
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Lumber Harvest Tree Cutting Game | RelaxPlayLand">
-    <meta property="og:description" content="Become a lumberjack in this relaxing tree cutting simulation. Cut down trees, harvest lumber, and enjoy the peaceful forest environment. Perfect for when you need a break and want to engage in a satisfying, low-stress activity.">
-    <meta property="og:url" content="https://relaxplayland.online/games/lumber-harvest-tree-cutting-game.html">
+    <!-- Open Graph Meta Tags (will be updated dynamically) -->
+    <meta property="og:title" content="Game | RelaxPlayLand">
+    <meta property="og:description" content="Play relaxing games on RelaxPlayLand">
+    <meta property="og:url" content="https://relaxplayland.online/game-template.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="RelaxPlayLand">
     
-    <!-- Twitter Card Meta Tags -->
+    <!-- Twitter Card Meta Tags (will be updated dynamically) -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lumber Harvest Tree Cutting Game | RelaxPlayLand">
-    <meta name="twitter:description" content="Become a lumberjack in this relaxing tree cutting simulation. Cut down trees, harvest lumber, and enjoy the peaceful forest environment. Perfect for when you need a break and want to engage in a satisfying, low-stress activity.">
+    <meta name="twitter:title" content="Game | RelaxPlayLand">
+    <meta name="twitter:description" content="Play relaxing games on RelaxPlayLand">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -83,6 +83,34 @@
             text-decoration: none;
             font-weight: 500;
         }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3B82F6;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background-color: #FEE2E2;
+            border-radius: 8px;
+            color: #B91C1C;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -105,15 +133,30 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Loading state -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading game data...</p>
+        </div>
+        
+        <!-- Error message -->
+        <div id="error-message" class="error-message">
+            <h2 class="text-xl font-bold mb-2">Game Not Found</h2>
+            <p>Sorry, we couldn't find the game you're looking for.</p>
+            <a href="/" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                Return to Home
+            </a>
+        </div>
+        
+        <!-- Game content (initially hidden) -->
+        <div id="game-content" class="bg-white rounded-lg shadow-lg overflow-hidden" style="display: none;">
             <!-- Game Header -->
             <div class="p-6 border-b border-gray-200">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-800">Lumber Harvest Tree Cutting Game</h1>
-                        <div class="flex flex-wrap items-center mt-2 space-x-2">
-                            <span class="badge bg-blue-100 text-blue-800">Simulation</span>
-                            <span class="badge badge-difficulty-easy">Easy</span>
+                        <h1 id="game-title" class="text-3xl font-bold text-gray-800">Game Title</h1>
+                        <div id="game-badges" class="flex flex-wrap items-center mt-2 space-x-2">
+                            <!-- Badges will be inserted here -->
                         </div>
                     </div>
                     <a href="/" class="mt-4 md:mt-0 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
@@ -129,13 +172,13 @@
             <div class="p-6">
                 <!-- Game Iframe -->
                 <div class="bg-gray-800 rounded-lg overflow-hidden mb-8">
-                    <iframe id="game-iframe" src="/public/games/lumber-harvest/index.html" class="game-iframe" title="Lumber Harvest Tree Cutting Game" allowfullscreen frameborder="0"></iframe>
+                    <iframe id="game-iframe" src="" class="game-iframe" title="Game" allowfullscreen frameborder="0"></iframe>
                     <!-- Fallback content if game fails to load -->
                     <div id="game-fallback" class="game-fallback">
                         <h3>Game Loading Issue</h3>
                         <p>Sorry, the game couldn't be loaded properly. Please try one of these options:</p>
                         <div class="space-y-3">
-                            <a href="/public/games/lumber-harvest/index.html" target="_blank" class="inline-block">Play in New Window</a>
+                            <a id="new-window-link" href="#" target="_blank" class="inline-block">Play in New Window</a>
                             <p>or</p>
                             <button id="reload-game" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Reload Game</button>
                         </div>
@@ -146,15 +189,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="md:col-span-2">
                         <h2 class="text-2xl font-bold mb-4 text-gray-800">About This Game</h2>
-                        <p class="text-gray-600 mb-6">Become a lumberjack in this relaxing tree cutting simulation. Cut down trees, harvest lumber, and enjoy the peaceful forest environment. Perfect for when you need a break and want to engage in a satisfying, low-stress activity.</p>
+                        <p id="game-description" class="text-gray-600 mb-6">Game description will be loaded here.</p>
                         
                         <h3 class="text-xl font-bold mb-3 text-gray-800">How to Play</h3>
-                        <p class="text-gray-600 mb-6">Click or tap on trees to cut them down. Collect the lumber by clicking on the logs. Upgrade your tools to cut trees faster and collect more resources.</p>
-                        
+                        <p id="game-instructions" class="text-gray-600 mb-6">Game instructions will be loaded here.</p>
                         
                         <h3 class="text-xl font-bold mb-3 text-gray-800">Features</h3>
-                        <p class="text-gray-600 mb-6">Relaxing gameplay, beautiful forest environments, tool upgrades, and resource collection.</p>
-                        
+                        <p id="game-features" class="text-gray-600 mb-6">Game features will be loaded here.</p>
                     </div>
 
                     <div class="bg-gray-50 p-6 rounded-lg">
@@ -162,33 +203,31 @@
                         <ul class="space-y-3">
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Category:</span>
-                                <span class="font-medium text-gray-800">Simulation</span>
+                                <span id="game-category" class="font-medium text-gray-800">-</span>
                             </li>
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Difficulty:</span>
-                                <span class="font-medium text-gray-800">Easy</span>
+                                <span id="game-difficulty" class="font-medium text-gray-800">-</span>
                             </li>
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Controls:</span>
-                                <span class="font-medium text-gray-800">Mouse/Touch</span>
+                                <span id="game-controls" class="font-medium text-gray-800">-</span>
                             </li>
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Players:</span>
-                                <span class="font-medium text-gray-800">Single Player</span>
+                                <span id="game-players" class="font-medium text-gray-800">-</span>
                             </li>
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Age Rating:</span>
-                                <span class="font-medium text-gray-800">All Ages</span>
+                                <span id="game-age-rating" class="font-medium text-gray-800">-</span>
                             </li>
                         </ul>
 
-                        
                         <div class="mt-6 pt-6 border-t border-gray-200">
                             <h4 class="font-bold text-gray-800 mb-2">Developer</h4>
-                            <p class="text-gray-600">RelaxPlayLand</p>
-                            <p class="text-blue-600 hover:underline"><a href="https://relaxplayland.online" target="_blank" rel="noopener noreferrer">https://relaxplayland.online</a></p>
+                            <p id="game-developer" class="text-gray-600">-</p>
+                            <p id="game-developer-url" class="text-blue-600 hover:underline"><a href="#" target="_blank" rel="noopener noreferrer">-</a></p>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -226,13 +265,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Get game ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameId = urlParams.get('id');
+            
+            if (!gameId) {
+                showError('No game ID provided');
+                return;
+            }
+            
+            // Fetch game data from API
+            fetchGameData(gameId);
+            
+            // Set up iframe error handling
             const gameIframe = document.getElementById('game-iframe');
             const gameFallback = document.getElementById('game-fallback');
             const reloadButton = document.getElementById('reload-game');
+            const newWindowLink = document.getElementById('new-window-link');
             
             // Check if iframe loaded correctly
             gameIframe.addEventListener('load', function() {
-                // Try to access iframe content to check if it loaded
                 try {
                     // Just trying to access contentWindow can throw error if blocked
                     const iframeContent = gameIframe.contentWindow;
@@ -274,6 +326,93 @@
                 }
             }, 5000);
         });
+        
+        // Function to fetch game data from API
+        async function fetchGameData(gameId) {
+            try {
+                const response = await fetch(`/api/games/${gameId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const gameData = await response.json();
+                populateGameData(gameData);
+            } catch (error) {
+                console.error('Error fetching game data:', error);
+                showError('Failed to load game data');
+            }
+        }
+        
+        // Function to populate the page with game data
+        function populateGameData(game) {
+            // Update page title and meta tags
+            document.title = `${game.name} | RelaxPlayLand`;
+            document.querySelector('meta[name="description"]').setAttribute('content', game.description);
+            document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', game.description);
+            document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.name} | RelaxPlayLand`);
+            document.querySelector('meta[name="twitter:description"]').setAttribute('content', game.description);
+            
+            // Update game content
+            document.getElementById('game-title').textContent = game.name;
+            document.getElementById('game-description').textContent = game.description || 'No description available.';
+            document.getElementById('game-instructions').textContent = game.instructions || 'No instructions available.';
+            document.getElementById('game-features').textContent = game.features || 'No features listed.';
+            
+            // Update game details
+            document.getElementById('game-category').textContent = game.category || '-';
+            document.getElementById('game-difficulty').textContent = game.difficulty || '-';
+            document.getElementById('game-controls').textContent = game.controls || '-';
+            document.getElementById('game-players').textContent = game.players || '-';
+            document.getElementById('game-age-rating').textContent = game.ageRating || '-';
+            
+            // Update developer info
+            if (game.developer) {
+                document.getElementById('game-developer').textContent = game.developer.name || '-';
+                const developerUrlElement = document.getElementById('game-developer-url').querySelector('a');
+                developerUrlElement.textContent = game.developer.url || '-';
+                developerUrlElement.href = game.developer.url || '#';
+            }
+            
+            // Set iframe source
+            const gameIframe = document.getElementById('game-iframe');
+            gameIframe.src = game.gameUrl;
+            gameIframe.title = game.name;
+            
+            // Set new window link
+            document.getElementById('new-window-link').href = game.gameUrl;
+            
+            // Add category and difficulty badges
+            const badgesContainer = document.getElementById('game-badges');
+            badgesContainer.innerHTML = '';
+            
+            if (game.category) {
+                const categoryBadge = document.createElement('span');
+                categoryBadge.className = 'badge bg-blue-100 text-blue-800';
+                categoryBadge.textContent = game.category;
+                badgesContainer.appendChild(categoryBadge);
+            }
+            
+            if (game.difficulty) {
+                const difficultyBadge = document.createElement('span');
+                difficultyBadge.className = `badge badge-difficulty-${game.difficulty.toLowerCase()}`;
+                difficultyBadge.textContent = game.difficulty;
+                badgesContainer.appendChild(difficultyBadge);
+            }
+            
+            // Hide loading state and show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('game-content').style.display = 'block';
+        }
+        
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            const errorElement = document.getElementById('error-message');
+            errorElement.style.display = 'block';
+            console.error(message);
+        }
     </script>
 </body>
-</html>
+</html> 
