@@ -274,8 +274,8 @@
                 return;
             }
             
-            // Fetch game data from API
-            fetchGameData(gameId);
+            // Fetch game data from API with retry mechanism
+            fetchGameDataWithRetry(gameId, 3); // Try up to 3 times
             
             // Set up iframe error handling
             const gameIframe = document.getElementById('game-iframe');
@@ -327,6 +327,29 @@
             }, 5000);
         });
         
+        // Function to fetch game data with retry mechanism
+        async function fetchGameDataWithRetry(gameId, maxRetries) {
+            let retries = 0;
+            
+            while (retries < maxRetries) {
+                try {
+                    await fetchGameData(gameId);
+                    return; // Success, exit the retry loop
+                } catch (error) {
+                    retries++;
+                    console.log(`Attempt ${retries}/${maxRetries} failed. ${retries < maxRetries ? 'Retrying...' : 'Giving up.'}`);
+                    
+                    if (retries >= maxRetries) {
+                        showError(`Failed to load game data after ${maxRetries} attempts`);
+                        break;
+                    }
+                    
+                    // Wait before retrying (exponential backoff)
+                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retries - 1)));
+                }
+            }
+        }
+        
         // Function to fetch game data from API
         async function fetchGameData(gameId) {
             try {
@@ -336,7 +359,15 @@
                 
                 console.log(`Fetching game data from: ${apiUrl}`);
                 
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors',
+                    credentials: 'same-origin'
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -356,9 +387,11 @@
                 
                 // Access the game data from the response
                 populateGameData(data.game);
+                return data; // Return the data for potential use by the caller
             } catch (error) {
                 console.error('Error fetching game data:', error);
-                showError('Failed to load game data');
+                // Let the retry mechanism handle the error
+                throw error;
             }
         }
         
@@ -448,6 +481,17 @@
             if (errorTitle && errorText) {
                 errorTitle.textContent = 'Game Not Found';
                 errorText.textContent = message || 'Sorry, we couldn\'t find the game you\'re looking for.';
+            }
+            
+            // Add a button to try alternative loading method
+            const returnLink = errorElement.querySelector('a');
+            if (returnLink) {
+                const gameId = new URLSearchParams(window.location.search).get('id');
+                const fallbackButton = document.createElement('a');
+                fallbackButton.className = 'mt-4 ml-4 inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors';
+                fallbackButton.textContent = 'Try Alternative Loading';
+                fallbackButton.href = `/games/${gameId}.html`;
+                returnLink.parentNode.appendChild(fallbackButton);
             }
             
             errorElement.style.display = 'block';

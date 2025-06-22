@@ -35,16 +35,33 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('.'));
+
+// Add CORS headers for API requests
+app.use((req, res, next) => {
+    // Check if the request is for an API endpoint
+    if (req.path.startsWith('/api/')) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        res.header('Content-Type', 'application/json');
+        
+        // Handle preflight requests
+        if (req.method === 'OPTIONS') {
+            return res.status(200).end();
+        }
+    }
+    next();
+});
+
 app.use(session({
     secret: 'relaxplayland-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Set to true if using HTTPS
 }));
-app.use(express.static('.'));
 
 // API Routes
 const dataPath = path.join(__dirname, 'data', 'games.json');
@@ -483,6 +500,9 @@ app.get('/api/games', (req, res) => {
 // Public API endpoint to get a specific game by ID
 app.get('/api/games/:id', (req, res) => {
     try {
+        // Ensure we're sending a JSON response
+        res.setHeader('Content-Type', 'application/json');
+        
         const gameId = req.params.id;
         const allGames = getGamesData();
         
@@ -490,7 +510,11 @@ app.get('/api/games/:id', (req, res) => {
         const game = allGames.find(g => g.id === gameId || g.slug === gameId);
         
         if (!game) {
-            return res.status(404).json({ success: false, message: 'Game not found' });
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Game not found',
+                error: `No game found with ID or slug: ${gameId}`
+            });
         }
         
         // For public API, only return approved games
@@ -499,7 +523,11 @@ app.get('/api/games/:id', (req, res) => {
             const isAdmin = req.session.isAdmin || req.headers.authorization === `Bearer ${ADMIN_API_KEY}`;
             
             if (!isAdmin) {
-                return res.status(404).json({ success: false, message: 'Game not found' });
+                return res.status(404).json({ 
+                    success: false, 
+                    message: 'Game not found',
+                    error: 'Game exists but is not approved'
+                });
             }
         }
         
@@ -511,13 +539,17 @@ app.get('/api/games/:id', (req, res) => {
             features: game.features || 'No features listed.'
         };
         
-        res.json({
+        return res.json({
             success: true,
             game: gameData
         });
     } catch (error) {
         console.error('Error in /api/games/:id:', error);
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error', 
+            error: error.message 
+        });
     }
 });
 
