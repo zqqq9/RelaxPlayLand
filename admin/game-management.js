@@ -31,6 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn: document.getElementById('close-batch-modal-btn'),
     };
 
+    // 检查batchModal对象的所有属性是否存在
+    const isBatchModalComplete = batchModal.el && batchModal.title && batchModal.message && 
+                               batchModal.count && batchModal.feedbackPreview && 
+                               batchModal.feedbackText && batchModal.confirmBtn && 
+                               batchModal.cancelBtn && batchModal.closeBtn;
+    
+    if (!isBatchModalComplete) {
+        console.warn('批量操作模态框的某些元素不存在，批量操作功能可能不可用');
+    }
+
     let currentPage = 1;
     let currentStatus = '';
     let searchQuery = '';
@@ -438,6 +448,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function showBatchConfirmation(isApprove) {
         if (selectedGames.size === 0) return;
         
+        // 检查必要的DOM元素是否存在
+        if (!isBatchModalComplete) {
+            console.error('批量操作模态框元素不完整，无法显示确认对话框');
+            return;
+        }
+        
         batchActionType = isApprove ? 'approve' : 'reject';
         
         batchModal.title.textContent = isApprove ? 'Confirm Approval' : 'Confirm Rejection';
@@ -459,6 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function closeBatchModal() {
+        if (!batchModal.el) {
+            console.error('批量操作模态框元素不存在，无法关闭');
+            return;
+        }
         batchModal.el.classList.add('opacity-0', 'pointer-events-none');
         document.body.classList.remove('modal-active');
     }
@@ -466,13 +486,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listeners
     
     // Batch modal event listeners
-    batchModal.confirmBtn.addEventListener('click', () => {
-        handleBatchApproval(batchActionType === 'approve');
-        closeBatchModal();
-    });
+    if (batchModal.confirmBtn) {
+        batchModal.confirmBtn.addEventListener('click', () => {
+            handleBatchApproval(batchActionType === 'approve');
+            closeBatchModal();
+        });
+    }
     
-    batchModal.cancelBtn.addEventListener('click', closeBatchModal);
-    batchModal.closeBtn.addEventListener('click', closeBatchModal);
+    if (batchModal.cancelBtn) {
+        batchModal.cancelBtn.addEventListener('click', closeBatchModal);
+    }
+    
+    if (batchModal.closeBtn) {
+        batchModal.closeBtn.addEventListener('click', closeBatchModal);
+    }
     
     // Global event listeners
     document.addEventListener('keydown', e => {
