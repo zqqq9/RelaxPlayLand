@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="p-6">
                 <h3 class="text-xl font-bold mb-3 text-apple-dark-gray">${game.name}</h3>
-                <p class="text-apple-gray mb-4">${game.description || 'No description available.'}</p>
+                <p class="text-apple-gray mb-4 line-clamp-3" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${game.description || 'No description available.'}</p>
                 <div class="flex items-center justify-between">
                     <span class="text-sm text-apple-gray">Difficulty: ${game.difficulty || 'Medium'}</span>
                     <a href="${gameUrl}" class="btn-primary">Play Now</a>

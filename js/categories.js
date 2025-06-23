@@ -195,7 +195,16 @@ document.addEventListener('DOMContentLoaded', function() {
             gameCard.innerHTML = `
                 <div class="relative">
                     <img src="${game.image}" alt="${game.name}" class="card-image">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                </div>
+                <div class="card-content">
+                    <a href="${gameUrl}">
+                        <h3 class="game-title">${game.name}</h3>
+                        <p class="game-description" style="-webkit-line-clamp: 3;">${game.description}</p>
+                        <div class="flex flex-wrap mt-auto">
+                            <span class="category-badge primary-badge">${game.category}</span>
+                            ${tagElements}
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                         <a href="${gameUrl}" class="play-button">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                                 <path d="M8 5v14l11-7z"></path>
@@ -203,15 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             Play Now
                         </a>
                     </div>
-                </div>
-                <div class="card-content">
-                    <a href="${gameUrl}">
-                        <h3 class="game-title">${game.name}</h3>
-                        <p class="game-description">${game.description}</p>
-                        <div class="flex flex-wrap mt-auto">
-                            <span class="category-badge primary-badge">${game.category}</span>
-                            ${tagElements}
-                        </div>
                     </a>
                 </div>
             `;
