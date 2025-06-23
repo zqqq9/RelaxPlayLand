@@ -1,0 +1,26 @@
+name = "relaxplayland"
+compatibility_date = "2023-06-23"
+
+[build]
+command = "npm install"
+
+[site]
+bucket = "./"
+
+[build.upload]
+format = "service-worker"
+
+[[kv_namespaces]]
+binding = "DB"
+id = "your-kv-namespace-id-here"
+preview_id = "your-preview-kv-namespace-id-here"
+
+[env.production]
+[[env.production.kv_namespaces]]
+binding = "DB"
+id = "your-kv-namespace-id-here"
+
+[env.preview]
+[[env.preview.kv_namespaces]]
+binding = "DB"
+id = "your-preview-kv-namespace-id-here" 
