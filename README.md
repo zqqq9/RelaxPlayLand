@@ -1,6 +1,43 @@
-# RelaxPlayLand - Online Gaming Platform
+# RelaxPlayLand
 
-A modern, responsive online gaming website built with HTML, Tailwind CSS, and JavaScript. Features a collection of relaxing casual games designed for stress relief and entertainment.
+A game website featuring a responsive design and category-based game filtering.
+
+## Features
+
+- Browse games by categories
+- Sort games by newest or alphabetically
+- Responsive design for mobile and desktop
+- Game cards with hover effects
+- Dynamic pagination
+
+## Setup Instructions
+
+1. Install dependencies:
+   ```
+   npm install
+   ```
+
+2. Start the development server:
+   ```
+   npm run dev
+   ```
+
+3. Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
+
+## API Endpoints
+
+- `/api/games` - Get all games
+
+## Project Structure
+
+- `index.html` - Main homepage
+- `categories.html` - Categories page with filtering
+- `js/categories.js` - JavaScript for the categories page functionality
+- `api/server.js` - Express server for serving the website and API
+- `api/games.json` - Game data in JSON format
 
 ## 🌟 Features
 

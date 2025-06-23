@@ -17,6 +17,12 @@ app.get('/api/games', (req, res) => {
   try {
     const gamesData = fs.readFileSync(path.join(__dirname, 'games.json'), 'utf8');
     const games = JSON.parse(gamesData);
+    
+    // Add CORS headers
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    
+    // Send the games data
     res.json(games);
   } catch (error) {
     console.error('Error reading games data:', error);
@@ -26,9 +32,22 @@ app.get('/api/games', (req, res) => {
 
 // Catch-all route to serve index.html for any other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  // Exclude API routes from catch-all
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  
+  const filePath = path.join(__dirname, '..', 'index.html');
+  
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('File not found');
+  }
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`API endpoint available at http://localhost:${PORT}/api/games`);
 }); 

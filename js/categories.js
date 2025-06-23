@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize the page
-    loadGames();
+    fetchGames();
 
     // Add event listeners to category buttons
     categoryButtons.forEach(button => {
@@ -79,131 +79,44 @@ document.addEventListener('DOMContentLoaded', function() {
         renderGames();
     });
 
-    // Function to load games data
-    function loadGames() {
+    // Function to fetch games from API
+    function fetchGames() {
         loadingIndicator.style.display = 'block';
         noResults.style.display = 'none';
         gamesContainer.innerHTML = '';
 
-        // Use hardcoded game data directly instead of fetching from API
-        allGames = [
-            {
-                "id": "1750524758590",
-                "slug": "golf-orbit",
-                "name": "Golf Orbit",
-                "category": "Adventure",
-                "description": "Golf Orbit is an exciting golf simulator game where you aim to launch golf balls to incredible heights, even reaching Mars. Have fun in one-shot golf battles and master the perfect shot.",
-                "tags": ["Golf", "Sport"],
-                "image": "https://imgs.crazygames.com/golf-orbit_16x9/20240620070701/golf-orbit_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-21T16:52:38.590Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750594882408",
-                "slug": "dalgona-candy-honeycomb-cookie",
-                "name": "Dalgona Candy Honeycomb Cookie",
-                "category": "Puzzle",
-                "description": "Dalgona Candy Honeycomb Cookie is a fun, shape-carving challenge where you'll carefully cut out designs from honeycomb cookies. With levels that feature classic dalgona and American cookies.",
-                "tags": ["Puzzle"],
-                "image": "https://imgs.crazygames.com/dalgona-candy-honeycomb-cookie-kam_16x9/20250521050634/dalgona-candy-honeycomb-cookie-kam_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T12:21:22.408Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750597764810",
-                "slug": "lumber-harvest-tree-cutting-game",
-                "name": "Lumber Harvest: Tree Cutting Game",
-                "category": "Simulation",
-                "description": "Lumber Harvest is a relaxing progression game where you drive a tractor to clear forests and collect timber. Upgrade your saw, expand your truck's capacity, and unlock new areas.",
-                "tags": ["Simulation", "Tree"],
-                "image": "https://imgs.crazygames.com/lumber-harvest-tree-cutting-game_16x9/20250619095414/lumber-harvest-tree-cutting-game_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T13:09:24.810Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750599184349",
-                "slug": "count-masters-stickman-games",
-                "name": "Count Masters: Stickman Games",
-                "category": "Casual",
-                "description": "Count Masters is a fast-paced running game where you gather a growing army of stickmen to clash against rival crowds. Navigate obstacles and multiply your numbers to win.",
-                "tags": ["Running", "Math"],
-                "image": "https://imgs.crazygames.com/count-masters-stickman-games_16x9/20250220041115/count-masters-stickman-games_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T13:33:04.349Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750601268347",
-                "slug": "capybara-clicker",
-                "name": "Capybara Clicker",
-                "category": "Other",
-                "description": "Capybara Clicker is a clicker game where you multiply the capybara population by clicking. Buy upgrades to increase capybara output, change weather, and unlock new skins.",
-                "tags": ["Clicker"],
-                "image": "https://imgs.crazygames.com/games/capybara-clicker/cover-1678290947532.png?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T14:07:48.347Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750602347123",
-                "slug": "2048",
-                "name": "2048",
-                "category": "Puzzle",
-                "description": "2048 is an addictive number puzzle game where you combine matching tiles to create the number 2048. Slide tiles in four directions, merging identical numbers to double their value.",
-                "tags": ["Puzzle", "Math", "Strategy"],
-                "image": "https://imgs.crazygames.com/2048_16x9/20250620070701/2048_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T15:12:48.347Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750603456789",
-                "slug": "snake-io",
-                "name": "Snake.io",
-                "category": "Arcade",
-                "description": "Snake.io is a multiplayer snake game where you control a colorful snake and compete against other players. Eat glowing orbs to grow longer and eliminate opponents.",
-                "tags": ["Multiplayer", "IO", "Snake"],
-                "image": "https://imgs.crazygames.com/snake-io_16x9/20250620070701/snake-io_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T16:34:48.347Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750604567890",
-                "slug": "city-builder",
-                "name": "City Builder",
-                "category": "Strategy",
-                "description": "City Builder is a strategic simulation game where you design and manage your own thriving metropolis. Start with a small town and expand it into a bustling city.",
-                "tags": ["Strategy", "Simulation", "Building"],
-                "image": "https://imgs.crazygames.com/city-builder_16x9/20250620070701/city-builder_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T17:23:48.347Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750605678901",
-                "slug": "basketball-stars",
-                "name": "Basketball Stars",
-                "category": "Sports",
-                "description": "Basketball Stars is a fast-paced sports game where you play one-on-one basketball matches against the computer or friends. Choose from various players with unique abilities.",
-                "tags": ["Sports", "Basketball", "Multiplayer"],
-                "image": "https://imgs.crazygames.com/basketball-stars_16x9/20250620070701/basketball-stars_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T18:12:48.347Z",
-                "status": "approved"
-            },
-            {
-                "id": "1750606789012",
-                "slug": "parkour-race",
-                "name": "Parkour Race",
-                "category": "Action",
-                "description": "Parkour Race is an exhilarating action game where you run, jump, and slide through challenging obstacle courses. Race against opponents and reach the finish line first.",
-                "tags": ["Action", "Parkour", "Racing"],
-                "image": "https://imgs.crazygames.com/parkour-race_16x9/20250620070701/parkour-race_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
-                "dateAdded": "2025-06-22T19:45:48.347Z",
-                "status": "approved"
-            }
-        ];
+        // API URL - adjust this to your actual API endpoint
+        const apiUrl = '/api/games';
 
-        setTimeout(() => {
-            loadingIndicator.style.display = 'none';
-            updateCategoryInfo();
-            renderGames();
-        }, 500); // Small delay to show loading indicator
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Games fetched successfully:', data);
+                allGames = data;
+                loadingIndicator.style.display = 'none';
+                updateCategoryInfo();
+                renderGames();
+            })
+            .catch(error => {
+                console.error('Error fetching games:', error);
+                // Show error message to user
+                loadingIndicator.style.display = 'none';
+                gamesContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Sorry, we couldn't load the games at this time.</p>
+                        <p>Please try again later or contact support if the problem persists.</p>
+                        <button id="retry-button" class="retry-button">Try Again</button>
+                    </div>
+                `;
+                
+                // Add event listener to retry button
+                document.getElementById('retry-button').addEventListener('click', fetchGames);
+            });
     }
 
     // Function to update category title and description
