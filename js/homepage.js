@@ -25,14 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const data = await response.json();
             
-            if (!data.success) {
-                throw new Error(data.message || 'Failed to fetch games');
+            console.log('Games data received:', data);
+            
+            // Extract games array from the response
+            let games = [];
+            if (data.success && Array.isArray(data.games)) {
+                games = data.games;
+            } else if (Array.isArray(data)) {
+                games = data;
+            } else if (data.games) {
+                games = data.games;
             }
             
-            console.log(`Fetched ${data.games.length} approved games`);
+            // Filter games by approved status
+            const approvedGames = games.filter(game => game && game.status === "approved");
+            
+            console.log(`Filtered ${approvedGames.length} approved games from ${games.length} total games`);
             
             // Render the games
-            renderGames(data.games);
+            renderGames(approvedGames);
             
         } catch (error) {
             console.error('Error fetching games:', error);

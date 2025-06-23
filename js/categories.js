@@ -186,28 +186,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? game.tags.map(tag => `<span class="category-badge">${tag}</span>`).join('')
                 : '';
             
+            // Encode the game data to pass it directly to the template
+            const gameDataParam = encodeURIComponent(JSON.stringify(game));
+            
+            // Link to the template page with game data as parameter
+            const gameUrl = `./game-template.html?id=${game.id || game.slug}&data=${gameDataParam}`;
+            
             gameCard.innerHTML = `
-                <a href="/games/${game.slug}.html" class="block h-full flex flex-col">
-                    <div class="relative">
-                        <img src="${game.image}" alt="${game.name}" class="card-image">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                            <button class="play-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                                    <path d="M8 5v14l11-7z"></path>
-                                </svg>
-                                Play Now
-                            </button>
-                        </div>
+                <div class="relative">
+                    <img src="${game.image}" alt="${game.name}" class="card-image">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                        <a href="${gameUrl}" class="play-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                                <path d="M8 5v14l11-7z"></path>
+                            </svg>
+                            Play Now
+                        </a>
                     </div>
-                    <div class="card-content">
+                </div>
+                <div class="card-content">
+                    <a href="${gameUrl}">
                         <h3 class="game-title">${game.name}</h3>
                         <p class="game-description">${game.description}</p>
                         <div class="flex flex-wrap mt-auto">
                             <span class="category-badge primary-badge">${game.category}</span>
                             ${tagElements}
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             `;
             gamesContainer.appendChild(gameCard);
         });
