@@ -10,6 +10,10 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://relaxplayland.online/games/{{GAME_SLUG}}.html">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4053948353567712"
      crossorigin="anonymous"></script>
@@ -20,14 +24,13 @@
     <meta property="og:url" content="https://relaxplayland.online/games/{{GAME_SLUG}}.html">
     <meta property="og:type" content="game">
     <meta property="og:site_name" content="RelaxPlayLand">
+    <meta property="og:image" content="https://relaxplayland.online/images/logo.png">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Play {{GAME_NAME}} Online | RelaxPlayLand">
     <meta name="twitter:description" content="{{GAME_DESCRIPTION}}">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="twitter:image" content="https://relaxplayland.online/images/logo.png">
     
     <!-- Tailwind CSS -->
     <link href="../dist/output.css" rel="stylesheet">
@@ -181,7 +184,10 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="../index.html" class="text-2xl font-bold text-apple-blue">RelaxPlayLand</a>
+                    <a href="../index.html" class="flex items-center" aria-label="RelaxPlayLand Home">
+                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-10 w-10 mr-2">
+                        <span class="text-2xl font-bold text-apple-blue">RelaxPlayLand</span>
+                    </a>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">

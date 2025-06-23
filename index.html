@@ -3,31 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RelaxPlayLand - Fun Online Games for Everyone | Play Free Casual Games</title>
-    <meta name="description" content="Discover the best free online games at RelaxPlayLand. Play Dalgona Candy Honeycomb Cookie and other relaxing casual games. Perfect for stress relief and entertainment.">
-    <meta name="keywords" content="online games, free games, casual games, relaxing games, Dalgona Candy Honeycomb Cookie, stress relief games, browser games">
+    <title>RelaxPlayLand - Free Online Games for Stress Relief | Play Browser Games</title>
+    <meta name="description" content="Play the best free online games at RelaxPlayLand. Discover relaxing puzzle games, casual games, and browser-based entertainment. No downloads required, play instantly!">
+    <meta name="keywords" content="free online games, browser games, casual games, relaxing games, puzzle games, no download games, stress relief games">
     <meta name="author" content="RelaxPlayLand">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://relaxplayland.online/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4053948353567712"
      crossorigin="anonymous"></script>
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="RelaxPlayLand - Fun Online Games for Everyone">
-    <meta property="og:description" content="Discover the best free online games at RelaxPlayLand. Play Dalgona Candy Honeycomb Cookie and other relaxing casual games.">
+    <meta property="og:title" content="RelaxPlayLand - Free Online Games for Stress Relief">
+    <meta property="og:description" content="Play the best free online games at RelaxPlayLand. Discover relaxing puzzle games, casual games, and browser-based entertainment. No downloads required!">
     <meta property="og:url" content="https://relaxplayland.online/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="RelaxPlayLand">
+    <meta property="og:image" content="https://relaxplayland.online/images/logo.png">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="RelaxPlayLand - Fun Online Games for Everyone">
-    <meta name="twitter:description" content="Discover the best free online games at RelaxPlayLand. Play Dalgona Candy Honeycomb Cookie and other relaxing casual games.">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="twitter:title" content="RelaxPlayLand - Free Online Games for Stress Relief">
+    <meta name="twitter:description" content="Play the best free online games at RelaxPlayLand. Discover relaxing puzzle games, casual games, and browser-based entertainment. No downloads required!">
+    <meta name="twitter:image" content="https://relaxplayland.online/images/logo.png">
     
     <!-- Tailwind CSS -->
     <link href="./dist/output.css" rel="stylesheet">
@@ -55,6 +58,20 @@
         .btn-primary:hover {
             background-color: #4338CA;
         }
+        .category-badge {
+            display: inline-block;
+            background-color: #e2e8f0;
+            border-radius: 16px;
+            padding: 4px 12px;
+            margin: 4px;
+            font-size: 14px;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+        .category-badge:hover {
+            background-color: #4F46E5;
+            color: white;
+        }
     </style>
     
     <!-- Structured Data -->
@@ -64,12 +81,27 @@
         "@type": "WebSite",
         "name": "RelaxPlayLand",
         "url": "https://relaxplayland.online",
-        "description": "A relaxing online gaming platform with fun and casual games",
+        "description": "A relaxing online gaming platform with free browser games for stress relief and entertainment",
         "potentialAction": {
             "@type": "SearchAction",
             "target": "https://relaxplayland.online/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
         }
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "RelaxPlayLand",
+        "url": "https://relaxplayland.online",
+        "logo": "https://relaxplayland.online/images/logo.png",
+        "sameAs": [
+            "https://twitter.com/relaxplayland",
+            "https://facebook.com/relaxplayland"
+        ]
     }
     </script>
 </head>
@@ -79,13 +111,18 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-apple-blue">RelaxPlayLand</h1>
+                    <a href="/" class="flex items-center" aria-label="RelaxPlayLand Home">
+                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-10 w-10 mr-2">
+                        <h1 class="text-2xl font-bold text-apple-blue">RelaxPlayLand</h1>
+                    </a>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#home" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
                         <a href="#games" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Games</a>
+                        <a href="#categories" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Categories</a>
                         <a href="#about" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="/blog.html" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Blog</a>
                     </div>
                 </div>
             </div>
@@ -95,17 +132,59 @@
     <!-- Hero Section -->
     <section id="home" class="bg-gradient-to-br from-apple-blue to-apple-purple text-white py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to RelaxPlayLand</h1>
-            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Your ultimate destination for relaxing and entertaining online games. Take a break from stress and enjoy our collection of casual games designed for pure fun.</p>
-            <a href="#games" class="btn-primary bg-white text-apple-blue hover:bg-gray-100">Explore Games</a>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Play Free Online Games at RelaxPlayLand</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Your ultimate destination for relaxing browser games and stress relief entertainment. Enjoy our collection of casual games designed for pure fun - no downloads required!</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#games" class="btn-primary bg-white text-apple-blue hover:bg-gray-100">Explore Games</a>
+                <a href="/categories/puzzle-games.html" class="btn-primary bg-transparent border-2 border-white text-white hover:bg-white hover:text-apple-blue">Popular Puzzles</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-apple-dark-gray">Game Categories</h2>
+            <p class="text-center text-apple-gray mb-12 max-w-3xl mx-auto">Discover our wide selection of free online games across various categories. From challenging puzzles to relaxing casual games, we have something for everyone.</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <a href="/categories/puzzle-games.html" class="category-badge">Puzzle Games</a>
+                <a href="/categories/arcade-games.html" class="category-badge">Arcade Games</a>
+                <a href="/categories/strategy-games.html" class="category-badge">Strategy Games</a>
+                <a href="/categories/adventure-games.html" class="category-badge">Adventure Games</a>
+                <a href="/categories/simulation-games.html" class="category-badge">Simulation Games</a>
+                <a href="/categories/casual-games.html" class="category-badge">Casual Games</a>
+                <a href="/categories/action-games.html" class="category-badge">Action Games</a>
+                <a href="/categories/relaxing-games.html" class="category-badge">Relaxing Games</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-apple-light-gray p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 text-apple-blue">Puzzle Games</h3>
+                    <p class="text-apple-gray mb-4">Challenge your mind with our collection of puzzle games. Perfect for brain training and relaxation.</p>
+                    <a href="/categories/puzzle-games.html" class="text-apple-blue hover:underline font-medium">Explore Puzzles →</a>
+                </div>
+                
+                <div class="bg-apple-light-gray p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 text-apple-blue">Casual Games</h3>
+                    <p class="text-apple-gray mb-4">Easy to learn, fun to master. Our casual games are perfect for quick gaming sessions.</p>
+                    <a href="/categories/casual-games.html" class="text-apple-blue hover:underline font-medium">Explore Casual Games →</a>
+                </div>
+                
+                <div class="bg-apple-light-gray p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 text-apple-blue">Relaxing Games</h3>
+                    <p class="text-apple-gray mb-4">Unwind and de-stress with our specially curated collection of relaxing games.</p>
+                    <a href="/categories/relaxing-games.html" class="text-apple-blue hover:underline font-medium">Explore Relaxing Games →</a>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Featured Games Section -->
-    <section id="games" class="py-16 bg-white">
+    <section id="games" class="py-16 bg-apple-light-gray">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-apple-dark-gray">Featured Games</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-apple-dark-gray">Featured Online Games</h2>
                 <a href="submit-game.html" class="mt-4 md:mt-0 bg-apple-blue hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -113,6 +192,8 @@
                     Submit Your Game
                 </a>
             </div>
+            
+            <p class="text-apple-gray mb-12 max-w-3xl">Explore our handpicked selection of the best free online games. All games are browser-based with no downloads required. Just click and start playing instantly!</p>
             
             <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Games will be loaded dynamically by homepage.js -->
@@ -125,13 +206,18 @@
                     <p class="mt-4 text-gray-600">Loading games...</p>
                 </div>
             </div>
+            
+            <div class="text-center mt-12">
+                <a href="/all-games.html" class="btn-primary bg-apple-blue hover:bg-blue-600">View All Games</a>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-16 bg-apple-light-gray">
+    <section id="about" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-apple-dark-gray">About RelaxPlayLand</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-apple-dark-gray">About RelaxPlayLand</h2>
+            <p class="text-center text-apple-gray mb-12 max-w-3xl mx-auto">RelaxPlayLand is your premier destination for free online browser games. We focus on providing a stress-free gaming experience with no downloads required.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
@@ -140,29 +226,29 @@
                         <div class="flex items-start">
                             <div class="flex-shrink-0 w-6 h-6 bg-apple-green rounded-full mt-1 mr-3"></div>
                             <div>
-                                <h4 class="font-semibold text-apple-dark-gray">Free to Play</h4>
-                                <p class="text-apple-gray">All our games are completely free with no hidden costs or subscriptions.</p>
+                                <h4 class="font-semibold text-apple-dark-gray">100% Free Online Games</h4>
+                                <p class="text-apple-gray">All our games are completely free with no hidden costs or subscriptions. Enjoy unlimited gaming without spending a penny.</p>
                             </div>
                         </div>
                         <div class="flex items-start">
                             <div class="flex-shrink-0 w-6 h-6 bg-apple-blue rounded-full mt-1 mr-3"></div>
                             <div>
                                 <h4 class="font-semibold text-apple-dark-gray">No Downloads Required</h4>
-                                <p class="text-apple-gray">Play instantly in your browser without downloading any software.</p>
+                                <p class="text-apple-gray">Play instantly in your browser without downloading any software. Our games load quickly and run smoothly on most devices.</p>
                             </div>
                         </div>
                         <div class="flex items-start">
                             <div class="flex-shrink-0 w-6 h-6 bg-apple-orange rounded-full mt-1 mr-3"></div>
                             <div>
-                                <h4 class="font-semibold text-apple-dark-gray">Mobile Friendly</h4>
-                                <p class="text-apple-gray">Optimized for both desktop and mobile devices for the best gaming experience.</p>
+                                <h4 class="font-semibold text-apple-dark-gray">Mobile Friendly Games</h4>
+                                <p class="text-apple-gray">Optimized for both desktop and mobile devices for the best gaming experience wherever you are. Play on any device with a browser.</p>
                             </div>
                         </div>
                         <div class="flex items-start">
                             <div class="flex-shrink-0 w-6 h-6 bg-apple-purple rounded-full mt-1 mr-3"></div>
                             <div>
-                                <h4 class="font-semibold text-apple-dark-gray">Stress Relief</h4>
-                                <p class="text-apple-gray">Carefully selected games designed to help you relax and unwind.</p>
+                                <h4 class="font-semibold text-apple-dark-gray">Stress Relief Entertainment</h4>
+                                <p class="text-apple-gray">Carefully selected games designed to help you relax and unwind. Perfect for taking a break and reducing stress levels.</p>
                             </div>
                         </div>
                     </div>
@@ -171,37 +257,110 @@
                 <div class="bg-white p-8 rounded-xl shadow-lg">
                     <h3 class="text-2xl font-bold mb-6 text-apple-blue">Our Mission</h3>
                     <p class="text-apple-gray mb-6">At RelaxPlayLand, we believe that gaming should be accessible, enjoyable, and stress-relieving. Our platform provides a curated collection of casual games that anyone can enjoy, regardless of their gaming experience.</p>
-                    <p class="text-apple-gray">Whether you're looking to take a quick break from work, relax after a long day, or simply have some fun, our games are designed to provide the perfect escape.</p>
+                    <p class="text-apple-gray mb-6">Whether you're looking to take a quick break from work, relax after a long day, or simply have some fun, our free online games are designed to provide the perfect escape.</p>
+                    <p class="text-apple-gray">We regularly add new games to our collection to ensure there's always something fresh and exciting to play. Join our community of casual gamers and start playing today!</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Latest Blog Posts -->
+    <section class="py-16 bg-apple-light-gray">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-apple-dark-gray">Gaming Tips & News</h2>
+            <p class="text-center text-apple-gray mb-12 max-w-3xl mx-auto">Stay updated with the latest gaming tips, tricks, and news from the world of online browser games.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <img src="/images/blog/relaxing-games.jpg" alt="Top 10 Relaxing Games" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-apple-dark-gray">Top 10 Relaxing Browser Games for Stress Relief</h3>
+                        <p class="text-apple-gray mb-4">Discover our handpicked selection of the most calming and relaxing online games to help you unwind after a long day.</p>
+                        <a href="/blog/top-relaxing-games.html" class="text-apple-blue hover:underline font-medium">Read More →</a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <img src="/images/blog/puzzle-games.jpg" alt="Brain Training Puzzle Games" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-apple-dark-gray">5 Puzzle Games That Improve Brain Function</h3>
+                        <p class="text-apple-gray mb-4">Learn how playing certain types of online puzzle games can help improve your cognitive abilities and memory.</p>
+                        <a href="/blog/puzzle-brain-training.html" class="text-apple-blue hover:underline font-medium">Read More →</a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <img src="/images/blog/gaming-breaks.jpg" alt="Gaming Breaks at Work" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-apple-dark-gray">Why Taking Gaming Breaks Improves Productivity</h3>
+                        <p class="text-apple-gray mb-4">Research shows that short gaming breaks during work can actually boost your productivity and creativity.</p>
+                        <a href="/blog/gaming-breaks-productivity.html" class="text-apple-blue hover:underline font-medium">Read More →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="/blog.html" class="btn-primary bg-apple-blue hover:bg-blue-600">View All Articles</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-apple-dark-gray">Stay Updated</h2>
+            <p class="text-apple-gray mb-8 max-w-2xl mx-auto">Subscribe to our newsletter to get updates on new games, gaming tips, and exclusive content.</p>
+            
+            <form class="max-w-md mx-auto">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-apple-blue">
+                    <button type="submit" class="bg-apple-blue hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">Subscribe</button>
+                </div>
+                <p class="text-xs text-apple-gray mt-4">We respect your privacy. Unsubscribe at any time.</p>
+            </form>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-apple-dark-gray text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-xl font-bold mb-4">RelaxPlayLand</h3>
-                    <p class="text-gray-400">Your ultimate destination for relaxing online games.</p>
+                    <p class="text-gray-400">Your ultimate destination for free online games and relaxing browser-based entertainment.</p>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
                         <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
                         <li><a href="#games" class="text-gray-400 hover:text-white transition-colors">Games</a></li>
+                        <li><a href="#categories" class="text-gray-400 hover:text-white transition-colors">Categories</a></li>
                         <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
-                        <li><a href="submit-game.html" class="text-gray-400 hover:text-white transition-colors">Submit Game</a></li>
+                        <li><a href="/blog.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
-                    <p class="text-gray-400">Have suggestions or feedback?</p>
-                    <p class="text-gray-400">We'd love to hear from you!</p>
+                    <h4 class="text-lg font-semibold mb-4">Game Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/categories/puzzle-games.html" class="text-gray-400 hover:text-white transition-colors">Puzzle Games</a></li>
+                        <li><a href="/categories/arcade-games.html" class="text-gray-400 hover:text-white transition-colors">Arcade Games</a></li>
+                        <li><a href="/categories/casual-games.html" class="text-gray-400 hover:text-white transition-colors">Casual Games</a></li>
+                        <li><a href="/categories/relaxing-games.html" class="text-gray-400 hover:text-white transition-colors">Relaxing Games</a></li>
+                        <li><a href="/all-games.html" class="text-gray-400 hover:text-white transition-colors">All Games</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact & Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/contact.html" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="/submit-game.html" class="text-gray-400 hover:text-white transition-colors">Submit Game</a></li>
+                        <li><a href="/privacy-policy.html" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service.html" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved.</p>
+                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved. The #1 destination for free online browser games.</p>
             </div>
         </div>
     </footer>
