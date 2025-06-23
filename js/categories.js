@@ -97,7 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 console.log('Games fetched successfully:', data);
-                allGames = data;
+                // Check if data.games exists and is an array, otherwise use data directly
+                allGames = Array.isArray(data.games) ? data.games : 
+                          (Array.isArray(data) ? data : []);
+                
                 loadingIndicator.style.display = 'none';
                 updateCategoryInfo();
                 renderGames();
@@ -137,10 +140,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear games container
         gamesContainer.innerHTML = '';
 
+        // Make sure allGames is an array before filtering
+        if (!Array.isArray(allGames)) {
+            console.error('allGames is not an array:', allGames);
+            allGames = [];
+        }
+
         // Filter games by category and status
-        let filteredGames = allGames.filter(game => game.status === "approved");
+        let filteredGames = allGames.filter(game => game && game.status === "approved");
         if (currentCategory !== 'all') {
-            filteredGames = filteredGames.filter(game => game.category === currentCategory);
+            filteredGames = filteredGames.filter(game => game && game.category === currentCategory);
         }
 
         // Sort games
