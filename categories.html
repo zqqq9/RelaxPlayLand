@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Categories - RelaxPlayLand | Browse Games by Category</title>
+    <meta name="description" content="Browse games by category on RelaxPlayLand. Find puzzle games, arcade games, casual games, and more relaxing browser-based entertainment.">
+    <meta name="keywords" content="game categories, puzzle games, arcade games, casual games, relaxing games, browser games, free online games">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4053948353567712"
+     crossorigin="anonymous"></script>
+    
+    <!-- Tailwind CSS -->
+    <link href="./dist/output.css" rel="stylesheet">
+    
+    <style>
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .category-item {
+            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+        }
+        .category-item:hover {
+            background-color: #f3f4f6;
+        }
+        .category-item.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .category-item.active:hover {
+            background-color: #4338CA;
+        }
+    </style>
+</head>
+<body class="bg-apple-light-gray min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center" aria-label="RelaxPlayLand Home">
+                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-3 w-3 mr-2">
+                        <h1 class="text-2xl font-bold text-apple-blue">RelaxPlayLand</h1>
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="/categories.html" class="text-apple-blue border-b-2 border-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Categories</a>
+                        <a href="#about" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="/blog.html" class="text-apple-gray hover:text-apple-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Blog</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row">
+            <!-- Category Sidebar -->
+            <div class="w-full md:w-64 flex-shrink-0 mb-6 md:mb-0 md:mr-8">
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <h2 class="text-xl font-bold mb-4 text-apple-dark-gray">Categories</h2>
+                    <ul id="category-list" class="space-y-1">
+                        <li>
+                            <button class="category-item active w-full text-left px-4 py-2 font-medium" data-category="all">
+                                All Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="puzzle">
+                                Puzzle Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="arcade">
+                                Arcade Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="casual">
+                                Casual Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="action">
+                                Action Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="strategy">
+                                Strategy Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="relaxing">
+                                Relaxing Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="adventure">
+                                Adventure Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="sports">
+                                Sports Games
+                            </button>
+                        </li>
+                        <li>
+                            <button class="category-item w-full text-left px-4 py-2 font-medium" data-category="multiplayer">
+                                Multiplayer Games
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Games Grid -->
+            <div class="flex-grow">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 id="category-title" class="text-3xl font-bold text-apple-dark-gray">All Games</h1>
+                    <div class="flex items-center">
+                        <label for="sort-by" class="mr-2 text-apple-gray">Sort by:</label>
+                        <select id="sort-by" class="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-apple-blue">
+                            <option value="popular">Popular</option>
+                            <option value="newest">Newest</option>
+                            <option value="a-z">A-Z</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="category-description" class="text-apple-gray mb-8">
+                    Browse all our free online games. Find your favorite games to play instantly in your browser with no downloads required.
+                </div>
+                
+                <div id="games-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Games will be loaded dynamically by categories.js -->
+                    <!-- Loading indicator -->
+                    <div class="col-span-full text-center py-10">
+                        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="mt-4 text-gray-600">Loading games...</p>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-12 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <!-- Heroicon name: solid/chevron-left -->
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-apple-blue hover:bg-gray-50">
+                            1
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            2
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            3
+                        </a>
+                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                            ...
+                        </span>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            8
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            9
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            10
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <!-- Heroicon name: solid/chevron-right -->
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-apple-dark-gray text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">RelaxPlayLand</h3>
+                    <p class="text-gray-400">Your ultimate destination for free online games and relaxing browser-based entertainment.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/categories.html" class="text-gray-400 hover:text-white transition-colors">Categories</a></li>
+                        <li><a href="/#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a href="/blog.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Game Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/categories.html?category=puzzle" class="text-gray-400 hover:text-white transition-colors">Puzzle Games</a></li>
+                        <li><a href="/categories.html?category=arcade" class="text-gray-400 hover:text-white transition-colors">Arcade Games</a></li>
+                        <li><a href="/categories.html?category=casual" class="text-gray-400 hover:text-white transition-colors">Casual Games</a></li>
+                        <li><a href="/categories.html?category=relaxing" class="text-gray-400 hover:text-white transition-colors">Relaxing Games</a></li>
+                        <li><a href="/categories.html" class="text-gray-400 hover:text-white transition-colors">All Games</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact & Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/contact.html" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="/submit-game.html" class="text-gray-400 hover:text-white transition-colors">Submit Game</a></li>
+                        <li><a href="/privacy-policy.html" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service.html" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 RelaxPlayLand. All rights reserved. The #1 destination for free online browser games.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Categories JS -->
+    <script src="./js/categories.js"></script>
+</body>
+</html> 
