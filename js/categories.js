@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentCategory = 'all';
     let currentSort = 'newest';
     let currentPage = 1;
-    const gamesPerPage = 9;
+    const gamesPerPage = 6;
 
     // Check URL parameters for category
     const urlParams = new URLSearchParams(window.location.search);
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize the page
-    fetchGames();
+    loadGames();
 
     // Add event listeners to category buttons
     categoryButtons.forEach(button => {
@@ -79,57 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
         renderGames();
     });
 
-    // Function to fetch games from API
-    function fetchGames() {
+    // Function to load games data
+    function loadGames() {
         loadingIndicator.style.display = 'block';
         noResults.style.display = 'none';
         gamesContainer.innerHTML = '';
 
-        // For demo purposes, use the sample data directly
-        // In a production environment, you would fetch from the API
-        useSampleData();
-        loadingIndicator.style.display = 'none';
-        updateCategoryInfo();
-        renderGames();
-
-        /* Uncomment this section to use the actual API
-        fetch('/api/games')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                allGames = data;
-                loadingIndicator.style.display = 'none';
-                
-                // Update UI with fetched games
-                updateCategoryInfo();
-                renderGames();
-            })
-            .catch(error => {
-                console.error('Error fetching games:', error);
-                
-                // For demo purposes, use sample data if API fails
-                useSampleData();
-                
-                loadingIndicator.style.display = 'none';
-                updateCategoryInfo();
-                renderGames();
-            });
-        */
-    }
-
-    // Function to use sample data if API fails (for demo purposes)
-    function useSampleData() {
+        // Use hardcoded game data directly instead of fetching from API
         allGames = [
             {
                 "id": "1750524758590",
                 "slug": "golf-orbit",
                 "name": "Golf Orbit",
                 "category": "Adventure",
-                "description": "Golf Orbit is an exciting golf simulator game within our sports category where you aim to launch golf balls to incredible heights, even reaching Mars. Have fun in one-shot golf battles, complete challenging levels, and master the art of the perfect shot.",
+                "description": "Golf Orbit is an exciting golf simulator game where you aim to launch golf balls to incredible heights, even reaching Mars. Have fun in one-shot golf battles and master the perfect shot.",
                 "tags": ["Golf", "Sport"],
                 "image": "https://imgs.crazygames.com/golf-orbit_16x9/20240620070701/golf-orbit_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
                 "dateAdded": "2025-06-21T16:52:38.590Z",
@@ -140,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "slug": "dalgona-candy-honeycomb-cookie",
                 "name": "Dalgona Candy Honeycomb Cookie",
                 "category": "Puzzle",
-                "description": "Dalgona Candy Honeycomb Cookie is a fun, shape-carving challenge where you'll carefully cut out designs from honeycomb cookies. With levels that feature classic dalgona, American cookies, and more, you'll have plenty of shapes to carve.",
+                "description": "Dalgona Candy Honeycomb Cookie is a fun, shape-carving challenge where you'll carefully cut out designs from honeycomb cookies. With levels that feature classic dalgona and American cookies.",
                 "tags": ["Puzzle"],
                 "image": "https://imgs.crazygames.com/dalgona-candy-honeycomb-cookie-kam_16x9/20250521050634/dalgona-candy-honeycomb-cookie-kam_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
                 "dateAdded": "2025-06-22T12:21:22.408Z",
@@ -151,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "slug": "lumber-harvest-tree-cutting-game",
                 "name": "Lumber Harvest: Tree Cutting Game",
                 "category": "Simulation",
-                "description": "Lumber Harvest: Tree Cutting Game is a relaxing progression game where you drive a powerful tractor to clear forests and collect timber. You'll upgrade your saw, expand your truck's capacity, and unlock new areas as you turn trees into profit.",
+                "description": "Lumber Harvest is a relaxing progression game where you drive a tractor to clear forests and collect timber. Upgrade your saw, expand your truck's capacity, and unlock new areas.",
                 "tags": ["Simulation", "Tree"],
                 "image": "https://imgs.crazygames.com/lumber-harvest-tree-cutting-game_16x9/20250619095414/lumber-harvest-tree-cutting-game_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
                 "dateAdded": "2025-06-22T13:09:24.810Z",
@@ -162,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "slug": "count-masters-stickman-games",
                 "name": "Count Masters: Stickman Games",
                 "category": "Casual",
-                "description": "Count Masters: Stickman Games is a fast-paced running game where you gather a growing army of stickmen to clash against rival crowds. Navigate through obstacles, choose the best paths to multiply your numbers, and lead your team to victory.",
-                "tags": ["Runing", "Math"],
+                "description": "Count Masters is a fast-paced running game where you gather a growing army of stickmen to clash against rival crowds. Navigate obstacles and multiply your numbers to win.",
+                "tags": ["Running", "Math"],
                 "image": "https://imgs.crazygames.com/count-masters-stickman-games_16x9/20250220041115/count-masters-stickman-games_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
                 "dateAdded": "2025-06-22T13:33:04.349Z",
                 "status": "approved"
@@ -173,13 +136,74 @@ document.addEventListener('DOMContentLoaded', function() {
                 "slug": "capybara-clicker",
                 "name": "Capybara Clicker",
                 "category": "Other",
-                "description": "Capybara Clicker is a clicker game where you multiply the capybara population by clicking. You can buy various upgrades to increase the output of capybaras, change the weather, and unlock new skins to make you the coolest capybara in town.",
+                "description": "Capybara Clicker is a clicker game where you multiply the capybara population by clicking. Buy upgrades to increase capybara output, change weather, and unlock new skins.",
                 "tags": ["Clicker"],
                 "image": "https://imgs.crazygames.com/games/capybara-clicker/cover-1678290947532.png?metadata=none&quality=40&width=273&fit=crop&dpr=2",
                 "dateAdded": "2025-06-22T14:07:48.347Z",
                 "status": "approved"
+            },
+            {
+                "id": "1750602347123",
+                "slug": "2048",
+                "name": "2048",
+                "category": "Puzzle",
+                "description": "2048 is an addictive number puzzle game where you combine matching tiles to create the number 2048. Slide tiles in four directions, merging identical numbers to double their value.",
+                "tags": ["Puzzle", "Math", "Strategy"],
+                "image": "https://imgs.crazygames.com/2048_16x9/20250620070701/2048_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
+                "dateAdded": "2025-06-22T15:12:48.347Z",
+                "status": "approved"
+            },
+            {
+                "id": "1750603456789",
+                "slug": "snake-io",
+                "name": "Snake.io",
+                "category": "Arcade",
+                "description": "Snake.io is a multiplayer snake game where you control a colorful snake and compete against other players. Eat glowing orbs to grow longer and eliminate opponents.",
+                "tags": ["Multiplayer", "IO", "Snake"],
+                "image": "https://imgs.crazygames.com/snake-io_16x9/20250620070701/snake-io_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
+                "dateAdded": "2025-06-22T16:34:48.347Z",
+                "status": "approved"
+            },
+            {
+                "id": "1750604567890",
+                "slug": "city-builder",
+                "name": "City Builder",
+                "category": "Strategy",
+                "description": "City Builder is a strategic simulation game where you design and manage your own thriving metropolis. Start with a small town and expand it into a bustling city.",
+                "tags": ["Strategy", "Simulation", "Building"],
+                "image": "https://imgs.crazygames.com/city-builder_16x9/20250620070701/city-builder_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
+                "dateAdded": "2025-06-22T17:23:48.347Z",
+                "status": "approved"
+            },
+            {
+                "id": "1750605678901",
+                "slug": "basketball-stars",
+                "name": "Basketball Stars",
+                "category": "Sports",
+                "description": "Basketball Stars is a fast-paced sports game where you play one-on-one basketball matches against the computer or friends. Choose from various players with unique abilities.",
+                "tags": ["Sports", "Basketball", "Multiplayer"],
+                "image": "https://imgs.crazygames.com/basketball-stars_16x9/20250620070701/basketball-stars_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
+                "dateAdded": "2025-06-22T18:12:48.347Z",
+                "status": "approved"
+            },
+            {
+                "id": "1750606789012",
+                "slug": "parkour-race",
+                "name": "Parkour Race",
+                "category": "Action",
+                "description": "Parkour Race is an exhilarating action game where you run, jump, and slide through challenging obstacle courses. Race against opponents and reach the finish line first.",
+                "tags": ["Action", "Parkour", "Racing"],
+                "image": "https://imgs.crazygames.com/parkour-race_16x9/20250620070701/parkour-race_16x9-cover?metadata=none&quality=40&width=273&fit=crop&dpr=2",
+                "dateAdded": "2025-06-22T19:45:48.347Z",
+                "status": "approved"
             }
         ];
+
+        setTimeout(() => {
+            loadingIndicator.style.display = 'none';
+            updateCategoryInfo();
+            renderGames();
+        }, 500); // Small delay to show loading indicator
     }
 
     // Function to update category title and description
@@ -242,20 +266,24 @@ document.addEventListener('DOMContentLoaded', function() {
             
             gameCard.innerHTML = `
                 <a href="/games/${game.slug}.html" class="block h-full flex flex-col">
-                    <img src="${game.image}" alt="${game.name}" class="card-image">
+                    <div class="relative">
+                        <img src="${game.image}" alt="${game.name}" class="card-image">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                            <button class="play-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                                    <path d="M8 5v14l11-7z"></path>
+                                </svg>
+                                Play Now
+                            </button>
+                        </div>
+                    </div>
                     <div class="card-content">
                         <h3 class="game-title">${game.name}</h3>
                         <p class="game-description">${game.description}</p>
                         <div class="flex flex-wrap mt-auto">
-                            <span class="category-badge">${game.category}</span>
+                            <span class="category-badge primary-badge">${game.category}</span>
                             ${tagElements}
                         </div>
-                        <button class="play-button mt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z"></path>
-                            </svg>
-                            Play Now
-                        </button>
                     </div>
                 </a>
             `;
