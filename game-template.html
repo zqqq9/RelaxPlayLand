@@ -772,30 +772,105 @@
                 
                 // Update page title and meta tags
                 document.title = `${gameData.name} | RelaxPlayLand`;
-                document.querySelector('meta[name="description"]').setAttribute('content', gameData.description || '');
                 
-                // Update game details in the page
-                document.getElementById('game-title').textContent = gameData.name;
-                document.getElementById('game-category').textContent = gameData.category || 'Uncategorized';
+                // Safely update meta tags with null checks
+                const metaDescription = document.querySelector('meta[name="description"]');
+                if (metaDescription) {
+                    metaDescription.setAttribute('content', gameData.description || '');
+                }
+                
+                // Update Open Graph and Twitter meta tags with null checks
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) {
+                    ogTitle.setAttribute('content', `${gameData.name} | RelaxPlayLand`);
+                }
+                
+                const ogDescription = document.querySelector('meta[property="og:description"]');
+                if (ogDescription) {
+                    ogDescription.setAttribute('content', gameData.description || '');
+                }
+                
+                const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twitterTitle) {
+                    twitterTitle.setAttribute('content', `${gameData.name} | RelaxPlayLand`);
+                }
+                
+                const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+                if (twitterDescription) {
+                    twitterDescription.setAttribute('content', gameData.description || '');
+                }
+                
+                if (gameData.image) {
+                    const ogImage = document.querySelector('meta[property="og:image"]');
+                    if (ogImage) {
+                        ogImage.setAttribute('content', gameData.image);
+                    }
+                    
+                    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+                    if (twitterImage) {
+                        twitterImage.setAttribute('content', gameData.image);
+                    }
+                }
+                
+                // Update game details in the page with null checks
+                const gameTitleElement = document.getElementById('game-title');
+                if (gameTitleElement) {
+                    gameTitleElement.textContent = gameData.name;
+                }
+                
+                const gameCategoryElement = document.getElementById('game-category');
+                if (gameCategoryElement) {
+                    gameCategoryElement.textContent = gameData.category || 'Uncategorized';
+                }
                 
                 // Format description and instructions with proper line breaks
                 const descriptionElement = document.getElementById('game-description');
-                const instructionsElement = document.getElementById('game-instructions');
-                
                 if (descriptionElement) {
                     descriptionElement.innerHTML = gameData.description ? gameData.description.replace(/\\r\\n/g, '<br>').replace(/\r\n/g, '<br>') : '';
                 }
                 
+                const instructionsElement = document.getElementById('game-instructions');
                 if (instructionsElement) {
                     instructionsElement.innerHTML = gameData.instructions ? gameData.instructions.replace(/\\r\\n/g, '<br>').replace(/\r\n/g, '<br>') : '';
                 }
                 
-                // Handle game iframe
-                const gameContainer = document.getElementById('game-container');
-                if (gameContainer) {
-                    // Clear any existing content
-                    gameContainer.innerHTML = '';
+                // Update developer info if available
+                const developerElement = document.getElementById('game-developer');
+                const developerUrlElement = document.getElementById('game-developer-url');
+                
+                if (developerElement && gameData.developer) {
+                    developerElement.textContent = gameData.developer.name || '-';
                     
+                    if (developerUrlElement && gameData.developer.website) {
+                        const link = developerUrlElement.querySelector('a');
+                        if (link) {
+                            link.href = gameData.developer.website;
+                            link.textContent = gameData.developer.website;
+                            link.style.display = 'inline';
+                        }
+                    } else if (developerUrlElement) {
+                        developerUrlElement.style.display = 'none';
+                    }
+                }
+                
+                // Handle game badges
+                const badgesContainer = document.getElementById('game-badges');
+                if (badgesContainer && gameData.tags && gameData.tags.length > 0) {
+                    badgesContainer.innerHTML = '';
+                    
+                    gameData.tags.forEach(tag => {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-blue-100 text-blue-800';
+                        badge.textContent = tag;
+                        badgesContainer.appendChild(badge);
+                    });
+                }
+                
+                // Handle game iframe
+                const gameIframe = document.getElementById('game-iframe');
+                const directIframeContainer = document.getElementById('direct-iframe-container');
+                
+                if (gameIframe && directIframeContainer) {
                     // Check if we have an iframe HTML string
                     if (gameData.iframe && typeof gameData.iframe === 'string') {
                         console.log('Using provided iframe HTML');
@@ -807,15 +882,19 @@
                                 .replace(/\\"/g, '"')  // Replace escaped quotes
                                 .replace(/\\\\/g, '\\'); // Replace double backslashes
                                 
-                            // Insert the iframe HTML
-                            gameContainer.innerHTML = cleanIframe;
+                            // Insert the iframe HTML into the direct container
+                            directIframeContainer.innerHTML = cleanIframe;
                             
                             // Check if iframe was inserted correctly
-                            if (gameContainer.querySelector('iframe')) {
+                            if (directIframeContainer.querySelector('iframe')) {
                                 console.log('Iframe inserted successfully using direct HTML');
                                 
+                                // Hide the standard iframe and show the direct container
+                                gameIframe.style.display = 'none';
+                                directIframeContainer.style.display = 'block';
+                                
                                 // Set up iframe event listeners
-                                setupIframeEventListeners(gameContainer.querySelector('iframe'));
+                                setupIframeEventListeners(directIframeContainer.querySelector('iframe'));
                             } else {
                                 throw new Error('Failed to insert iframe using direct HTML');
                             }
@@ -830,20 +909,16 @@
                                 const heightMatch = gameData.iframe.match(/height=["']([^"']+)["']/i);
                                 
                                 if (srcMatch && srcMatch[1]) {
-                                    // Create a new iframe element
-                                    const iframe = document.createElement('iframe');
-                                    iframe.src = srcMatch[1].replace(/\\"/g, '"');
-                                    iframe.width = widthMatch && widthMatch[1] ? widthMatch[1] : '100%';
-                                    iframe.height = heightMatch && heightMatch[1] ? heightMatch[1] : '500';
-                                    iframe.frameBorder = '0';
-                                    iframe.allowFullscreen = true;
+                                    // Use the standard iframe
+                                    gameIframe.src = srcMatch[1].replace(/\\"/g, '"');
+                                    if (widthMatch && widthMatch[1]) gameIframe.width = widthMatch[1];
+                                    if (heightMatch && heightMatch[1]) gameIframe.height = heightMatch[1];
                                     
-                                    // Add the iframe to the container
-                                    gameContainer.appendChild(iframe);
+                                    // Show the standard iframe
+                                    gameIframe.style.display = 'block';
+                                    directIframeContainer.style.display = 'none';
+                                    
                                     console.log('Iframe created using extracted attributes');
-                                    
-                                    // Set up iframe event listeners
-                                    setupIframeEventListeners(iframe);
                                 } else {
                                     throw new Error('Could not extract iframe src');
                                 }
@@ -853,28 +928,37 @@
                             }
                         }
                     } else if (gameData.gameUrl) {
-                        // Create iframe from gameUrl
+                        // Use gameUrl with the standard iframe
                         console.log('Creating iframe from gameUrl:', gameData.gameUrl);
-                        const iframe = document.createElement('iframe');
-                        iframe.src = gameData.gameUrl;
-                        iframe.width = '100%';
-                        iframe.height = '500';
-                        iframe.frameBorder = '0';
-                        iframe.allowFullscreen = true;
-                        
-                        // Add the iframe to the container
-                        gameContainer.appendChild(iframe);
-                        
-                        // Set up iframe event listeners
-                        setupIframeEventListeners(iframe);
+                        gameIframe.src = gameData.gameUrl;
+                        gameIframe.style.display = 'block';
+                        directIframeContainer.style.display = 'none';
                     } else {
                         showError('No game URL or iframe provided');
                     }
                 }
                 
-                // Show the game page content
-                document.getElementById('loading-indicator').style.display = 'none';
-                document.getElementById('game-page-content').style.display = 'block';
+                // Set up "Play in New Window" link
+                const newWindowLink = document.getElementById('new-window-link');
+                if (newWindowLink) {
+                    const gameUrl = gameData.gameUrl || (gameData.iframe ? gameData.iframe.match(/src=["']([^"']+)["']/i)?.[1] : null);
+                    if (gameUrl) {
+                        newWindowLink.href = gameUrl.replace(/\\"/g, '"');
+                    } else {
+                        newWindowLink.style.display = 'none';
+                    }
+                }
+                
+                // Hide loading indicator and show game content
+                const loadingElement = document.getElementById('loading');
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                
+                const gameContentElement = document.getElementById('game-content');
+                if (gameContentElement) {
+                    gameContentElement.style.display = 'block';
+                }
                 
             } catch (error) {
                 console.error('Error populating game data:', error);
