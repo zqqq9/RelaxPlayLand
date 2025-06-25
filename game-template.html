@@ -269,76 +269,85 @@
             // Try to load game data from URL parameter first
             if (gameDataParam) {
                 try {
-                    // Safely decode the game data parameter
-                    let gameData;
-                    try {
-                        // First try standard decoding
-                        console.log('Attempting standard decoding of game data parameter');
-                        gameData = JSON.parse(decodeURIComponent(gameDataParam));
-                    } catch (decodeError) {
-                        // If that fails, try a more careful approach to handle malformed URIs
-                        console.log('Standard decoding failed with error:', decodeError.message);
-                        console.log('Trying alternative decoding approach');
+                    // Attempt to extract game data using multiple approaches
+                    let gameData = null;
+                    
+                    // Approach 1: Try to directly extract the iframe HTML if present
+                    console.log('Attempting to extract iframe directly from URL parameter');
+                    const iframeMatch = gameDataParam.match(/iframe":\s*"([^"]+)"/);
+                    const nameMatch = gameDataParam.match(/name":\s*"([^"]+)"/);
+                    const imageMatch = gameDataParam.match(/image":\s*"([^"]+)"/);
+                    const descriptionMatch = gameDataParam.match(/description":\s*"([^"]+)"/);
+                    const categoryMatch = gameDataParam.match(/category":\s*"([^"]+)"/);
+                    const howToPlayMatch = gameDataParam.match(/howToPlay":\s*"([^"]+)"/);
+                    
+                    if (iframeMatch && nameMatch) {
+                        console.log('Successfully extracted iframe and name from URL parameter');
                         
-                        // Log the problematic sequences
-                        console.log('URL parameter contains \\r\\n sequences:', gameDataParam.includes('%5Cr%5Cn'));
-                        console.log('URL parameter contains escaped backslashes:', gameDataParam.includes('%5C'));
-                        
-                        // Replace problematic escape sequences before decoding
-                        const fixedParam = gameDataParam
-                            .replace(/%5Cr%5Cn/g, '\\n')  // Replace \r\n with just \n
-                            .replace(/%5C/g, '\\');       // Fix other escaped backslashes
-                        
-                        // Try decoding the fixed parameter
+                        // Create a simplified game object with the extracted data
+                        gameData = {
+                            id: gameId,
+                            name: nameMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"'),
+                            iframe: iframeMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"'),
+                            image: imageMatch ? imageMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"') : '',
+                            description: descriptionMatch ? descriptionMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"').replace(/\\r\\n/g, '<br>') : '',
+                            category: categoryMatch ? categoryMatch[1] : 'Uncategorized',
+                            howToPlay: howToPlayMatch ? howToPlayMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"').replace(/\\r\\n/g, '<br>') : ''
+                        };
+                    } else {
+                        // Approach 2: Try standard decoding
                         try {
-                            gameData = JSON.parse(decodeURIComponent(fixedParam));
-                            console.log('Alternative decoding successful');
-                        } catch (secondError) {
-                            console.error('Alternative decoding also failed:', secondError.message);
+                            console.log('Attempting standard decoding of game data parameter');
+                            // Replace problematic sequences before decoding
+                            const cleanedParam = gameDataParam
+                                .replace(/%5Cr%5Cn/g, ' ') // Replace \r\n with space
+                                .replace(/%5C%22/g, '%22'); // Replace \" with "
+                                
+                            gameData = JSON.parse(decodeURIComponent(cleanedParam));
+                            console.log('Standard decoding successful');
+                        } catch (decodeError) {
+                            console.log('Standard decoding failed with error:', decodeError.message);
                             
-                            // Last resort: try to extract the iframe directly
-                            console.log('Attempting to extract iframe directly from parameter');
-                            const iframeMatch = gameDataParam.match(/%22iframe%22%3A%22(.+?)%22%2C/);
-                            if (iframeMatch && iframeMatch[1]) {
-                                console.log('Found iframe data in parameter, creating minimal game data');
-                                
-                                // Create minimal game data with just the iframe
-                                const iframeContent = decodeURIComponent(iframeMatch[1]);
-                                gameData = {
-                                    id: gameId,
-                                    name: "Game " + gameId,
-                                    iframe: iframeContent,
-                                    description: "Game loaded with minimal data",
-                                    howToPlay: "Controls depend on the specific game"
-                                };
-                                
-                                console.log('Created minimal game data with iframe:', iframeContent.substring(0, 50) + '...');
-                            } else {
-                                throw secondError; // Re-throw if we couldn't extract iframe
+                            // Approach 3: Try manual JSON extraction
+                            try {
+                                console.log('Trying manual JSON extraction');
+                                // Convert escaped JSON to proper JSON
+                                const jsonString = gameDataParam
+                                    .replace(/%7B/g, '{')
+                                    .replace(/%7D/g, '}')
+                                    .replace(/%22/g, '"')
+                                    .replace(/%20/g, ' ')
+                                    .replace(/%3A/g, ':')
+                                    .replace(/%2C/g, ',')
+                                    .replace(/%5B/g, '[')
+                                    .replace(/%5D/g, ']')
+                                    .replace(/%5C/g, '\\')
+                                    .replace(/%25/g, '%');
+                                    
+                                gameData = JSON.parse(jsonString);
+                                console.log('Manual JSON extraction successful');
+                            } catch (jsonError) {
+                                console.log('Manual JSON extraction failed:', jsonError.message);
+                                throw new Error('Could not parse game data parameter');
                             }
                         }
                     }
                     
-                    console.log('Using game data from URL parameter:', gameData);
-                    
-                    // Validate that we have the minimum required fields
-                    if (!gameData.name) {
-                        console.warn('Game data missing name field, trying API');
-                        fetchGameDataWithRetry(gameId, 3);
+                    // Process the game data
+                    if (gameData) {
+                        // Format game data for display
+                        populateGameData(gameData);
                         return;
                     }
-                    
-                    populateGameData(gameData);
                 } catch (error) {
                     console.error('Error parsing game data from URL:', error);
-                    // Fall back to API request
-                    fetchGameDataWithRetry(gameId, 3);
+                    // Continue to API fallback
                 }
-            } else {
-                // No game data in URL, try API request
-                console.log('No game data in URL, trying API request');
-                fetchGameDataWithRetry(gameId, 3);
             }
+            
+            // No game data in URL, try API request
+            console.log('No game data in URL, trying API request');
+            fetchGameDataWithRetry(gameId, 3);
             
             // Set up iframe error handling
             const gameFallback = document.getElementById('game-fallback');
@@ -560,55 +569,79 @@
         function setupIframeEventListeners(iframe) {
             if (!iframe) return;
             
-            // Check if iframe loaded correctly
+            // Add loading event handler
             iframe.addEventListener('load', function() {
-                console.log('Iframe load event fired');
-                
-                // Hide the fallback if it was showing
-                const gameFallback = document.getElementById('game-fallback');
-                if (gameFallback) {
-                    gameFallback.style.display = 'none';
-                }
-                iframe.style.display = 'block';
+                console.log('Game iframe loaded successfully');
+                // You could trigger analytics events here
             });
             
-            // Handle iframe errors
+            // Add error event handler
             iframe.addEventListener('error', function(e) {
-                console.error('Game iframe failed to load:', e);
-                const gameFallback = document.getElementById('game-fallback');
-                if (gameFallback) {
-                    const gameIframe = document.getElementById('game-iframe');
-                    if (gameIframe) {
-                        gameIframe.style.display = 'none';
-                    }
-                    const directIframeContainer = document.getElementById('direct-iframe-container');
-                    if (directIframeContainer) {
-                        directIframeContainer.style.display = 'none';
-                    }
-                    gameFallback.style.display = 'block';
-                }
+                console.error('Error loading game iframe:', e);
+                showError('Failed to load game. Please try refreshing the page.');
             });
+            
+            // Set security attributes
+            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+            iframe.setAttribute('loading', 'lazy');
+            
+            // Set additional attributes for better user experience
+            iframe.setAttribute('allow', 'fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture');
         }
         
-        // Function to fetch game data with retry mechanism
-        async function fetchGameDataWithRetry(gameId, maxRetries) {
-            let retries = 0;
-            
-            while (retries < maxRetries) {
-                try {
-                    await fetchGameData(gameId);
-                    return; // Success, exit the retry loop
-                } catch (error) {
-                    retries++;
-                    console.log(`Attempt ${retries}/${maxRetries} failed. ${retries < maxRetries ? 'Retrying...' : 'Giving up.'}`);
+        // Function to fetch game data with retry
+        async function fetchGameDataWithRetry(gameId, maxRetries = 3, retryCount = 0) {
+            try {
+                const gameData = await fetchGameData(gameId);
+                if (gameData) {
+                    populateGameData(gameData);
+                } else {
+                    throw new Error('No game data returned');
+                }
+            } catch (error) {
+                console.error(`Error fetching game data (attempt ${retryCount + 1}/${maxRetries}):`, error);
+                
+                if (retryCount < maxRetries - 1) {
+                    // Exponential backoff for retries
+                    const delay = Math.pow(2, retryCount) * 1000;
+                    console.log(`Retrying in ${delay}ms...`);
                     
-                    if (retries >= maxRetries) {
-                        showError(`Failed to load game data after ${maxRetries} attempts`);
-                        break;
+                    setTimeout(() => {
+                        fetchGameDataWithRetry(gameId, maxRetries, retryCount + 1);
+                    }, delay);
+                } else {
+                    console.error('All retry attempts failed');
+                    
+                    // Last resort: try to extract from URL parameter
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const gameDataParam = urlParams.get('data');
+                    
+                    if (gameDataParam) {
+                        try {
+                            // Try direct extraction of iframe from parameter
+                            const iframeMatch = gameDataParam.match(/iframe":\s*"([^"]+)"/);
+                            if (iframeMatch && iframeMatch[1]) {
+                                console.log('Creating minimal game data from URL parameter');
+                                
+                                // Create minimal game data
+                                const minimalGameData = {
+                                    id: gameId,
+                                    name: `Game ${gameId}`,
+                                    iframe: iframeMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"'),
+                                    description: 'Game description not available.',
+                                    howToPlay: 'Game instructions not available.'
+                                };
+                                
+                                populateGameData(minimalGameData);
+                                return;
+                            }
+                        } catch (extractError) {
+                            console.error('Failed to extract iframe from URL parameter:', extractError);
+                        }
                     }
                     
-                    // Wait before retrying (exponential backoff)
-                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retries - 1)));
+                    // If all else fails, show error
+                    showError('Failed to load game data. Please try refreshing the page.');
                 }
             }
         }
@@ -629,40 +662,28 @@
                         'Content-Type': 'application/json'
                     },
                     mode: 'cors',
+                    cache: 'no-cache',
                     credentials: 'same-origin'
                 });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
                 
                 // Check if response is JSON
                 const contentType = response.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
-                    console.warn(`API returned non-JSON response: ${contentType}`);
+                    console.log(`API returned non-JSON response: ${contentType}`);
                     
-                    // Try to extract game data from URL parameters as a fallback
+                    // Try to extract game data from URL parameter as fallback
                     const urlParams = new URLSearchParams(window.location.search);
                     const gameDataParam = urlParams.get('data');
                     
                     if (gameDataParam) {
                         try {
-                            // Use the same careful parsing approach as before
-                            let gameData;
-                            try {
-                                gameData = JSON.parse(decodeURIComponent(gameDataParam));
-                            } catch (decodeError) {
-                                const fixedParam = gameDataParam
-                                    .replace(/%5Cr%5Cn/g, '\\n')
-                                    .replace(/%5C/g, '\\');
-                                gameData = JSON.parse(decodeURIComponent(fixedParam));
+                            // Try to parse the URL parameter data
+                            const gameData = extractGameDataFromParam(gameDataParam);
+                            if (gameData) {
+                                return gameData;
                             }
-                            
-                            console.log('API returned non-JSON, using URL parameter data instead');
-                            populateGameData(gameData);
-                            return { success: true, game: gameData };
-                        } catch (parseError) {
-                            console.error('Failed to parse URL parameter data as fallback:', parseError);
+                        } catch (paramError) {
+                            console.log('Failed to parse URL parameter data as fallback:', paramError);
                         }
                     }
                     
@@ -671,43 +692,65 @@
                 
                 const data = await response.json();
                 
-                if (!data.success) {
-                    throw new Error(data.message || 'Failed to load game data');
+                // Validate response data
+                if (!data || !data.name) {
+                    console.error('Invalid game data received from API:', data);
+                    throw new Error('Invalid game data received from API');
                 }
                 
-                // Access the game data from the response
-                populateGameData(data.game);
-                return data; // Return the data for potential use by the caller
+                return data;
             } catch (error) {
                 console.error('Error fetching game data:', error);
-                
-                // Check if we have game data in URL as a last resort
-                const urlParams = new URLSearchParams(window.location.search);
-                const gameDataParam = urlParams.get('data');
-                
-                if (gameDataParam && !document.getElementById('game-content').style.display === 'block') {
-                    try {
-                        // Try to parse the URL parameter as a last resort
-                        let gameData;
-                        try {
-                            gameData = JSON.parse(decodeURIComponent(gameDataParam));
-                        } catch (decodeError) {
-                            const fixedParam = gameDataParam
-                                .replace(/%5Cr%5Cn/g, '\\n')
-                                .replace(/%5C/g, '\\');
-                            gameData = JSON.parse(decodeURIComponent(fixedParam));
-                        }
-                        
-                        console.log('API failed, using URL parameter data as last resort');
-                        populateGameData(gameData);
-                        return { success: true, game: gameData };
-                    } catch (parseError) {
-                        console.error('Failed to parse URL parameter data as last resort:', parseError);
-                    }
-                }
-                
-                // Let the retry mechanism handle the error
                 throw error;
+            }
+        }
+        
+        // Helper function to extract game data from URL parameter
+        function extractGameDataFromParam(param) {
+            // Try direct extraction using regex
+            const iframeMatch = param.match(/iframe":\s*"([^"]+)"/);
+            const nameMatch = param.match(/name":\s*"([^"]+)"/);
+            const imageMatch = param.match(/image":\s*"([^"]+)"/);
+            const descriptionMatch = param.match(/description":\s*"([^"]+)"/);
+            const categoryMatch = param.match(/category":\s*"([^"]+)"/);
+            const howToPlayMatch = param.match(/howToPlay":\s*"([^"]+)"/);
+            
+            if (iframeMatch && nameMatch) {
+                // Create a simplified game object with the extracted data
+                return {
+                    id: new URLSearchParams(window.location.search).get('id'),
+                    name: nameMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"'),
+                    iframe: iframeMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"'),
+                    image: imageMatch ? imageMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"') : '',
+                    description: descriptionMatch ? descriptionMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"').replace(/\\r\\n/g, '<br>') : '',
+                    category: categoryMatch ? categoryMatch[1] : 'Uncategorized',
+                    howToPlay: howToPlayMatch ? howToPlayMatch[1].replace(/\\"/g, '"').replace(/\\\\"/g, '\\"').replace(/\\r\\n/g, '<br>') : ''
+                };
+            }
+            
+            // Try various decoding approaches
+            try {
+                // Replace problematic sequences before decoding
+                const cleanedParam = param
+                    .replace(/%5Cr%5Cn/g, ' ') // Replace \r\n with space
+                    .replace(/%5C%22/g, '%22'); // Replace \" with "
+                    
+                return JSON.parse(decodeURIComponent(cleanedParam));
+            } catch (decodeError) {
+                // Try manual JSON extraction
+                const jsonString = param
+                    .replace(/%7B/g, '{')
+                    .replace(/%7D/g, '}')
+                    .replace(/%22/g, '"')
+                    .replace(/%20/g, ' ')
+                    .replace(/%3A/g, ':')
+                    .replace(/%2C/g, ',')
+                    .replace(/%5B/g, '[')
+                    .replace(/%5D/g, ']')
+                    .replace(/%5C/g, '\\')
+                    .replace(/%25/g, '%');
+                    
+                return JSON.parse(jsonString);
             }
         }
         
@@ -730,136 +773,112 @@
                 // Update page title and meta tags
                 document.title = `${gameData.name} | RelaxPlayLand`;
                 document.querySelector('meta[name="description"]').setAttribute('content', gameData.description || '');
-                document.querySelector('meta[property="og:title"]').setAttribute('content', `${gameData.name} | RelaxPlayLand`);
-                document.querySelector('meta[property="og:description"]').setAttribute('content', gameData.description || '');
-                document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${gameData.name} | RelaxPlayLand`);
-                document.querySelector('meta[name="twitter:description"]').setAttribute('content', gameData.description || '');
                 
-                // Update game content
+                // Update game details in the page
                 document.getElementById('game-title').textContent = gameData.name;
-                document.getElementById('game-description').textContent = gameData.description || 'No description available.';
-                document.getElementById('game-instructions').textContent = gameData.instructions;
+                document.getElementById('game-category').textContent = gameData.category || 'Uncategorized';
                 
-                // Update game details
-                document.getElementById('game-category').textContent = gameData.category || '-';
+                // Format description and instructions with proper line breaks
+                const descriptionElement = document.getElementById('game-description');
+                const instructionsElement = document.getElementById('game-instructions');
                 
-                // Update developer info
-                if (gameData.developer) {
-                    document.getElementById('game-developer').textContent = gameData.developer.name || '-';
-                    const developerUrlElement = document.getElementById('game-developer-url').querySelector('a');
-                    developerUrlElement.textContent = gameData.developer.website || gameData.developer.url || '-';
-                    developerUrlElement.href = gameData.developer.website || gameData.developer.url || '#';
+                if (descriptionElement) {
+                    descriptionElement.innerHTML = gameData.description ? gameData.description.replace(/\\r\\n/g, '<br>').replace(/\r\n/g, '<br>') : '';
                 }
                 
-                // Set iframe source - use iframe URL directly if available, or fallback to gameUrl
-                let gameIframe = document.getElementById('game-iframe');
-                const directIframeContainer = document.getElementById('direct-iframe-container');
+                if (instructionsElement) {
+                    instructionsElement.innerHTML = gameData.instructions ? gameData.instructions.replace(/\\r\\n/g, '<br>').replace(/\r\n/g, '<br>') : '';
+                }
                 
-                // Check if iframe data is an HTML string containing an iframe tag
-                if (gameData.iframe && typeof gameData.iframe === 'string') {
-                    console.log('Processing iframe data:', gameData.iframe.substring(0, 100) + '...');
+                // Handle game iframe
+                const gameContainer = document.getElementById('game-container');
+                if (gameContainer) {
+                    // Clear any existing content
+                    gameContainer.innerHTML = '';
                     
-                    // First try direct HTML insertion approach
-                    if (gameData.iframe.includes('<iframe')) {
+                    // Check if we have an iframe HTML string
+                    if (gameData.iframe && typeof gameData.iframe === 'string') {
+                        console.log('Using provided iframe HTML');
+                        
                         try {
-                            // Clean iframe HTML string - replace escaped quotes and backslashes
-                            const cleanIframeHtml = gameData.iframe
-                                .replace(/\\"/g, '"')
-                                .replace(/\\'/g, "'")
-                                .replace(/\\\\/g, "\\");
+                            // Method 1: Try direct HTML insertion (like admin panel)
+                            // Create a safe version of the iframe HTML
+                            const cleanIframe = gameData.iframe
+                                .replace(/\\"/g, '"')  // Replace escaped quotes
+                                .replace(/\\\\/g, '\\'); // Replace double backslashes
+                                
+                            // Insert the iframe HTML
+                            gameContainer.innerHTML = cleanIframe;
                             
-                            console.log('Using direct iframe HTML insertion');
-                            directIframeContainer.innerHTML = cleanIframeHtml;
-                            
-                            // Check if insertion was successful
-                            const insertedIframe = directIframeContainer.querySelector('iframe');
-                            if (insertedIframe) {
-                                console.log('Successfully inserted iframe directly');
+                            // Check if iframe was inserted correctly
+                            if (gameContainer.querySelector('iframe')) {
+                                console.log('Iframe inserted successfully using direct HTML');
                                 
-                                // Hide the regular iframe and show the direct container
-                                gameIframe.style.display = 'none';
-                                directIframeContainer.style.display = 'block';
-                                
-                                // Update new window link
-                                const newWindowLink = document.getElementById('new-window-link');
-                                if (insertedIframe.src) {
-                                    newWindowLink.href = insertedIframe.src;
-                                }
-                                
-                                // Add extra height to container if needed
-                                if (insertedIframe.height) {
-                                    const height = parseInt(insertedIframe.height);
-                                    if (!isNaN(height) && height > 0) {
-                                        directIframeContainer.style.height = `${height}px`;
-                                    }
-                                }
-                                
-                                // Hide loading state and show content
-                                document.getElementById('loading').style.display = 'none';
-                                document.getElementById('game-content').style.display = 'block';
-                                
-                                return; // Exit early since we've successfully loaded the iframe
+                                // Set up iframe event listeners
+                                setupIframeEventListeners(gameContainer.querySelector('iframe'));
+                            } else {
+                                throw new Error('Failed to insert iframe using direct HTML');
                             }
-                        } catch (error) {
-                            console.error('Error with direct iframe insertion:', error);
-                            // Continue with fallback methods
+                        } catch (directInsertError) {
+                            console.error('Error inserting iframe directly:', directInsertError);
+                            
+                            try {
+                                // Method 2: Extract src, width, height from iframe string
+                                console.log('Trying to extract iframe attributes');
+                                const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/i);
+                                const widthMatch = gameData.iframe.match(/width=["']([^"']+)["']/i);
+                                const heightMatch = gameData.iframe.match(/height=["']([^"']+)["']/i);
+                                
+                                if (srcMatch && srcMatch[1]) {
+                                    // Create a new iframe element
+                                    const iframe = document.createElement('iframe');
+                                    iframe.src = srcMatch[1].replace(/\\"/g, '"');
+                                    iframe.width = widthMatch && widthMatch[1] ? widthMatch[1] : '100%';
+                                    iframe.height = heightMatch && heightMatch[1] ? heightMatch[1] : '500';
+                                    iframe.frameBorder = '0';
+                                    iframe.allowFullscreen = true;
+                                    
+                                    // Add the iframe to the container
+                                    gameContainer.appendChild(iframe);
+                                    console.log('Iframe created using extracted attributes');
+                                    
+                                    // Set up iframe event listeners
+                                    setupIframeEventListeners(iframe);
+                                } else {
+                                    throw new Error('Could not extract iframe src');
+                                }
+                            } catch (extractError) {
+                                console.error('Error creating iframe from attributes:', extractError);
+                                showError('Failed to load game iframe. Please try refreshing the page.');
+                            }
                         }
+                    } else if (gameData.gameUrl) {
+                        // Create iframe from gameUrl
+                        console.log('Creating iframe from gameUrl:', gameData.gameUrl);
+                        const iframe = document.createElement('iframe');
+                        iframe.src = gameData.gameUrl;
+                        iframe.width = '100%';
+                        iframe.height = '500';
+                        iframe.frameBorder = '0';
+                        iframe.allowFullscreen = true;
+                        
+                        // Add the iframe to the container
+                        gameContainer.appendChild(iframe);
+                        
+                        // Set up iframe event listeners
+                        setupIframeEventListeners(iframe);
+                    } else {
+                        showError('No game URL or iframe provided');
                     }
-                    
-                    // Extract iframe src using regex as fallback
-                    try {
-                        const srcMatch = gameData.iframe.match(/src=["']([^"']+)["']/i);
-                        if (srcMatch && srcMatch[1]) {
-                            const iframeSrc = srcMatch[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-                            console.log('Extracted iframe src using regex:', iframeSrc);
-                            
-                            // Set attributes for the iframe
-                            gameIframe.allowFullscreen = true;
-                            gameIframe.allow = "fullscreen; autoplay; clipboard-write; encrypted-media; gamepad; accelerometer; gyroscope; picture-in-picture";
-                            gameIframe.frameBorder = "0";
-                            gameIframe.src = iframeSrc;
-                            
-                            // Update new window link
-                            const newWindowLink = document.getElementById('new-window-link');
-                            newWindowLink.href = iframeSrc;
-                            
-                            // Show the regular iframe
-                            gameIframe.style.display = 'block';
-                            directIframeContainer.style.display = 'none';
-                        } else {
-                            // If no src found, try to use the iframe string directly as a URL
-                            console.log('No iframe src found, trying to use string as URL');
-                            gameIframe.src = gameData.iframe;
-                        }
-                    } catch (error) {
-                        console.error('Error extracting iframe src:', error);
-                        gameIframe.src = gameData.gameUrl || '';
-                    }
-                } else {
-                    console.log('Using direct iframe URL:', gameData.gameUrl || '');
-                    gameIframe.src = gameData.gameUrl || '';
                 }
                 
-                gameIframe.title = gameData.name;
-                
-                // Add category and difficulty badges
-                const badgesContainer = document.getElementById('game-badges');
-                badgesContainer.innerHTML = '';
-                
-                if (gameData.category) {
-                    const categoryBadge = document.createElement('span');
-                    categoryBadge.className = 'badge bg-blue-100 text-blue-800';
-                    categoryBadge.textContent = gameData.category;
-                    badgesContainer.appendChild(categoryBadge);
-                }
-                
-                // Hide loading state and show content
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('game-content').style.display = 'block';
+                // Show the game page content
+                document.getElementById('loading-indicator').style.display = 'none';
+                document.getElementById('game-page-content').style.display = 'block';
                 
             } catch (error) {
                 console.error('Error populating game data:', error);
-                showError('Error displaying game content');
+                showError('Failed to display game data. Please try refreshing the page.');
             }
         }
         
