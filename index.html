@@ -52,11 +52,13 @@
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             font-weight: 500;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             display: inline-block;
+            text-align: center;
         }
         .btn-primary:hover {
             background-color: #4338CA;
+            transform: translateY(-2px);
         }
         .category-badge {
             display: inline-block;
@@ -112,8 +114,8 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <a href="/" class="flex items-center" aria-label="RelaxPlayLand Home">
-                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-8 w-8 mr-2">
-                        <h1 class="text-xl font-bold text-apple-blue">RelaxPlayLand</h1>
+                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-6 w-6 mr-2">
+                        <h1 class="text-lg font-bold text-apple-blue">RelaxPlayLand</h1>
                     </a>
                 </div>
                 <div class="hidden md:block">
@@ -134,9 +136,23 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl md:text-6xl font-bold mb-6">Play Free Online Games at RelaxPlayLand</h1>
             <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Your ultimate destination for relaxing browser games and stress relief entertainment. Enjoy our collection of casual games designed for pure fun - no downloads required!</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#games" class="btn-primary bg-white text-apple-blue hover:bg-gray-100">Explore Games</a>
-                <a href="/categories.html" class="btn-primary bg-indigo-700 hover:bg-indigo-800">Browse Categories</a>
+            <div class="flex flex-row justify-center gap-4 sm:gap-6">
+                <a href="#games" class="btn-primary bg-white text-apple-blue hover:bg-gray-100 px-6 py-3 font-medium shadow-md rounded-lg">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                        Explore Games
+                    </span>
+                </a>
+                <a href="/categories.html" class="btn-primary bg-indigo-700 hover:bg-indigo-800 px-6 py-3 font-medium shadow-md rounded-lg">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                        </svg>
+                        Browse Categories
+                    </span>
+                </a>
             </div>
         </div>
     </section>
