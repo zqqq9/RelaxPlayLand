@@ -18,21 +18,11 @@ const dalgonaGame = {
   slug: 'dalgona-candy',
   name: 'Dalgona Candy Honeycomb Cookie',
   category: 'Puzzle',
-  difficulty: 'Medium',
-  controls: 'Mouse/Touch',
-  players: 'Single Player',
-  ageRating: 'All Ages',
   description: 'Test your patience and precision by carving intricate patterns into honeycomb candy without breaking it. Inspired by the viral Squid Game challenge.',
   howToPlay: 'Use your mouse or touch to carefully trace the pattern on the honeycomb candy. Move slowly and precisely to avoid breaking the candy. Complete the pattern within the time limit to win.',
-  features: 'Multiple difficulty levels, various patterns to choose from, time challenges, and realistic physics.',
   iframe: '<iframe src="https://www.crazygames.com/embed/dalgona-candy" class="game-iframe" title="Dalgona Candy Game" allow="fullscreen" frameborder="0"></iframe>',
   tags: ['Puzzle', 'Skill', 'Precision', 'Squid Game', 'Challenge'],
   image: '/images/games/dalgona-candy.jpg',
-  developer: {
-    name: 'RelaxPlayLand',
-    email: 'contact@relaxplayland.online',
-    website: 'https://relaxplayland.online'
-  },
   dateAdded: new Date().toISOString(),
   status: 'approved' // 已批准
 };

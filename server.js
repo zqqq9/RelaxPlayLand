@@ -329,14 +329,12 @@ app.post('/api/admin/games/batch-reject', authenticate, (req, res) => {
 app.post('/api/submit-game', upload.single('gameImageFile'), (req, res) => {
     try {
         const { 
-            gameName, gameCategory, gameDifficulty, gameControls, 
-            gamePlayers, gameAgeRating, gameDescription, gameHowToPlay,
-            gameFeatures, gameTags, gameImage, gameIframe,
-            developerName, developerEmail, developerWebsite
+            gameName, gameCategory, gameDescription, gameHowToPlay,
+            gameTags, gameImage, gameIframe
         } = req.body;
         
         // Validate required fields
-        if (!gameName || !gameCategory || !gameDescription || !gameHowToPlay || !gameIframe || !developerName || !developerEmail) {
+        if (!gameName || !gameCategory || !gameDescription || !gameHowToPlay || !gameIframe) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
         
@@ -381,22 +379,11 @@ app.post('/api/submit-game', upload.single('gameImageFile'), (req, res) => {
             slug,
             name: gameName,
             category: gameCategory,
-            difficulty: gameDifficulty || 'Medium',
-            controls: gameControls || 'Mouse/Touch',
-            players: gamePlayers || 'Single Player',
-            ageRating: gameAgeRating || 'All Ages',
             description: gameDescription,
             howToPlay: gameHowToPlay,
-            features: gameFeatures || '',
             iframe: gameIframe,
             tags: parsedTags,
             image: imagePath,
-            developer: {
-                name: developerName,
-                email: developerEmail,
-                website: developerWebsite || ''
-            },
-            dateAdded: new Date().toISOString(),
             status: 'pending'
         };
         

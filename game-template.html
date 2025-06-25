@@ -51,18 +51,6 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        .badge-difficulty-easy {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-        .badge-difficulty-medium {
-            background-color: #FEF3C7;
-            color: #92400E;
-        }
-        .badge-difficulty-hard {
-            background-color: #FEE2E2;
-            color: #B91C1C;
-        }
         .game-fallback {
             display: none;
             padding: 20px;
@@ -200,8 +188,6 @@
                         <h3 class="text-xl font-bold mb-3 text-gray-800">How to Play</h3>
                         <p id="game-instructions" class="text-gray-600 mb-6">Game instructions will be loaded here.</p>
                         
-                        <h3 class="text-xl font-bold mb-3 text-gray-800">Features</h3>
-                        <p id="game-features" class="text-gray-600 mb-6">Game features will be loaded here.</p>
                     </div>
 
                     <div class="bg-gray-50 p-6 rounded-lg">
@@ -210,22 +196,6 @@
                             <li class="flex justify-between">
                                 <span class="text-gray-600">Category:</span>
                                 <span id="game-category" class="font-medium text-gray-800">-</span>
-                            </li>
-                            <li class="flex justify-between">
-                                <span class="text-gray-600">Difficulty:</span>
-                                <span id="game-difficulty" class="font-medium text-gray-800">-</span>
-                            </li>
-                            <li class="flex justify-between">
-                                <span class="text-gray-600">Controls:</span>
-                                <span id="game-controls" class="font-medium text-gray-800">-</span>
-                            </li>
-                            <li class="flex justify-between">
-                                <span class="text-gray-600">Players:</span>
-                                <span id="game-players" class="font-medium text-gray-800">-</span>
-                            </li>
-                            <li class="flex justify-between">
-                                <span class="text-gray-600">Age Rating:</span>
-                                <span id="game-age-rating" class="font-medium text-gray-800">-</span>
                             </li>
                         </ul>
 
@@ -635,8 +605,7 @@
                     ...game,
                     // Add computed properties if they don't exist
                     gameUrl: game.iframe || game.gameUrl || `/public/games/${game.slug}/index.html`,
-                    instructions: game.instructions || game.howToPlay || 'No instructions available.',
-                    features: game.features || 'No features listed.'
+                    instructions: game.instructions || game.howToPlay || 'No instructions available.'
                 };
                 
                 // Update page title and meta tags
@@ -651,14 +620,9 @@
                 document.getElementById('game-title').textContent = gameData.name;
                 document.getElementById('game-description').textContent = gameData.description || 'No description available.';
                 document.getElementById('game-instructions').textContent = gameData.instructions;
-                document.getElementById('game-features').textContent = gameData.features;
                 
                 // Update game details
                 document.getElementById('game-category').textContent = gameData.category || '-';
-                document.getElementById('game-difficulty').textContent = gameData.difficulty || '-';
-                document.getElementById('game-controls').textContent = gameData.controls || '-';
-                document.getElementById('game-players').textContent = gameData.players || '-';
-                document.getElementById('game-age-rating').textContent = gameData.ageRating || '-';
                 
                 // Update developer info
                 if (gameData.developer) {
@@ -856,13 +820,6 @@
                     categoryBadge.className = 'badge bg-blue-100 text-blue-800';
                     categoryBadge.textContent = gameData.category;
                     badgesContainer.appendChild(categoryBadge);
-                }
-                
-                if (gameData.difficulty) {
-                    const difficultyBadge = document.createElement('span');
-                    difficultyBadge.className = `badge badge-difficulty-${gameData.difficulty.toLowerCase()}`;
-                    difficultyBadge.textContent = gameData.difficulty;
-                    badgesContainer.appendChild(difficultyBadge);
                 }
                 
                 // Hide loading state and show content
