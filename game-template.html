@@ -241,10 +241,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get game ID and data from URL parameters
+                            // Get game ID and data from URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const gameId = urlParams.get('id');
             const gameDataParam = urlParams.get('data');
+            
+            console.log('Game ID:', gameId);
+            console.log('Game data param length:', gameDataParam ? gameDataParam.length : 0);
             
             if (!gameId) {
                 showError('No game ID provided');
@@ -640,6 +643,30 @@
                     console.log('Processing iframe HTML:', gameData.iframe);
                     
                     try {
+                        // First try the direct HTML insertion approach (similar to admin panel)
+                        const directIframeContainer = document.getElementById('direct-iframe-container');
+                        directIframeContainer.innerHTML = gameData.iframe;
+                        
+                        // If we successfully inserted an iframe, use that
+                        if (directIframeContainer.querySelector('iframe')) {
+                            console.log('Successfully used direct iframe insertion');
+                            
+                            // Hide the regular iframe and show the direct container
+                            gameIframe.style.display = 'none';
+                            directIframeContainer.style.display = 'block';
+                            
+                            // Update new window link if possible
+                            const directIframe = directIframeContainer.querySelector('iframe');
+                            if (directIframe && directIframe.src) {
+                                const newWindowLink = document.getElementById('new-window-link');
+                                newWindowLink.href = directIframe.src;
+                            }
+                            
+                            // Exit early since we've successfully loaded the iframe
+                            return;
+                        }
+                        
+                        // If direct insertion didn't work, fall back to the original approach
                         // Check if it's a CrazyGames iframe
                         if (gameData.iframe.includes('crazygames.com')) {
                             console.log('CrazyGames iframe detected, using direct creation approach');
@@ -784,9 +811,15 @@
                             const newWindowLink = document.getElementById('new-window-link');
                             newWindowLink.href = srcMatch[1];
                         } else {
-                            // Final fallback: Try to insert the iframe HTML directly
+                            // Final fallback: Try to insert the iframe HTML directly again
+                            // (We already tried this at the beginning but might have different HTML now)
                             console.log('Using direct iframe insertion as fallback');
                             const directIframeContainer = document.getElementById('direct-iframe-container');
+                            
+                            // Clear any previous content
+                            directIframeContainer.innerHTML = '';
+                            
+                            // Try with the cleaned HTML
                             directIframeContainer.innerHTML = cleanIframeHtml;
                             
                             // Hide the regular iframe and show the direct container
@@ -796,16 +829,25 @@
                             // If direct insertion didn't work, show error
                             if (!directIframeContainer.querySelector('iframe')) {
                                 console.error('Failed to insert iframe directly');
-                                gameIframe.style.display = 'block';
-                                directIframeContainer.style.display = 'none';
-                                gameIframe.src = gameData.gameUrl || '';
-                            } else {
-                                // Update new window link if possible
-                                const directIframe = directIframeContainer.querySelector('iframe');
-                                if (directIframe && directIframe.src) {
-                                    const newWindowLink = document.getElementById('new-window-link');
-                                    newWindowLink.href = directIframe.src;
+                                
+                                // Try one more time with the original iframe HTML
+                                directIframeContainer.innerHTML = gameData.iframe;
+                                
+                                if (!directIframeContainer.querySelector('iframe')) {
+                                    console.error('All iframe insertion methods failed');
+                                    gameIframe.style.display = 'block';
+                                    directIframeContainer.style.display = 'none';
+                                    gameIframe.src = gameData.gameUrl || '';
+                                } else {
+                                    console.log('Successfully inserted original iframe HTML on final attempt');
                                 }
+                            }
+                            
+                            // Update new window link if possible
+                            const directIframe = directIframeContainer.querySelector('iframe');
+                            if (directIframe && directIframe.src) {
+                                const newWindowLink = document.getElementById('new-window-link');
+                                newWindowLink.href = directIframe.src;
                             }
                         }
                     }
