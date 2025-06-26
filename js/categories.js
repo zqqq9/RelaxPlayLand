@@ -193,26 +193,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const gameUrl = `./game-template.html?id=${game.id || game.slug}&data=${gameDataParam}`;
             
             gameCard.innerHTML = `
-                <div class="relative">
-                    <img src="${game.image}" alt="${game.name}" class="card-image">
-                </div>
+                <a href="${gameUrl}" class="block">
+                    <div class="relative">
+                        <img src="${game.image}" alt="${game.name}" class="card-image">
+                    </div>
+                </a>
                 <div class="card-content">
-                    <a href="${gameUrl}">
+                    <div>
                         <h3 class="game-title">${game.name}</h3>
-                        <p class="game-description" style="-webkit-line-clamp: 3;">${game.description}</p>
-                        <div class="flex flex-wrap mt-auto">
+                        <p class="game-description" style="-webkit-line-clamp: 2;">${game.description}</p>
+                    </div>
+                    <div class="mt-auto pt-2">
+                        <div class="flex flex-wrap mb-2">
                             <span class="category-badge primary-badge">${game.category}</span>
                             ${tagElements}
                         </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                        <a href="${gameUrl}" class="play-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                                <path d="M8 5v14l11-7z"></path>
-                            </svg>
+                        <a href="${gameUrl}" class="play-button w-full">
                             Play Now
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
                         </a>
                     </div>
-                    </a>
                 </div>
             `;
             gamesContainer.appendChild(gameCard);
