@@ -163,7 +163,7 @@
             <!-- Game Content -->
             <div class="p-6">
                 <!-- Game Iframe -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden mb-8">
+                <div id="game-container" class="bg-gray-800 rounded-lg overflow-hidden mb-8 relative">
                     <iframe id="game-iframe" src="" class="game-iframe" title="Game" allowfullscreen frameborder="0"></iframe>
                     <!-- Direct iframe container for fallback -->
                     <div id="direct-iframe-container" style="display: none; width: 100%; height: 600px;"></div>
@@ -177,6 +177,16 @@
                             <button id="reload-game" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">Reload Game</button>
                         </div>
                     </div>
+                    
+                    <!-- Fullscreen Button for Mobile -->
+                    <button id="fullscreen-btn" class="absolute bottom-4 right-4 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full md:hidden z-10">
+                        <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m0 0v-4m0 4l-5-5" />
+                        </svg>
+                        <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h5v5M5 4h5v5M15 20h5v-5M5 20h5v-5" />
+                        </svg>
+                    </button>
                 </div>
 
                 <!-- Game Info -->
@@ -198,12 +208,6 @@
                                 <span id="game-category" class="font-medium text-gray-800">-</span>
                             </li>
                         </ul>
-
-                        <div class="mt-6 pt-6 border-t border-gray-200">
-                            <h4 class="font-bold text-gray-800 mb-2">Developer</h4>
-                            <p id="game-developer" class="text-gray-600">-</p>
-                            <p id="game-developer-url" class="text-blue-600 hover:underline"><a href="#" target="_blank" rel="noopener noreferrer">-</a></p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -563,6 +567,46 @@
                     console.log(`Preloaded domain: ${domain}`);
                 });
             }
+
+            // Fullscreen functionality for mobile
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const gameContainer = document.getElementById('game-container');
+            const fullscreenEnterIcon = document.getElementById('fullscreen-enter-icon');
+            const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
+
+            if (fullscreenBtn && gameContainer) {
+                fullscreenBtn.addEventListener('click', () => {
+                    toggleFullScreen(gameContainer);
+                });
+
+                document.addEventListener('fullscreenchange', () => {
+                    if (document.fullscreenElement) {
+                        fullscreenEnterIcon.classList.add('hidden');
+                        fullscreenExitIcon.classList.remove('hidden');
+                    } else {
+                        fullscreenEnterIcon.classList.remove('hidden');
+                        fullscreenExitIcon.classList.add('hidden');
+                    }
+                });
+            }
+
+            function toggleFullScreen(element) {
+                if (!document.fullscreenElement) {
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen();
+                    } else if (element.mozRequestFullScreen) { /* Firefox */
+                        element.mozRequestFullScreen();
+                    } else if (element.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        element.webkitRequestFullscreen();
+                    } else if (element.msRequestFullscreen) { /* IE/Edge */
+                        element.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
         });
         
         // Function to set up iframe event listeners
@@ -834,24 +878,6 @@
                     instructionsElement.innerHTML = gameData.instructions ? gameData.instructions.replace(/\\r\\n/g, '<br>').replace(/\r\n/g, '<br>') : '';
                 }
                 
-                // Update developer info if available
-                const developerElement = document.getElementById('game-developer');
-                const developerUrlElement = document.getElementById('game-developer-url');
-                
-                if (developerElement && gameData.developer) {
-                    developerElement.textContent = gameData.developer.name || '-';
-                    
-                    if (developerUrlElement && gameData.developer.website) {
-                        const link = developerUrlElement.querySelector('a');
-                        if (link) {
-                            link.href = gameData.developer.website;
-                            link.textContent = gameData.developer.website;
-                            link.style.display = 'inline';
-                        }
-                    } else if (developerUrlElement) {
-                        developerUrlElement.style.display = 'none';
-                    }
-                }
                 
                 // Handle game badges
                 const badgesContainer = document.getElementById('game-badges');
