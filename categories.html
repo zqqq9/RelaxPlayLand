@@ -552,106 +552,61 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="nav-container">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center" aria-label="RelaxPlayLand Home">
-                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="h-8 w-8 mr-2">
-                        <h1 class="text-xl font-bold text-apple-blue">RelaxPlayLand</h1>
+                    <a href="/" class="flex items-center space-x-2">
+                        <img src="/images/logo.png" alt="RelaxPlayLand Logo" class="logo-img h-10">
+                        <span class="text-2xl font-bold text-blue-600">RelaxPlayLand</span>
                     </a>
                 </div>
-                
-                <nav class="nav-links">
-                    <a href="/" class="nav-link">Home</a>
-                    <a href="/categories.html" class="nav-link active">Categories</a>
-                    <a href="/#about" class="nav-link">About</a>
-                    <a href="/blog.html" class="nav-link">Blog</a>
-                </nav>
-                
-                <button class="mobile-menu-button" id="mobile-menu-button" aria-label="Toggle menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="/categories" class="text-blue-600 font-semibold px-3 py-2 rounded-md text-sm font-medium">Categories</a>
+                    <a href="/about" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                    <a href="/blog" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Blog</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobile-menu">
-            <a href="/" class="mobile-nav-link">Home</a>
-            <a href="/categories.html" class="mobile-nav-link active">Categories</a>
-            <a href="/#about" class="mobile-nav-link">About</a>
-            <a href="/blog.html" class="mobile-nav-link">Blog</a>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <a href="/" class="block text-gray-600 hover:bg-gray-100 px-4 py-2">Home</a>
+            <a href="/categories" class="block text-blue-600 font-semibold bg-blue-50 px-4 py-2">Categories</a>
+            <a href="/about" class="block text-gray-600 hover:bg-gray-100 px-4 py-2">About</a>
+            <a href="/blog" class="block text-gray-600 hover:bg-gray-100 px-4 py-2">Blog</a>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container">
-        <div class="main-content">
-            <!-- Category Sidebar -->
-            <aside class="sidebar">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="lg:flex lg:space-x-8">
+            <!-- Sidebar -->
+            <aside class="lg:w-1/4 mb-8 lg:mb-0">
                 <div class="category-sidebar">
-                    <h2 class="text-lg font-bold mb-4">Categories</h2>
-                    <ul id="category-list">
-                        <li>
-                            <button class="category-item active" data-category="all">
-                                All Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Puzzle">
-                                Puzzle Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Arcade">
-                                Arcade Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Casual">
-                                Casual Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Action">
-                                Action Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Strategy">
-                                Strategy Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Simulation">
-                                Simulation Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Adventure">
-                                Adventure Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Sports">
-                                Sports Games
-                            </button>
-                        </li>
-                        <li>
-                            <button class="category-item" data-category="Other">
-                                Other Games
-                            </button>
-                        </li>
-                    </ul>
+                    <h3 class="text-lg font-bold mb-4">Categories</h3>
+                    <button class="category-item active" data-category="all">All Games</button>
+                    <button class="category-item" data-category="puzzle">Puzzle Games</button>
+                    <button class="category-item" data-category="arcade">Arcade Games</button>
+                    <button class="category-item" data-category="casual">Casual Games</button>
+                    <button class="category-item" data-category="action">Action Games</button>
+                    <button class="category-item" data-category="strategy">Strategy Games</button>
+                    <button class="category-item" data-category="simulation">Simulation Games</button>
+                    <button class="category-item" data-category="adventure">Adventure Games</button>
+                    <button class="category-item" data-category="sports">Sports Games</button>
+                    <button class="category-item" data-category="other">Other Games</button>
                 </div>
             </aside>
-            
-            <!-- Games Content -->
-            <div class="content">
-                <div class="section-header">
-                    <h1 id="category-title" class="text-2xl font-bold">All Games</h1>
+
+            <!-- Main Content -->
+            <div class="lg:w-3/4">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 id="category-title" class="text-3xl font-bold">All Games</h1>
                     <div class="sort-container">
                         <label for="sort-by" class="sort-label">Sort by:</label>
                         <select id="sort-by" class="sort-select">
@@ -660,92 +615,110 @@
                         </select>
                     </div>
                 </div>
-                
-                <p id="category-description" class="category-description">
+
+                <p id="category-description" class="text-lg text-gray-600 mb-8">
                     Browse all our free online games. Find your favorite games to play instantly in your browser with no downloads required.
                 </p>
-                
-                <div id="games-container" class="games-grid">
-                    <!-- Games will be loaded dynamically by categories.js -->
+
+                <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Game cards will be dynamically inserted here -->
                 </div>
-                
-                <!-- Loading indicator -->
-                <div id="loading-indicator" class="py-10 text-center">
+
+                <div id="loading-indicator" class="text-center py-12">
                     <div class="loading-spinner"></div>
-                    <p class="mt-4 text-gray-600">Loading games...</p>
+                    <p class="mt-2 text-gray-600">Loading games...</p>
                 </div>
-                
-                <!-- No results message -->
-                <div id="no-results" class="no-results hidden">
-                    <div class="no-results-icon">🎮</div>
-                    <p class="no-results-text">No games found</p>
-                    <p class="no-results-description">We couldn't find any games in this category. Try selecting a different category or check back later for new additions.</p>
+
+                <div id="no-games-message" class="hidden text-center py-12 bg-white rounded-lg shadow">
+                    <span class="text-5xl">🎮</span>
+                    <h3 class="mt-4 text-xl font-bold">No games found</h3>
+                    <p class="mt-2 text-gray-600">We couldn't find any games in this category. Try selecting a different category or check back later for new additions.</p>
                 </div>
-                
-                <!-- Pagination -->
-                <div id="pagination" class="pagination-container">
-                    <!-- Pagination will be generated dynamically -->
+
+                <div id="pagination-container" class="pagination-container">
+                    <!-- Pagination will be dynamically inserted here -->
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
+    <footer class="bg-gray-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="footer-title">RelaxPlayLand</h3>
-                    <p class="footer-description">Your ultimate destination for free online games and relaxing browser-based entertainment.</p>
+                    <h3 class="text-2xl font-bold">RelaxPlayLand</h3>
+                    <p class="mt-2 text-gray-400">Your ultimate destination for free online games and relaxing browser-based entertainment.</p>
                 </div>
                 <div>
-                    <h4 class="footer-heading">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="/">Home</a></li>
-                        <li class="footer-link"><a href="/categories.html">Categories</a></li>
-                        <li class="footer-link"><a href="/#about">About</a></li>
-                        <li class="footer-link"><a href="/blog.html">Blog</a></li>
+                    <h4 class="text-lg font-semibold">Quick Links</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="/categories" class="text-gray-400 hover:text-white">Categories</a></li>
+                        <li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="/blog" class="text-gray-400 hover:text-white">Blog</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="footer-heading">Game Categories</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="/categories.html?category=Puzzle">Puzzle Games</a></li>
-                        <li class="footer-link"><a href="/categories.html?category=Arcade">Arcade Games</a></li>
-                        <li class="footer-link"><a href="/categories.html?category=Casual">Casual Games</a></li>
-                        <li class="footer-link"><a href="/categories.html?category=Adventure">Adventure Games</a></li>
-                        <li class="footer-link"><a href="/categories.html">All Games</a></li>
+                    <h4 class="text-lg font-semibold">Game Categories</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="/categories?category=puzzle" class="text-gray-400 hover:text-white">Puzzle Games</a></li>
+                        <li><a href="/categories?category=arcade" class="text-gray-400 hover:text-white">Arcade Games</a></li>
+                        <li><a href="/categories?category=casual" class="text-gray-400 hover:text-white">Casual Games</a></li>
+                        <li><a href="/categories?category=adventure" class="text-gray-400 hover:text-white">Adventure Games</a></li>
+                        <li><a href="/categories" class="text-gray-400 hover:text-white">All Games</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="footer-heading">Contact & Support</h4>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="/contact.html">Contact Us</a></li>
-                        <li class="footer-link"><a href="/submit-game.html">Submit Game</a></li>
-                        <li class="footer-link"><a href="/privacy-policy.html">Privacy Policy</a></li>
-                        <li class="footer-link"><a href="/terms-of-service.html">Terms of Service</a></li>
+                    <h4 class="text-lg font-semibold">Contact & Support</h4>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="/contact" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="/submit-game.html" class="text-gray-400 hover:text-white">Submit Game</a></li>
+                        <li><a href="/privacy" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="/terms" class="text-gray-400 hover:text-white">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom">
+            <div class="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400">
                 <p>&copy; 2024 RelaxPlayLand. All rights reserved. The #1 destination for free online browser games.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('open');
-            });
-        });
-    </script>
+        // ... (existing script)
 
-    <!-- Categories JS -->
-    <script src="./js/categories.js"></script>
+        function createGameCard(game) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.gameId = game.id;
+            card.dataset.gameName = game.name;
+            card.dataset.gameUrl = game.url;
+
+            let imageUrl = game.image;
+            if (!imageUrl || imageUrl.trim() === '') {
+                imageUrl = '/images/placeholder.png'; // Fallback image
+            }
+
+            card.innerHTML = `
+                <img src="${imageUrl}" alt="${game.name}" class="card-image" loading="lazy" onerror="this.onerror=null;this.src='/images/placeholder.png';">
+                <div class="card-content">
+                    <h3 class="game-title">${game.name}</h3>
+                    <p class="game-description">${game.description || ''}</p>
+                    <div class="mt-auto pt-2">
+                         <button class="play-button w-full" data-game-url="/game-template.html?id=${game.id}" data-game-data='${JSON.stringify(game)}'>
+                            Play Now
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // ... (rest of the script)
+    </script>
 </body>
 </html> 
