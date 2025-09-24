@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/blog$", "dest": "/blog.html" },
+    { "src": "^/categories$", "dest": "/categories.html" },
+    { "src": "^/submit-game$", "dest": "/submit-game.html" }
+  ]
+}
+
+
