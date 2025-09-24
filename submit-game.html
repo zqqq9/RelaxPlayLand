@@ -414,9 +414,20 @@
                 }
                 
                 try {
+                    const payload = {
+                        gameName: document.getElementById('gameName').value,
+                        gameCategory: document.getElementById('gameCategory').value,
+                        gameDescription: document.getElementById('gameDescription').value,
+                        gameHowToPlay: document.getElementById('gameHowToPlay').value,
+                        gameTags: document.getElementById('gameTags').value,
+                        gameImage: document.getElementById('gameImage').value,
+                        gameIframe: document.getElementById('gameIframe').value
+                    };
+
                     const response = await fetch('/api/submit-game', {
                         method: 'POST',
-                        body: formData
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
 
                     const result = await response.json();
